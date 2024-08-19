@@ -417,6 +417,20 @@ public class ChessLogic implements ChessConstants {
 		
 		
 		/**
+		 * Moves a chess piece on the board and updates its position
+		 * @param board the chess board
+		 * @param newPos the new position
+		 * @param pieceToMove the chess piece to be updated
+		 */
+		public void moveAndUpdate( ChessBoard board,ChessPiece pieceToMove, Pair newPos) {
+			
+			board.move(pieceToMove.getPos(), newPos);
+			pieceToMove.setPos(newPos.row(), newPos.col());
+			pieceToMove.willMove();
+		}
+		
+		
+		/**
 		 * Populates an array of chess pieces
 		 * @param arr the array to be populated
 		 * @param color the color of the chess piece
@@ -433,12 +447,12 @@ public class ChessLogic implements ChessConstants {
 			
 			//add chess pieces in order from left to right
 			arr[j++] = new ChessPiece(ROOK, color);
-			arr[j++] = new ChessPiece(BISHOP, color); 
 			arr[j++] = new ChessPiece(KNIGHT, color); 
+			arr[j++] = new ChessPiece(BISHOP, color); 
 			arr[j++] = new ChessPiece(QUEEN, color); 
 			arr[j++] = new KingPiece(color); 
-			arr[j++] = new ChessPiece(KNIGHT, color); 
-			arr[j++] = new ChessPiece(BISHOP, color);
+			arr[j++] = new ChessPiece(BISHOP, color); 
+			arr[j++] = new ChessPiece(KNIGHT, color);
 			arr[j++] = new ChessPiece(ROOK, color); 
 			
 			
