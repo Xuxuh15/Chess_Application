@@ -67,8 +67,8 @@ public class ChessPieceTest implements ChessConstants {
 	
 	@Test
 	public void testGetToken() {
-		assertEquals('p', pW.getToken()); 
-		assertEquals('R', pB.getToken()); 
+		assertEquals('\u2659', pW.getToken()); 
+		assertEquals('\u2656', pB.getToken()); 
 	}
 	
 	@Test
@@ -84,6 +84,20 @@ public class ChessPieceTest implements ChessConstants {
 		assertEquals(5,pB.getValue()); 
 		pW.setValue(0); 
 		assertEquals(0,pW.getValue()); 
+	}
+	
+	@Test
+	public void testHasMoved() {
+		assertFalse(pW.hasMoved()); 
+		pW.setHasMoved(true);
+		assertTrue(pW.hasMoved()); 
+	}
+	
+	@Test
+	public void testConsoleDisplay() {
+		//checks to see if console displays unicode characters
+		System.out.println("Testing if console supports unicode"); 
+		System.out.println(pW.getToken()); 
 	}
 	
 	
