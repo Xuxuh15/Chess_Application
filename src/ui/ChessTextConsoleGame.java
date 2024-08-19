@@ -111,60 +111,46 @@ public class ChessTextConsoleGame implements ChessConstants {
 					
 					case PAWN: 
 						if(logic.verifyMovePawn(board, p, playerMove)) {
-							board.move(p.getPos(), playerMove);
-							p.setPos(playerMove.row(),playerMove.col());
-							p.willMove();
+							logic.moveAndUpdate(board, p, playerMove);
 							hasMoved = true; 
 							
 						}
 						break; 
 					case KNIGHT:
 						if(logic.verifyMoveKnight(board, p, playerMove)) {
-							board.move(p.getPos(), playerMove);
-							p.setPos(playerMove.row(), playerMove.col());
-							p.willMove();
+							logic.moveAndUpdate(board, p, playerMove);
 							hasMoved = true; 
 						}
 						break; 
 					case BISHOP:
 						if(logic.verifyMoveBishop(board, p, playerMove)) {
-							board.move(p.getPos(), playerMove);
-							p.setPos(playerMove.row(), playerMove.col());
-							p.willMove();
+							logic.moveAndUpdate(board, p, playerMove);
 							hasMoved = true; 
 						}
 						break; 
 					case ROOK:
 						if(logic.verifyMoveRook(board, p, playerMove)) {
-							board.move(p.getPos(), playerMove);
-							p.setPos(playerMove.row(), playerMove.col());
-							p.willMove();
+							logic.moveAndUpdate(board, p, playerMove);
 							hasMoved = true; 
 						}
 						break;
 					case QUEEN:
 						if(logic.verifyMoveQueen(board, p, playerMove)) {
-							board.move(p.getPos(), playerMove);
-							p.setPos(playerMove.row(), playerMove.col());
-							p.willMove();
+							logic.moveAndUpdate(board, p, playerMove);
 							hasMoved = true; 
 						}
 						break;
 					case KING:
 						if(currentPlayer == WHITE) {
 							if(logic.verifyMoveKing(board,piecesWhite, p, playerMove)) {
-								board.move(p.getPos(), playerMove);
-								p.setPos(playerMove.row(), playerMove.col());
-								p.willMove();
+								logic.moveAndUpdate(board, p, playerMove);
 								hasMoved = true;
 							}
 						}
 						
 						else {
 							if(logic.verifyMoveKing(board,piecesBlack, p, playerMove)) {
-								board.move(p.getPos(), playerMove);
-								p.setPos(playerMove.row(), playerMove.col());
-								p.willMove();
+								logic.moveAndUpdate(board, p, playerMove);
 								hasMoved = true;
 						 
 							}
@@ -323,7 +309,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		
 		
 		//print the column headers
-		System.out.print("    "); 
+		System.out.print("   "); 
 		char header = 'A'; 
 		for(int i = 0; i < ROWS; i++) {
 			System.out.print(" " + header);
@@ -331,7 +317,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		}
 		
 		System.out.println(); 
-		System.out.print( "   " + "-----------------"); 
+		System.out.print( "   " + "_________________"); 
 		
 		//print the board 
 		for(int i = 0; i < ROWS; i++) { 
