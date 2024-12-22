@@ -3,7 +3,11 @@ package tests;
 
 
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,8 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
-
-
+import helpers.Pair;
 import logic.ChessBoard;
 import logic.ChessLogic;
 import logic.ChessPiece;
@@ -25,6 +28,8 @@ public class ChessTextConsoleTest {
 
 	private static ChessTextConsoleGame game; 
 	private static ChessBoard board = new ChessBoard(); 
+	
+	
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -48,14 +53,89 @@ public class ChessTextConsoleTest {
 	
 	@Test
 	@DisplayName("setUpGame resets game parameters to default and sets up the game board")
-	public void setUpGame_resetsGameParameters() {
+	public void setUpGame_ResetsGameParameters() {
 		game.setUpGame();
 		
 		assertEquals(false, game.getCheckMate(), "Expected game.checkMate to be false"); 
 		assertEquals(ChessConstants.WHITE, game.getCurrentPlayer(), "Expected game.currentPlayer to be equal to ChessConstants.WHITE"); 
 		assertEquals(false, game.getHasMoved(), "Expected game.hasMoved to be false"); 
 		
+		
 	}
+	
+	@Test
+	@DisplayName("setUpGame successfully generates game pieces")
+	public void setUpGame_SuccessfullyGeneratesGamePieces() {
+		game.setUpGame();
+		
+		ChessPiece[] whitePieces = game.getWhiteChessPieces(); 
+		
+		ChessPiece[] blackPieces = game.getBlackChessPieces(); 
+		
+		assertNotNull(whitePieces); 
+		assertNotNull(blackPieces); 
+		
+		
+	}
+	
+	@Test
+	@DisplayName("convertLetterToNum returns -1 for invalid input")
+	public void convertLetterToNum_InvalidInput_ReturnsNegativeOne() {
+		int result = game.convertLettertoNum("q"); 
+		assertEquals(-1, result, "Expected result to be equal to -1"); 
+		
+	}
+	
+	@Test
+	@DisplayName("convertLetterToNum returns -1 for null input")
+	public void convertLetterToNum_NullInput_ReturnsNegativeOne() {
+		int result = game.convertLettertoNum(null); 
+		assertEquals(-1, result, "Expected result to be equal to -1"); 
+		
+	}
+	
+	@Test
+	@DisplayName("convertLetterToNum returns correct value for valid input")
+	public void convertLetterToNum_ValidInput_ReturnsCorrectConstant() {
+		int result = game.convertLettertoNum("A"); 
+		assertEquals(ChessConstants.A, result, "Expected result to be equal to ChessConstants.A"); 
+		result = game.convertLettertoNum("E"); 
+		assertEquals(ChessConstants.E, result, "Expected result to be equal to ChessConstants.E"); 
+		
+	}
+	
+	
+	@Test
+	@DisplayName("selectPiece input out of bounds throws ArrayIndexOutOfBoundsException")
+	public void selectPiece_InputOutOfBounds_ThrowsArrayIndexOutOfBoundsException() {
+		assertThrows(ArrayIndexOutOfBoundsException.class, ()->{
+			game.selectPiece(new Pair(9,9)); 
+		}, "Expected ArrayIndexOutofBoundsException to be thrown"); 
+	}
+	
+	@Test
+	@DisplayName("selectPiece input out empty square returns null")
+	public void selectPiece_EmptySquare_ReturnsNull() throws ArrayIndexOutOfBoundsException {
+		ChessPiece selectedPiece = game.selectPiece(new Pair(ChessConstants.D,5)); 
+		assertNull(selectedPiece); 
+	}
+	
+	@Test
+	@DisplayName("selectPiece valid input returns correct Chess Piece")
+	public void selectPiece_ValidInput_ReturnsCorrectChessPiece() {
+		ChessPiece selectedPiece = game.selectPiece(new Pair(ChessConstants.B,1)); 
+		assertNotNull(selectedPiece); 
+		assertEquals(ChessConstants.WHITE, selectedPiece.getColor(), "Expected chess pieceto be white"); 
+		assertEquals(ChessConstants.PAWN, selectedPiece.getRank(), "Expected chess piece to be PAWN rank"); 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 
