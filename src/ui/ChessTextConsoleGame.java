@@ -372,7 +372,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		case "G":
 			return G; 
 		case "H":
-			return F; 
+			return H; 
 		default:
 			return -1; 
 			
