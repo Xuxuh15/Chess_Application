@@ -27,7 +27,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	/**
 	 * the chess board
 	 */
-	private ChessBoard board = new ChessBoard(); 
+	private ChessBoard board;  
 	
 	/**
 	 * Represents whether current player has moved
@@ -41,7 +41,36 @@ public class ChessTextConsoleGame implements ChessConstants {
 	private ChessLogic logic; 
 	
 	
-	//maybe move error handling to the play game method instead of getuserInput
+	//Getter methods -- primarily for testing purposes
+	
+	public boolean getHasMoved() {
+		return this.hasMoved; 
+	}
+	
+	public char getCurrentPlayer() {
+		return currentPlayer; 
+	}
+	
+	public boolean getCheckMate() {
+		return this.checkMate; 
+	}
+	
+	public ChessPiece[] getBlackChessPieces() {
+		return this.piecesBlack; 
+	}
+	
+	public ChessPiece[] getWhiteChessPieces() {
+		return this.piecesWhite; 
+	}
+	
+	
+	/**
+	 * Constructor. 
+	 * @param board chess board object. 
+	 */
+	public ChessTextConsoleGame(ChessBoard board) {
+		this.board = board; 
+	}
 	
 	/**
 	 * Starts a new chess game
@@ -195,7 +224,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 * @param in scanner
 	 * @return the currently selected chess piece
 	 */
-	private ChessPiece selectChessPiece(Scanner in) throws IllegalArgumentException {
+	public ChessPiece selectChessPiece(Scanner in) throws IllegalArgumentException {
 		System.out.println("\n Select a chess piece"); 
 		//get player move
 		Pair chessPieceSelection = getUserInput(in); 
@@ -229,7 +258,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 * @return false if not in check
 	 * @throws IllegalArgumentException if the selected piece is not the king
 	 */
-	private boolean inCheck(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
+	public boolean inCheck(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
 		
 		if(currentPlayer == WHITE) {
 			if(this.logic.isChecked(this.board, this.piecesBlack, this.piecesWhite[INDEXKING].getPos())){
@@ -400,7 +429,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	/**
 	 * Sets up a new game.
 	 */
-	private void setUpGame() {
+	public void setUpGame() {
 		//game logic
 		this.logic = new ChessLogic();
 		
@@ -440,7 +469,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 */
 	public static void main(String[] args) {
 		
-		ChessTextConsoleGame chess = new ChessTextConsoleGame(); 
+		ChessTextConsoleGame chess = new ChessTextConsoleGame(new ChessBoard()); 
 		
 		chess.playGame(); 
 		
