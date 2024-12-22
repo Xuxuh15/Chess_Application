@@ -230,7 +230,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		Pair chessPieceSelection = getUserInput(in); 
 		//get the selected piece
 		in.nextLine(); 
-		ChessPiece selectedPiece = selectPiece(board, chessPieceSelection); 
+		ChessPiece selectedPiece = selectPiece(chessPieceSelection); 
 		if(selectedPiece == null) {
 			throw new IllegalArgumentException("Illegal Move: You selected an empty squre"); 
 		}
@@ -340,10 +340,10 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 * @return the chess piece selected
 	 * @throws ArrayIndexOutOfBoundsException for specified square that is outside the board parameters
 	 */
-	public ChessPiece selectPiece(ChessBoard board, Pair square) 
+	public ChessPiece selectPiece(Pair square) 
 		throws ArrayIndexOutOfBoundsException{
 		
-		return board.checkSpace(square.row(), square.col()); 
+		return this.board.checkSpace(square.row(), square.col()); 
 	}
 	
 	
@@ -355,28 +355,42 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 */
 	public int convertLettertoNum(String l) {
 		
-		switch(l.toUpperCase()) {
+		int val = -1; 
 		
-		case "A":
-			return A; 
-		case "B":
-			return B; 
-		case "C":
-			return C; 
-		case "D":
-			return D; 
-		case "E":
-			return E; 
-		case "F":
-			return F; 
-		case "G":
-			return G; 
-		case "H":
-			return H; 
-		default:
-			return -1; 
+		if(l != null) {
+			switch(l.toUpperCase()) {
 			
+			case "A":
+				val = A;
+				break;
+			case "B":
+				val = B;
+				break;
+			case "C":
+				val = C;
+				break;
+			case "D":
+				val = D;
+				break;
+			case "E":
+				val = E;
+				break;
+			case "F":
+				val = F;
+				break;
+			case "G":
+				val = G;
+				break;
+			case "H":
+				val = H; 
+				break;
+			default:
+				break;  
+				
+			}
 		}
+		return val; 
+		
 	}
 	
 	/**
