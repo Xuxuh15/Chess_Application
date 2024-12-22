@@ -49,20 +49,8 @@ public class ChessTextConsoleGame implements ChessConstants {
 	public void playGame() {
 		
 		Scanner in = new Scanner(System.in);
-		//game logic
-		logic = new ChessLogic();
 		
-		//reset game parameters
-		checkMate = false ;
-		currentPlayer = WHITE; 
-		board.resetBoard();
-		
-		//generate the chess pieces
-		logic.generatePieces(piecesWhite, WHITE); //white pieces
-		logic.generatePieces(piecesBlack, BLACK); //black pieces
-		
-		//set up the board
-		logic.setUpBoard(board, piecesWhite, piecesBlack);
+		this.setUpGame();
 		
 		//start game
 		while(!checkMate) {
@@ -189,7 +177,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 					System.out.println("Input must be in format of number:letter"); 
 				}
 				catch(IllegalArgumentException ex) {
-					System.out.println(ex); 
+					System.out.println(ex.getMessage()); 
 				}
 				}
 				
@@ -407,6 +395,43 @@ public class ChessTextConsoleGame implements ChessConstants {
 			
 		}
 		System.out.println( "\n   " + "-----------------"); 
+	}
+	
+	/**
+	 * Sets up a new game.
+	 */
+	private void setUpGame() {
+		//game logic
+		this.logic = new ChessLogic();
+		
+		this.resetGame();
+		
+		this.generatePiecesAndSetUpBoard();
+		
+		
+	}
+	
+	/**
+	 * Generates the chess piece objects and sets up the board. 
+	 */
+	private void generatePiecesAndSetUpBoard() {
+		//generate the chess pieces
+		logic.generatePieces(piecesWhite, WHITE); //white pieces
+		logic.generatePieces(piecesBlack, BLACK); //black pieces
+		
+		//set up the board
+		logic.setUpBoard(board, piecesWhite, piecesBlack);
+		
+		
+	}
+	/**
+	 * Reset the game parameters for a new game.
+	 */
+	private void resetGame() {
+		//reset game parameters
+		checkMate = false ;
+		currentPlayer = WHITE; 
+		board.resetBoard();
 	}
 	
 	/**
