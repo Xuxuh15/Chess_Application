@@ -38,6 +38,8 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 */
 	private char currentPlayer; 
 	
+	private ChessLogic logic; 
+	
 	
 	//maybe move error handling to the play game method instead of getuserInput
 	
@@ -48,7 +50,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		
 		Scanner in = new Scanner(System.in);
 		//game logic
-		ChessLogic logic = new ChessLogic();
+		logic = new ChessLogic();
 		
 		//reset game parameters
 		checkMate = false ;
@@ -74,83 +76,61 @@ public class ChessTextConsoleGame implements ChessConstants {
 				displayBoard(board); 
 				
 				try {
-					System.out.println("\n Select a chess piece"); 
-					//get player move
-					Pair chessPieceSelection = getUserInput(in); 
-					System.out.println("Pick a destination square"); 
-					Pair playerMove = getUserInput(in); 
-					//get the selected piece
-					ChessPiece p = selectPiece(board, chessPieceSelection); 
 					
-					if(p.getColor() != currentPlayer) {
-						System.out.println("Illegal Move: Cannot select opponent's pieces"); 
-						break; 
-					}
+					ChessPiece selectedPiece = selectChessPiece(in); 
+					Pair playerMove = getDestinationSquare(in); 
 					
-					//if the player is in check, make sure they move the king piece
-					if(currentPlayer == WHITE) {
-						if(logic.isChecked(board, piecesBlack, piecesWhite[INDEXKING].getPos())){
-							if(p.getRank() != KING) {
-								System.out.println("Illegal Selection: King is in check");
-								break; 
-							}
-						}
-					}
-					else {
-						if(logic.isChecked(board, piecesWhite, piecesBlack[INDEXKING].getPos())){
-							if(p.getRank() != KING) {
-								System.out.println("Illegal Selection: King is in check");
-								break; 
-							}
-						}
-					}
+					//check to make sure player chooses correct color
+					selectedCorrectColor(currentPlayer, selectedPiece); 
+					
+					inCheck(currentPlayer, selectedPiece); //checks if player is in check
 					
 					
 					//verify the move is legal and then move
-					switch(p.getRank()) {
+					switch(selectedPiece.getRank()) {
 					
 					case PAWN: 
-						if(logic.verifyMovePawn(board, p, playerMove)) {
-							logic.moveAndUpdate(board, p, playerMove);
+						if(logic.verifyMovePawn(board, selectedPiece, playerMove)) {
+							logic.moveAndUpdate(board, selectedPiece, playerMove);
 							hasMoved = true; 
 							
 						}
 						break; 
 					case KNIGHT:
-						if(logic.verifyMoveKnight(board, p, playerMove)) {
-							logic.moveAndUpdate(board, p, playerMove);
+						if(logic.verifyMoveKnight(board, selectedPiece, playerMove)) {
+							logic.moveAndUpdate(board, selectedPiece, playerMove);
 							hasMoved = true; 
 						}
 						break; 
 					case BISHOP:
-						if(logic.verifyMoveBishop(board, p, playerMove)) {
-							logic.moveAndUpdate(board, p, playerMove);
+						if(logic.verifyMoveBishop(board, selectedPiece, playerMove)) {
+							logic.moveAndUpdate(board, selectedPiece, playerMove);
 							hasMoved = true; 
 						}
 						break; 
 					case ROOK:
-						if(logic.verifyMoveRook(board, p, playerMove)) {
-							logic.moveAndUpdate(board, p, playerMove);
+						if(logic.verifyMoveRook(board, selectedPiece, playerMove)) {
+							logic.moveAndUpdate(board, selectedPiece, playerMove);
 							hasMoved = true; 
 						}
 						break;
 					case QUEEN:
-						if(logic.verifyMoveQueen(board, p, playerMove)) {
-							logic.moveAndUpdate(board, p, playerMove);
+						if(logic.verifyMoveQueen(board, selectedPiece, playerMove)) {
+							logic.moveAndUpdate(board, selectedPiece, playerMove);
 							hasMoved = true; 
 						}
 						break;
 					case KING:
 						if(currentPlayer == WHITE) {
-							if(logic.verifyMoveKing(board,piecesWhite, p, playerMove)) {
-								logic.moveAndUpdate(board, p, playerMove);
+							if(logic.verifyMoveKing(board,piecesWhite, selectedPiece, playerMove)) {
+								logic.moveAndUpdate(board, selectedPiece, playerMove);
 								hasMoved = true;
 							}
 						}
 						
 						else {
-							if(logic.verifyMoveKing(board,piecesBlack, p, playerMove)) {
-								logic.moveAndUpdate(board, p, playerMove);
+							if(logic.verifyMoveKing(board,piecesBlack, selectedPiece, playerMove)) {
+								logic.moveAndUpdate(board, selectedPiece, playerMove);
 								hasMoved = true;
 						 
 							}
@@ -208,6 +188,10 @@ public class ChessTextConsoleGame implements ChessConstants {
 				catch(NumberFormatException ex) {
 					System.out.println("Input must be in format of number:letter"); 
 				}
+				catch(IllegalArgumentException ex) {
+					System.out.println(ex); 
+				}
+				}
 				
 			}
 			
@@ -217,7 +201,84 @@ public class ChessTextConsoleGame implements ChessConstants {
 		
 		
 		
+	
+	/**
+	 * Returns the chess piece at a selected square.
+	 * @param in scanner
+	 * @return the currently selected chess piece
+	 */
+	private ChessPiece selectChessPiece(Scanner in) throws IllegalArgumentException {
+		System.out.println("\n Select a chess piece"); 
+		//get player move
+		Pair chessPieceSelection = getUserInput(in); 
+		//get the selected piece
+		in.nextLine(); 
+		ChessPiece selectedPiece = selectPiece(board, chessPieceSelection); 
+		if(selectedPiece == null) {
+			throw new IllegalArgumentException("Illegal Move: You selected an empty squre"); 
+		}
+		return selectedPiece; 
+		
+		
 	}
+	
+	/**
+	 * Returns a Pair representing the destination square that a player wants to move their selected piece.s
+	 * @param in scanner
+	 * @return a pair representing the square the player wants to move their selected piece
+	 */
+	private Pair getDestinationSquare(Scanner in) {
+		System.out.println("Pick a destination square"); 
+		Pair playerMove = getUserInput(in);
+		in.nextLine(); 
+		return playerMove; 
+	}
+	
+	/**
+	 * Throws an exception if player tries to move a chess piece that is not the king while in check
+	 * @param currentPlayer the current player color
+	 * @param selectedPiece the currently selected piece
+	 * @return false if not in check
+	 * @throws IllegalArgumentException if the selected piece is not the king
+	 */
+	private boolean inCheck(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
+		
+		if(currentPlayer == WHITE) {
+			if(this.logic.isChecked(this.board, this.piecesBlack, this.piecesWhite[INDEXKING].getPos())){
+				if(selectedPiece.getRank() != KING) {
+					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
+					 
+				}
+			}
+		}
+		else {
+			if(logic.isChecked(this.board, this.piecesWhite, this.piecesBlack[INDEXKING].getPos())){
+				if(selectedPiece.getRank() != KING) {
+					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
+				}
+			}
+		}
+		
+		return false; 
+		
+		
+	}
+	
+	/**
+	 * 
+	 * @param currentPlayer the current player color
+	 * @param selectedPiece the selected piece 
+	 * @return true if player selected correct color
+	 * @throws IllegalArgumentException if player selects opponents chess piece
+	 */
+	private boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
+		//check to make sure player chooses correct color
+		if(selectedPiece.getColor() != currentPlayer) {
+			throw new IllegalArgumentException("Illegal Move: Cannot select opponent's pieces"); 
+		}
+		return true; 
+	}
+	
 	
 	/**
 	 * Gets user input

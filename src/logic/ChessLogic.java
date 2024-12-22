@@ -422,7 +422,7 @@ public class ChessLogic implements ChessConstants {
 		 * @param newPos the new position
 		 * @param pieceToMove the chess piece to be updated
 		 */
-		public void moveAndUpdate( ChessBoard board,ChessPiece pieceToMove, Pair newPos) {
+		public void moveAndUpdate(ChessBoard board,ChessPiece pieceToMove, Pair newPos) {
 			
 			board.move(pieceToMove.getPos(), newPos);
 			pieceToMove.setPos(newPos.row(), newPos.col());
