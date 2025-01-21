@@ -1,9 +1,8 @@
 package logic;
 
+import helpers.Pair;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-
-import helpers.Pair;
 
 /**
  * Class that is responsible for handling the chess game logic
@@ -297,9 +296,7 @@ public class ChessLogic implements ChessConstants {
 					System.out.println("Illegal Move: Cannot move to square where king is attacked"); 
 					return false; 
 				}
-				return true; 
 			}
-			
 			
 			return true; 
 		}
