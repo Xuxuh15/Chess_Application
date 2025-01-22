@@ -10,6 +10,46 @@ import java.io.PrintStream;
  */
 public class ChessLogic implements ChessConstants {
 	
+	VerificationStrategy verificationStrategy = null; 
+	
+	
+	
+	public boolean verifyMove(ChessBoard board, ChessPiece pieceToMove, Pair newPos) {
+		
+		boolean isValidMove = false; 
+		
+		
+		switch(pieceToMove.getRank()) {
+		
+		case PAWN:
+			verificationStrategy = new VerifyMovePawn(); 
+			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos); 
+			break; 
+		case KNIGHT:
+			verificationStrategy = new VerifyMoveKnight(); 
+			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+			break; 
+		case BISHOP:
+			verificationStrategy = new VerifyMoveBishop(); 
+			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+			break; 
+		case ROOK:
+			verificationStrategy = new VerifyMoveRook(); 
+			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+			break; 
+		case QUEEN:
+			verificationStrategy = new VerifyMoveQueen(); 
+			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+			break; 
+		case KING:
+			break; 
+		default:
+			System.out.println("Method<verifyMove> Error: Chess Piece not recognonized"); 
+			break; 
+		}
+		return isValidMove; 
+	}
+	
 
 	//must add  en pesant rule later
 		/**
@@ -378,9 +418,9 @@ public class ChessLogic implements ChessConstants {
 		 * @param kingPos the position of the king on the board
 		 * @return boolean indicates whether a check-mate has been achieved
 		 */
-		public boolean checkMate(ChessBoard board, ChessPiece[] arr, Pair kingPos) {
+		public boolean checkmate(ChessBoard board, ChessPiece[] arr, Pair kingPos) {
 			
-			//at any given positon, a king piece has maximum 8 possible moves
+			//at any given position, a king piece has maximum 8 possible moves
 			Pair[] possibleMoves = new Pair[8];
 			int counter = 0; 
 			
@@ -399,14 +439,12 @@ public class ChessLogic implements ChessConstants {
 				}
 				
 			}
-			//now we check whether moving the king to one of the possible squares will result in the king being safe
+			//now we check whether there exists a destination square that results in no check
 			for(int i = 0; i < counter; i++) {
 				if(!isChecked(board,arr,possibleMoves[i])) {
 					return false; 
 				}
 			}
-			
-			
 			
 			//this means that there is no possible move the king can make where it is not in check
 			return true; 
