@@ -408,7 +408,7 @@ public class ChessLogic implements ChessConstants {
 			
 			
 			
-			//this means that there is no possible move the king can make where it is not in check or check mate
+			//this means that there is no possible move the king can make where it is not in check
 			return true; 
 		}
 		
