@@ -2,10 +2,10 @@ package logic;
 
 import helpers.Pair;
 
-public class verifyMoveQueen implements VerificationStrategy {
+public class VerifyMoveQueen implements VerificationStrategy {
 	
-	verifyMoveRook rookVerification = new verifyMoveRook(); 
-	verifyMoveBishop bishopVerification = new verifyMoveBishop(); 
+	VerifyMoveRook rookVerification = new VerifyMoveRook(); 
+	VerifyMoveBishop bishopVerification = new VerifyMoveBishop(); 
 	
 
 	@Override

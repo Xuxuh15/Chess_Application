@@ -1,3 +1,4 @@
+package logic;
 
 
 import helpers.Pair;
@@ -6,7 +7,7 @@ import logic.ChessLogic;
 import logic.ChessPiece;
 
 
-public class verifyMoveKnight implements VerificationStrategy{
+public class VerifyMoveKnight implements VerificationStrategy{
 
     ChessLogic logic = new ChessLogic(); 
 

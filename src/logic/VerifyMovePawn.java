@@ -1,9 +1,10 @@
+package logic;
 
 
 import helpers.Pair;
 import logic.*; 
 
-public class verifyMovePawn implements VerificationStrategy {
+public class VerifyMovePawn implements VerificationStrategy {
 
     ChessLogic logic = new ChessLogic(); 
 

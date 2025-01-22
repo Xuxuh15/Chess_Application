@@ -1,10 +1,11 @@
+package logic;
 
 import helpers.Pair;
 import logic.ChessBoard;
 import logic.ChessPiece;
 import logic.ChessLogic;
 
-public class verifyMoveBishop implements VerificationStrategy {
+public class VerifyMoveBishop implements VerificationStrategy {
 
     ChessLogic logic = new ChessLogic(); 
 

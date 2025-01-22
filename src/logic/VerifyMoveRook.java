@@ -2,7 +2,7 @@ package logic;
 
 import helpers.Pair;
 
-public class verifyMoveRook implements VerificationStrategy  {
+public class VerifyMoveRook implements VerificationStrategy  {
 	
 	ChessLogic logic = new ChessLogic(); 
 
