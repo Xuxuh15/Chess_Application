@@ -18,11 +18,11 @@ public class ChessLogic implements ChessConstants {
 	/**
 	 * Array containing the white player's chess pieces
 	 */
-	private ChessPiece[] whitePlayerPieces; 
+	private ChessPiece[] whitePlayerPieces = null; 
 	/**
 	 * Array containing the black player's chess pieces
 	 */
-	private ChessPiece[] blackPlayerPieces; 
+	private ChessPiece[] blackPlayerPieces = null; 
 	
 	
 	/**
@@ -68,7 +68,6 @@ public class ChessLogic implements ChessConstants {
 					this.verificationStrategy = new VerifyMoveKing(this.whitePlayerPieces);
 				}
 				isValidMove = this.verificationStrategy.verifyMove(board, pieceToMove, newPos); 
-				
 				break; 
 			default:
 				System.out.println("Method<verifyMove> Error: Chess Piece not recognonized"); 
@@ -533,6 +532,11 @@ public class ChessLogic implements ChessConstants {
 		 */
 		public void setUpBoard(ChessBoard board) {
 			
+			if(this.blackPlayerPieces == null || this.whitePlayerPieces == null) {
+				System.out.println("Method<setUpBoard> Error: chess piece arrays are empty. First generate pieces before setting up the board"); 
+				return; 
+			}
+			
 			//set up the white pieces
 			int counter = 0; 
 			for(int i = STARTWHITE; i >= 0; i-- ) {
@@ -563,7 +567,7 @@ public class ChessLogic implements ChessConstants {
 		 * Setter method for blackPlayerPieces
 		 * @param arr populated array 
 		 */
-		public void setBlackChessArray(ChessPiece[] arr) {
+		public void setBlackPlayerChessArray(ChessPiece[] arr) {
 			if(arr != null)this.blackPlayerPieces = arr; 
 			
 		}
