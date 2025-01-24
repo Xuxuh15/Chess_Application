@@ -10,7 +10,19 @@ import java.io.PrintStream;
  */
 public class ChessLogic implements ChessConstants {
 	
+	/**
+	 * Strategy object used to verify a move is legal
+	 */
 	VerificationStrategy verificationStrategy = null; 
+	
+	/**
+	 * Array containing the white player's chess pieces
+	 */
+	ChessPiece[] whitePlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
+	/**
+	 * Array containing the black player's chess pieces
+	 */
+	ChessPiece[] blackPlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
 	
 	
 	
@@ -21,31 +33,31 @@ public class ChessLogic implements ChessConstants {
 		
 		switch(pieceToMove.getRank()) {
 		
-		case PAWN:
-			verificationStrategy = new VerifyMovePawn(); 
-			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos); 
-			break; 
-		case KNIGHT:
-			verificationStrategy = new VerifyMoveKnight(); 
-			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
-			break; 
-		case BISHOP:
-			verificationStrategy = new VerifyMoveBishop(); 
-			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
-			break; 
-		case ROOK:
-			verificationStrategy = new VerifyMoveRook(); 
-			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
-			break; 
-		case QUEEN:
-			verificationStrategy = new VerifyMoveQueen(); 
-			isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
-			break; 
-		case KING:
-			break; 
-		default:
-			System.out.println("Method<verifyMove> Error: Chess Piece not recognonized"); 
-			break; 
+			case PAWN:
+				verificationStrategy = new VerifyMovePawn(); 
+				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos); 
+				break; 
+			case KNIGHT:
+				verificationStrategy = new VerifyMoveKnight(); 
+				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+				break; 
+			case BISHOP:
+				verificationStrategy = new VerifyMoveBishop(); 
+				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+				break; 
+			case ROOK:
+				verificationStrategy = new VerifyMoveRook(); 
+				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+				break; 
+			case QUEEN:
+				verificationStrategy = new VerifyMoveQueen(); 
+				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
+				break; 
+			case KING:
+				break; 
+			default:
+				System.out.println("Method<verifyMove> Error: Chess Piece not recognonized"); 
+				break; 
 		}
 		return isValidMove; 
 	}
