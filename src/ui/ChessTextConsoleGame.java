@@ -15,7 +15,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	/**
 	 * Represents a check mate
 	 */
-	private boolean checkMate; 
+	private boolean checkmate; 
 	/**
 	 * White chess pieces
 	 */
@@ -52,7 +52,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	}
 	
 	public boolean getCheckMate() {
-		return this.checkMate; 
+		return this.checkmate; 
 	}
 	
 	public ChessPiece[] getBlackChessPieces() {
@@ -82,7 +82,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		this.setUpGame();
 		
 		//start game
-		while(!checkMate) {
+		while(!checkmate) {
 			
 			hasMoved = false; 
 			
@@ -102,44 +102,18 @@ public class ChessTextConsoleGame implements ChessConstants {
 					
 					inCheck(currentPlayer, selectedPiece); //checks if player is in check
 					
-					
+					//verify move is legal
 					boolean isLegalMove = logic.verifyMove(board, selectedPiece, playerMove); 
 					if(isLegalMove) {
 						logic.moveAndUpdate(board, selectedPiece, playerMove);
 						hasMoved = true;
 					}
+					
 					//check for check mate
-					
-					KingPiece king; 
-					
-					if(currentPlayer == WHITE) {
-						king = (KingPiece)piecesBlack[INDEXKING]; 
-						if(logic.isChecked(board, piecesWhite, king.getPos())){
-							if(logic.checkmate(board, piecesWhite, king.getPos())) {
-								System.out.println("Checkmate: White player wins"); 
-								
-								checkMate = true; 
-							}
-							//set king's checked parameter to true
-							king.setIsChecked(true);
-							
-						}
-					}
-					else {
-						king = (KingPiece)piecesWhite[INDEXKING]; 
-						if(logic.isChecked(board, piecesBlack, king.getPos())){
-							if(logic.checkmate(board, piecesBlack, king.getPos())) {
-								System.out.println("Checkmate: Black player wins"); 
-								
-								checkMate = true; 
-							}
-							//set king's checked parameter to true
-							king.setIsChecked(true);
-						}
-					}
+					this.checkmate = isCheckmate(); 
 					
 					//toggle the current color
-					if(!checkMate && hasMoved) {
+					if(!checkmate && hasMoved) {
 						currentPlayer = currentPlayer == WHITE ? BLACK: WHITE; 
 						hasMoved = false; 
 					}
@@ -160,13 +134,11 @@ public class ChessTextConsoleGame implements ChessConstants {
 				catch(IllegalArgumentException ex) {
 					System.out.println(ex);  
 				}
-				}
-				
 			}
-			
-			
-			
+				
 		}
+			
+	}
 		
 		
 		
@@ -296,6 +268,41 @@ public class ChessTextConsoleGame implements ChessConstants {
 		throws ArrayIndexOutOfBoundsException{
 		
 		return this.board.checkSpace(square.row(), square.col()); 
+	}
+	
+	/**
+	 * Checks whether checkmate condition has been achieved
+	 * @param king the king chess piece being checked
+	 * @return boolean whether checkmate condition has been achieved
+	 */ 
+	private boolean isCheckmate() {
+		boolean checkmate = false; 
+		KingPiece king = null; 
+		if(currentPlayer == WHITE) {
+			king = (KingPiece)piecesBlack[ChessConstants.INDEXKING]; 
+			if(logic.isChecked(board, piecesWhite, king.getPos())){
+				if(logic.checkmate(board, piecesWhite, king.getPos())) {
+					checkmate = true; 
+					System.out.println("Checkmate! White player wins!"); 
+				}
+				//set king's checked parameter to true
+				king.setIsChecked(true);
+				
+			}
+		}
+		else {
+			king = (KingPiece)piecesWhite[ChessConstants.INDEXKING]; 
+			if(logic.isChecked(board, piecesBlack, king.getPos())){
+				if(logic.checkmate(board, piecesBlack, king.getPos())) {
+					checkmate = true; 
+					System.out.println("Checkmate! Black player wins!");
+				}
+				//set king's checked parameter to true
+				king.setIsChecked(true);
+			}
+		}
+		return checkmate;
+		
 	}
 	
 	
@@ -428,7 +435,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 */
 	private void resetGame() {
 		//reset game parameters
-		checkMate = false ;
+		checkmate = false ;
 		currentPlayer = WHITE; 
 		board.resetBoard();
 	}
