@@ -6,6 +6,6 @@ public interface VerificationStrategy {
 
 
     boolean verifyMove(ChessBoard board, ChessPiece pieceToMove, Pair destinationSquare) 
-    throws ArrayIndexOutOfBoundsException; 
+    throws ArrayIndexOutOfBoundsException, IllegalArgumentException; 
     
 }

@@ -17,8 +17,9 @@ public class VerifyMoveBishop implements VerificationStrategy {
 		 * @param newPos the destination position
 		 * @return boolean indicates whether move made is legal
 		 * @throws ArrayIndexOutOfBoundsException a move that is out of bounds is automatically illegal
+		 * @throws IllegalArgumentException a move that is not legal
 		 */
-    public boolean verifyMove(ChessBoard board, ChessPiece bishop, Pair newPos) throws ArrayIndexOutOfBoundsException{
+    public boolean verifyMove(ChessBoard board, ChessPiece bishop, Pair newPos) throws ArrayIndexOutOfBoundsException, IllegalArgumentException{
 
         int deltaX = newPos.col() - bishop.getPos().col(); 
 			int deltaY = newPos.row() - bishop.getPos().row(); 
@@ -26,14 +27,12 @@ public class VerifyMoveBishop implements VerificationStrategy {
 			
 			//make sure the piece moves along a diagonal axis
 			if(Math.abs(deltaX) != Math.abs(deltaY)) {
-				System.out.println("Illegal Move:" + bishop.toString() + " can only move along the diaginal axis."); 
-				return false; 
+				throw new IllegalArgumentException("Illegal Move:" + bishop.toString() + " can only move along the diaginal axis."); 
 			}
 			
 			//make sure the new position is not equal to the old position
 			if(deltaX == 0 && deltaY == 0) {
-				System.out.println("Illegal Move:" + bishop.toString() + " is already in that square."); 
-				return false; 
+				throw new IllegalArgumentException("Illegal Move:" + bishop.toString() + " is already in that square.");  
 			}
 			
 			//gives us the direction the bishop is moving along x and y axis
@@ -46,8 +45,7 @@ public class VerifyMoveBishop implements VerificationStrategy {
 			while(y_coord != newPos.row() && x_coord != newPos.col()) {
 				//make sure that the path to the destination is free
 				if(!logic.isEmpty(board, y_coord, x_coord)) {
-					System.out.println("Illegal Move:" + bishop.toString() + " cannot jump pieces"); 
-					return false; 
+					throw new IllegalArgumentException("Illegal Move:" + bishop.toString() + " cannot jump pieces"); 
 				}
 				x_coord += uVectorX; 
 				y_coord += uVectorY; 

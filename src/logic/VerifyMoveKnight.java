@@ -19,22 +19,21 @@ public class VerifyMoveKnight implements VerificationStrategy{
 		 * @param newPos the new position
 		 * @return boolean indicates whether move is legal or not
 		 * @throws ArrayIndexOutOfBoundsException a move that is out of bounds is automatically illegal
+		 * @throws IllegalArgumentException if a move is not legal
 		 */
-    public boolean verifyMove(ChessBoard board, ChessPiece knight, Pair newPos) throws ArrayIndexOutOfBoundsException {
+    public boolean verifyMove(ChessBoard board, ChessPiece knight, Pair newPos) throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
 
 				int deltaY = Math.abs(knight.getPos().row() - newPos.row()); 
 				int deltaX = Math.abs(knight.getPos().col() - newPos.col());
 				
 				//make sure move is not over bounds
 				if(deltaY > 2 || deltaX > 2 || deltaX <= 0 || deltaY <= 0) {
-					System.out.println("Illegal Move:  Knight must move in a L-sequence "); 
-					return false; 
+					throw new IllegalArgumentException("Illegal Move:  Knight must move in a L-sequence "); 
 				}
 				
 				//make sure the move is a L-shape
 				if(deltaY == 2 && deltaX != 1 || deltaY == 1 && deltaX != 2) {
-					System.out.print("Illegal Move: Knight must move in a L-sequence");
-					return false; 
+					throw new IllegalArgumentException("Illegal Move: Knight must move in a L-sequence"); 
 				}
 				
 				//if the move is valid, then the destination square must be empty or able to capture
