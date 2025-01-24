@@ -421,9 +421,9 @@ public class ChessTextConsoleGame implements ChessConstants {
 	private void generatePiecesAndSetUpBoard() {
 		//generate the chess pieces
 		this.piecesWhite = logic.generatePieces(WHITE); //white pieces
-		logic.setBlackChessArray(piecesWhite);
+		logic.setWhitePlayerChessArray(piecesWhite);
 		this.piecesBlack = logic.generatePieces(BLACK); //black pieces
-		logic.setWhitePlayerChessArray(piecesBlack);
+		logic.setBlackPlayerChessArray(piecesBlack);
 		
 		//set up the board
 		logic.setUpBoard(board);
