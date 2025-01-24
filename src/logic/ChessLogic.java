@@ -13,19 +13,25 @@ public class ChessLogic implements ChessConstants {
 	/**
 	 * Strategy object used to verify a move is legal
 	 */
-	VerificationStrategy verificationStrategy = null; 
+	private VerificationStrategy verificationStrategy = null; 
 	
 	/**
 	 * Array containing the white player's chess pieces
 	 */
-	ChessPiece[] whitePlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
+	private ChessPiece[] whitePlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
 	/**
 	 * Array containing the black player's chess pieces
 	 */
-	ChessPiece[] blackPlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
+	private ChessPiece[] blackPlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
 	
 	
-	
+	/**
+	 * Verifies a move is legal
+	 * @param board the chess board
+	 * @param pieceToMove the chess piece to move
+	 * @param newPos the destination square
+	 * @return boolean whether the move is legal or not
+	 */
 	public boolean verifyMove(ChessBoard board, ChessPiece pieceToMove, Pair newPos) {
 		
 		boolean isValidMove = false; 
@@ -34,26 +40,35 @@ public class ChessLogic implements ChessConstants {
 		switch(pieceToMove.getRank()) {
 		
 			case PAWN:
-				verificationStrategy = new VerifyMovePawn(); 
+				this.verificationStrategy = new VerifyMovePawn(); 
 				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos); 
 				break; 
 			case KNIGHT:
-				verificationStrategy = new VerifyMoveKnight(); 
+				this.verificationStrategy = new VerifyMoveKnight(); 
 				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
 				break; 
 			case BISHOP:
-				verificationStrategy = new VerifyMoveBishop(); 
+				this.verificationStrategy = new VerifyMoveBishop(); 
 				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
 				break; 
 			case ROOK:
-				verificationStrategy = new VerifyMoveRook(); 
+				this.verificationStrategy = new VerifyMoveRook(); 
 				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
 				break; 
 			case QUEEN:
-				verificationStrategy = new VerifyMoveQueen(); 
+				this.verificationStrategy = new VerifyMoveQueen(); 
 				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos);
 				break; 
 			case KING:
+				if(pieceToMove.getColor() == ChessConstants.WHITE) {
+					this.verificationStrategy = new VerifyMoveKing(this.blackPlayerPieces); 
+					
+				}
+				else {
+					this.verificationStrategy = new VerifyMoveKing(this.whitePlayerPieces);
+				}
+				isValidMove = this.verificationStrategy.verifyMove(board, pieceToMove, newPos); 
+				
 				break; 
 			default:
 				System.out.println("Method<verifyMove> Error: Chess Piece not recognonized"); 
