@@ -19,11 +19,11 @@ public class ChessTextConsoleGame implements ChessConstants {
 	/**
 	 * White chess pieces
 	 */
-	private ChessPiece[] piecesWhite = new ChessPiece[NUMPIECES]; 
+	private ChessPiece[] piecesWhite;
 	/**
 	 * Black chess pieces
 	 */
-	private ChessPiece[] piecesBlack = new ChessPiece[NUMPIECES];
+	private ChessPiece[] piecesBlack;
 	/**
 	 * the chess board
 	 */
@@ -103,59 +103,11 @@ public class ChessTextConsoleGame implements ChessConstants {
 					inCheck(currentPlayer, selectedPiece); //checks if player is in check
 					
 					
-					//verify the move is legal and then move
-					switch(selectedPiece.getRank()) {
-					
-					case PAWN: 
-						if(logic.verifyMovePawn(board, selectedPiece, playerMove)) {
-							logic.moveAndUpdate(board, selectedPiece, playerMove);
-							hasMoved = true; 
-							
-						}
-						break; 
-					case KNIGHT:
-						if(logic.verifyMoveKnight(board, selectedPiece, playerMove)) {
-							logic.moveAndUpdate(board, selectedPiece, playerMove);
-							hasMoved = true; 
-						}
-						break; 
-					case BISHOP:
-						if(logic.verifyMoveBishop(board, selectedPiece, playerMove)) {
-							logic.moveAndUpdate(board, selectedPiece, playerMove);
-							hasMoved = true; 
-						}
-						break; 
-					case ROOK:
-						if(logic.verifyMoveRook(board, selectedPiece, playerMove)) {
-							logic.moveAndUpdate(board, selectedPiece, playerMove);
-							hasMoved = true; 
-						}
-						break;
-					case QUEEN:
-						if(logic.verifyMoveQueen(board, selectedPiece, playerMove)) {
-							logic.moveAndUpdate(board, selectedPiece, playerMove);
-							hasMoved = true; 
-						}
-						break;
-					case KING:
-						if(currentPlayer == WHITE) {
-							if(logic.verifyMoveKing(board,piecesWhite, selectedPiece, playerMove)) {
-								logic.moveAndUpdate(board, selectedPiece, playerMove);
-								hasMoved = true;
-							}
-						}
-						
-						else {
-							if(logic.verifyMoveKing(board,piecesBlack, selectedPiece, playerMove)) {
-								logic.moveAndUpdate(board, selectedPiece, playerMove);
-								hasMoved = true;
-						 
-							}
-						
-						}
-						break; 
+					boolean isLegalMove = logic.verifyMove(board, selectedPiece, playerMove); 
+					if(isLegalMove) {
+						logic.moveAndUpdate(board, selectedPiece, playerMove);
+						hasMoved = true;
 					}
-					
 					//check for check mate
 					
 					KingPiece king; 
@@ -163,7 +115,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 					if(currentPlayer == WHITE) {
 						king = (KingPiece)piecesBlack[INDEXKING]; 
 						if(logic.isChecked(board, piecesWhite, king.getPos())){
-							if(logic.checkMate(board, piecesWhite, king.getPos())) {
+							if(logic.checkmate(board, piecesWhite, king.getPos())) {
 								System.out.println("Checkmate: White player wins"); 
 								
 								checkMate = true; 
@@ -176,7 +128,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 					else {
 						king = (KingPiece)piecesWhite[INDEXKING]; 
 						if(logic.isChecked(board, piecesBlack, king.getPos())){
-							if(logic.checkMate(board, piecesBlack, king.getPos())) {
+							if(logic.checkmate(board, piecesBlack, king.getPos())) {
 								System.out.println("Checkmate: Black player wins"); 
 								
 								checkMate = true; 
@@ -206,7 +158,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 					System.out.println("Input must be in format of number:letter"); 
 				}
 				catch(IllegalArgumentException ex) {
-					System.out.println(ex.getMessage()); 
+					System.out.println(ex);  
 				}
 				}
 				
@@ -454,16 +406,20 @@ public class ChessTextConsoleGame implements ChessConstants {
 		
 	}
 	
+	//maybe move this method to a separate class
+	
 	/**
 	 * Generates the chess piece objects and sets up the board. 
 	 */
 	private void generatePiecesAndSetUpBoard() {
 		//generate the chess pieces
-		logic.generatePieces(piecesWhite, WHITE); //white pieces
-		logic.generatePieces(piecesBlack, BLACK); //black pieces
+		this.piecesWhite = logic.generatePieces(WHITE); //white pieces
+		logic.setBlackChessArray(piecesWhite);
+		this.piecesBlack = logic.generatePieces(BLACK); //black pieces
+		logic.setWhitePlayerChessArray(piecesBlack);
 		
 		//set up the board
-		logic.setUpBoard(board, piecesWhite, piecesBlack);
+		logic.setUpBoard(board);
 		
 		
 	}
