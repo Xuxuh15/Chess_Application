@@ -18,11 +18,11 @@ public class ChessLogic implements ChessConstants {
 	/**
 	 * Array containing the white player's chess pieces
 	 */
-	private ChessPiece[] whitePlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
+	private ChessPiece[] whitePlayerPieces; 
 	/**
 	 * Array containing the black player's chess pieces
 	 */
-	private ChessPiece[] blackPlayerPieces = new ChessPiece[ChessConstants.NUMPIECES]; 
+	private ChessPiece[] blackPlayerPieces; 
 	
 	
 	/**
@@ -497,25 +497,29 @@ public class ChessLogic implements ChessConstants {
 		 * @param arr the array to be populated
 		 * @param color the color of the chess piece
 		 */
-		public void generatePieces(ChessPiece[] arr, char color) {
+		public ChessPiece[] generatePieces(char color) {
 			
+			ChessPiece[] arrToReturn = new ChessPiece[ChessConstants.NUMPIECES]; 
 			//add first row of pawns from left to right
 			for(int i = 0; i < numPawns; i++) {
-				arr[i] = new ChessPiece(PAWN,color);
+				arrToReturn[i] = new ChessPiece(PAWN,color);
 			}
 			
 			int j = numPawns; 
 			
 			
 			//add chess pieces in order from left to right
-			arr[j++] = new ChessPiece(ROOK, color);
-			arr[j++] = new ChessPiece(KNIGHT, color); 
-			arr[j++] = new ChessPiece(BISHOP, color); 
-			arr[j++] = new ChessPiece(QUEEN, color); 
-			arr[j++] = new KingPiece(color); 
-			arr[j++] = new ChessPiece(BISHOP, color); 
-			arr[j++] = new ChessPiece(KNIGHT, color);
-			arr[j++] = new ChessPiece(ROOK, color); 
+			arrToReturn[j++] = new ChessPiece(ROOK, color);
+			arrToReturn[j++] = new ChessPiece(KNIGHT, color); 
+			arrToReturn[j++] = new ChessPiece(BISHOP, color); 
+			arrToReturn[j++] = new ChessPiece(QUEEN, color); 
+			arrToReturn[j++] = new KingPiece(color); 
+			arrToReturn[j++] = new ChessPiece(BISHOP, color); 
+			arrToReturn[j++] = new ChessPiece(KNIGHT, color);
+			arrToReturn[j++] = new ChessPiece(ROOK, color); 
+			
+			return arrToReturn; 
+			
 			
 			
 		}
@@ -527,16 +531,16 @@ public class ChessLogic implements ChessConstants {
 		 * @param white array of white chess pieces starting from the leftmost pawn (7A) and moving left to right
 		 * @param black array of black chess pieces starting from the leftmost pawn (2A) and moving left to right
 		 */
-		public void setUpBoard(ChessBoard board, ChessPiece[] white, ChessPiece[] black) {
+		public void setUpBoard(ChessBoard board) {
 			
 			//set up the white pieces
 			int counter = 0; 
 			for(int i = STARTWHITE; i >= 0; i-- ) {
 				for(int j = A; j < COLUMNS; j++) {
-					board.getBoard()[i][j] = white[counter]; 
-					white[counter].setPos(i,j); 
-					white[counter].setHasMoved(false);
-					white[counter].setIsCaptured(false);
+					board.getBoard()[i][j] = this.whitePlayerPieces[counter]; 
+					this.whitePlayerPieces[counter].setPos(i,j); 
+					this.whitePlayerPieces[counter].setHasMoved(false);
+					this.whitePlayerPieces[counter].setIsCaptured(false);
 					counter++; 
 				}
 			}
@@ -544,14 +548,32 @@ public class ChessLogic implements ChessConstants {
 			counter = 0; 
 			for(int i = STARTBLACK; i < ROWS; i++ ) {
 				for(int j = A; j < COLUMNS; j++) {
-					board.getBoard()[i][j] = black[counter]; 
-					black[counter].setPos(i,j); 
-					black[counter].setHasMoved(false);
-					black[counter].setIsCaptured(false);  
+					board.getBoard()[i][j] = this.blackPlayerPieces[counter]; 
+					blackPlayerPieces[counter].setPos(i,j); 
+					blackPlayerPieces[counter].setHasMoved(false);
+					blackPlayerPieces[counter].setIsCaptured(false);  
 					counter++; 
 				}
 			}
 			
+			
+		}
+		
+		/**
+		 * Setter method for blackPlayerPieces
+		 * @param arr populated array 
+		 */
+		public void setBlackChessArray(ChessPiece[] arr) {
+			if(arr != null)this.blackPlayerPieces = arr; 
+			
+		}
+		
+		/**
+		 * Setter method for whitePlayerPieces
+		 * @param arr populated array
+		 */
+		public void setWhitePlayerChessArray(ChessPiece[] arr) {
+			if(arr != null)this.whitePlayerPieces = arr;
 			
 		}
 		
