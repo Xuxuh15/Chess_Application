@@ -2,8 +2,14 @@ package logic;
 
 import helpers.Pair;
 
+/**
+ * Verifies whether a move made by a rook is legal.
+ */
 public class VerifyMoveRook implements VerificationStrategy  {
 	
+	/**
+	 * Chess logic class.
+	 */
 	ChessLogic logic = new ChessLogic(); 
 
 	@Override
@@ -16,7 +22,7 @@ public class VerifyMoveRook implements VerificationStrategy  {
 	 * @return boolean indicates whether the move is legal or not
 	 */
 	public boolean verifyMove(ChessBoard board, ChessPiece rook, Pair newPos)
-			throws ArrayIndexOutOfBoundsException {
+			throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
 		//change in x and y coordinates 
 		int deltaX = newPos.col() - rook.getPos().col(); 
 		int deltaY = newPos.row() - rook.getPos().row(); 
@@ -24,8 +30,7 @@ public class VerifyMoveRook implements VerificationStrategy  {
 		
 		//make sure the rook moves either horizontally or vertically but not both
 		if(!(deltaX == 0 ^ deltaY == 0) ) {
-			System.out.println("Illegal Move:" + rook.toString() +  " can move either horizontally or vertically but not both");
-			return false; 
+			throw new IllegalArgumentException("Illegal Move:" + rook.toString() +  " can move either horizontally or vertically but not both"); 
 		}
 		
 		//temporary coordinates
@@ -42,8 +47,7 @@ public class VerifyMoveRook implements VerificationStrategy  {
 			 //traverse the path (y-axis) to the destination
 			 while(y_coord != newPos.row()) {
 				 if(!logic.isEmpty(board,y_coord, x_coord)) {
-					 System.out.println("Illegal Move:" + rook.toString() + " cannot jump pieces"); 
-					 return false; 
+					 throw new IllegalArgumentException("Illegal Move:" + rook.toString() + " cannot jump pieces"); 
 				 }
 				 //increment counter var
 				 y_coord += vectorY;
@@ -59,8 +63,7 @@ public class VerifyMoveRook implements VerificationStrategy  {
 			 //traverse path (x-axis) to the destination
 			while(x_coord != newPos.col()) {
 				if(!logic.isEmpty(board,y_coord, x_coord)) {
-					 System.out.println("Illegal Move:" + rook.toString() + " cannot jump pieces"); 
-					 return false; 
+					 throw new IllegalArgumentException("Illegal Move:" + rook.toString() + " cannot jump pieces"); 
 				 }
 				 //increment counter var
 				 x_coord += vectorX;

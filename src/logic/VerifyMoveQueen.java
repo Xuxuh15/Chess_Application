@@ -2,10 +2,14 @@ package logic;
 
 import helpers.Pair;
 
+/**
+ * Verifies whether a move made by the queen is legal.
+ */
 public class VerifyMoveQueen implements VerificationStrategy {
 	
-	VerifyMoveRook rookVerification = new VerifyMoveRook(); 
-	VerifyMoveBishop bishopVerification = new VerifyMoveBishop(); 
+	
+	private VerifyMoveRook rookVerification = new VerifyMoveRook(); 
+	private VerifyMoveBishop bishopVerification = new VerifyMoveBishop(); 
 	
 
 	@Override

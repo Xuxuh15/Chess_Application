@@ -383,6 +383,7 @@ public class ChessLogic implements ChessConstants {
 	        PrintStream originalOut = System.out;
 	        System.setOut(printStream);
 	        
+	        //note to self. Refactor this method tomorrow to use strategies
 	        
 	        try {
 	        	 for(int i = 0; i < arr.length; i++) {
@@ -472,7 +473,7 @@ public class ChessLogic implements ChessConstants {
 				}
 			}
 			
-			//this means that there is no possible move the king can make where it is not in check
+			//if your opponent invokes this line, you're cooked  ¯\_(ツ)_/¯
 			return true; 
 		}
 		

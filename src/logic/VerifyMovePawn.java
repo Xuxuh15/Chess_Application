@@ -4,9 +4,15 @@ package logic;
 import helpers.Pair;
 import logic.*; 
 
+/**
+ * Verifies whether a move made with a pawn is legal. 
+ */
 public class VerifyMovePawn implements VerificationStrategy {
-
-    ChessLogic logic = new ChessLogic(); 
+	
+	/**
+	 * Chess logic.
+	 */
+    private ChessLogic logic = new ChessLogic(); 
 
     @Override
     	/**

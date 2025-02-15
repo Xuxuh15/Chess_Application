@@ -2,12 +2,25 @@ package logic;
 
 import helpers.Pair;
 
+/**
+ * Verifies whether a move made with a king is legal.
+ */
 public class VerifyMoveKing implements VerificationStrategy {
 	
+	/**
+	 * Chess logic.
+	 */
 	private ChessLogic logic = new ChessLogic(); 
 	
+	/**
+	 * Algorithm determines if a king is in check by checking position of opponents pieces.
+	 */
 	private ChessPiece[] opponentPieces; 
 	
+	/**
+	 * Constructor
+	 * @param oppoentPieces array of opponents pieces.
+	 */
 	public VerifyMoveKing(ChessPiece[] oppoentPieces) {
 		this.opponentPieces = opponentPieces;
 		

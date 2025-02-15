@@ -5,9 +5,15 @@ import logic.ChessBoard;
 import logic.ChessPiece;
 import logic.ChessLogic;
 
+/**
+ * Verifies whether a move made with a bishop is legal.
+ */
 public class VerifyMoveBishop implements VerificationStrategy {
-
-    ChessLogic logic = new ChessLogic(); 
+	
+	/**
+	 * Chess logic.
+	 */
+    private ChessLogic logic = new ChessLogic(); 
 
     @Override
     /**

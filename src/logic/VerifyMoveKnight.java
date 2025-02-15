@@ -6,10 +6,15 @@ import logic.ChessBoard;
 import logic.ChessLogic;
 import logic.ChessPiece;
 
-
+/**
+ * Verifies whether a move made with a knight is legal.
+ */
 public class VerifyMoveKnight implements VerificationStrategy{
-
-    ChessLogic logic = new ChessLogic(); 
+	
+	/**
+	 * Chess logic.
+	 */
+    private ChessLogic logic = new ChessLogic(); 
 
     @Override
     /**
