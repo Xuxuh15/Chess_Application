@@ -239,7 +239,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 			String str = in.next(); 
 			//split strings into components
 			row = Integer.parseInt(str.split(":")[1]) - 1; 
-			col = convertLettertoNum(str.split(":")[0]);
+			col = logic.convertLettertoNum(str.split(":")[0]);
 			//return a pair object with the destination square
 			return new Pair(row,col); 
 		}
@@ -305,52 +305,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		
 	}
 	
-	
-	
-	/**
-	 * Used to convert user column input into corresponding integer
-	 * @param l the column choice [A-H]
-	 * @return the corresponding column value
-	 */
-	public int convertLettertoNum(String l) {
-		
-		int val = -1; 
-		
-		if(l != null) {
-			switch(l.toUpperCase()) {
-			
-			case "A":
-				val = A;
-				break;
-			case "B":
-				val = B;
-				break;
-			case "C":
-				val = C;
-				break;
-			case "D":
-				val = D;
-				break;
-			case "E":
-				val = E;
-				break;
-			case "F":
-				val = F;
-				break;
-			case "G":
-				val = G;
-				break;
-			case "H":
-				val = H; 
-				break;
-			default:
-				break;  
-				
-			}
-		}
-		return val; 
-		
-	}
+
 	
 	/**
 	 * Displays the game board
