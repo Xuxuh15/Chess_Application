@@ -25,7 +25,7 @@ public class VerifyMovePawn implements VerificationStrategy {
 		 * @throws IllegalArgumentException if a move is not legal
 		 */
     public boolean verifyMove(ChessBoard board, ChessPiece pawn, Pair newPos) throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
-        int deltaY = Math.abs(pawn.getPos().row() - newPos.row()); 
+        	int deltaY = Math.abs(pawn.getPos().row() - newPos.row()); 
 			int deltaX = Math.abs(pawn.getPos().col() - newPos.col());	
 			int uVector; 
 			
