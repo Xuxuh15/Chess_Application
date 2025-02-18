@@ -331,6 +331,51 @@ public class ChessLogic implements ChessConstants {
 			return verifyMoveRook(board, queen, newPos) || verifyMoveRook(board, queen, newPos); 
 		}
 		
+		/**
+		 * Used to convert user column input into corresponding integer
+		 * @param l the column choice [A-H]
+		 * @return the corresponding column value
+		 */
+		public int convertLettertoNum(String l) {
+			
+			int val = -1; 
+			
+			if(l != null) {
+				switch(l.toUpperCase()) {
+				
+				case "A":
+					val = A;
+					break;
+				case "B":
+					val = B;
+					break;
+				case "C":
+					val = C;
+					break;
+				case "D":
+					val = D;
+					break;
+				case "E":
+					val = E;
+					break;
+				case "F":
+					val = F;
+					break;
+				case "G":
+					val = G;
+					break;
+				case "H":
+					val = H; 
+					break;
+				default:
+					break;  
+					
+				}
+			}
+			return val; 
+			
+		}
+		
 		
 		
 		
@@ -581,6 +626,17 @@ public class ChessLogic implements ChessConstants {
 			if(arr != null)this.whitePlayerPieces = arr;
 			
 		}
+		
+		/**
+		 * Peeks at a chess coordinate. 
+		 * @param square the square to peek at
+		 * @return a Chess Piece if there is one on the specified square
+		 * @throws ArrayIndexOutOfBoundsException for a coordinate outside the board
+		 */
+		public ChessPiece peek(ChessBoard board, Pair square) throws ArrayIndexOutOfBoundsException{
+			return board.checkSpace(square.row(), square.col());
+		}
+		
 		
 		
 		
