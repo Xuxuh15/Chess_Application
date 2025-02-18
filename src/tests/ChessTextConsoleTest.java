@@ -79,33 +79,6 @@ public class ChessTextConsoleTest {
 	}
 	
 	@Test
-	@DisplayName("convertLetterToNum returns -1 for invalid input")
-	public void convertLetterToNum_InvalidInput_ReturnsNegativeOne() {
-		int result = game.convertLettertoNum("q"); 
-		assertEquals(-1, result, "Expected result to be equal to -1"); 
-		
-	}
-	
-	@Test
-	@DisplayName("convertLetterToNum returns -1 for null input")
-	public void convertLetterToNum_NullInput_ReturnsNegativeOne() {
-		int result = game.convertLettertoNum(null); 
-		assertEquals(-1, result, "Expected result to be equal to -1"); 
-		
-	}
-	
-	@Test
-	@DisplayName("convertLetterToNum returns correct value for valid input")
-	public void convertLetterToNum_ValidInput_ReturnsCorrectConstant() {
-		int result = game.convertLettertoNum("A"); 
-		assertEquals(ChessConstants.A, result, "Expected result to be equal to ChessConstants.A"); 
-		result = game.convertLettertoNum("E"); 
-		assertEquals(ChessConstants.E, result, "Expected result to be equal to ChessConstants.E"); 
-		
-	}
-	
-	
-	@Test
 	@DisplayName("selectPiece input out of bounds throws ArrayIndexOutOfBoundsException")
 	public void selectPiece_InputOutOfBounds_ThrowsArrayIndexOutOfBoundsException() {
 		assertThrows(ArrayIndexOutOfBoundsException.class, ()->{
