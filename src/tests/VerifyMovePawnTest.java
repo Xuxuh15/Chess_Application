@@ -1,34 +1,46 @@
 package tests;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 
+import helpers.ChessEmulator;
+import helpers.PawnChessSequences;
 import helpers.Pair;
 import logic.ChessBoard;
 import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
+import logic.VerifyMovePawn;
 
-public class ChessLogicTest implements ChessConstants {
+public class VerifyMovePawnTest implements ChessConstants {
 	
 	private static ChessBoard board; 
 	private static ChessLogic logic; 
 	private static ChessPiece[] whitePieces; 
 	private static ChessPiece[] blackPieces; 
+	private static ChessEmulator emulator; 
+	private static VerifyMovePawn verification; 
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
-		whitePieces = new ChessPiece[16]; 
-		blackPieces = new ChessPiece[16]; 
-		logic.generatePieces(blackPieces, BLACK);
-		logic.generatePieces(whitePieces, WHITE);
+		whitePieces = logic.generatePieces(WHITE); 
+		blackPieces = logic.generatePieces(BLACK);
+		logic.setBlackPlayerChessArray(blackPieces);
+		logic.setWhitePlayerChessArray(whitePieces);
+		emulator = new ChessEmulator(logic);
+		verification = new VerifyMovePawn(); 
+		
 		
 	}
 
@@ -41,89 +53,111 @@ public class ChessLogicTest implements ChessConstants {
 
 	@Before
 	public void setUp() throws Exception {
-		logic.setUpBoard(board, whitePieces, blackPieces);
+		logic = new ChessLogic();
+		whitePieces = logic.generatePieces(WHITE); 
+		blackPieces = logic.generatePieces(BLACK);
+		logic.setBlackPlayerChessArray(blackPieces);
+		logic.setWhitePlayerChessArray(whitePieces);
+		logic.setUpBoard(board);
+		emulator.setLogic(logic);
 		
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		board.resetBoard();
+		emulator.setLogic(null);
+		whitePieces = null; 
+		blackPieces= null; 
 	}
 	
 	@Test
-	public void testVerifyMovePawn() {
+	@DisplayName("verifyMovePawn pawn move backwards throws IllegalArgumentException")
+	public void verifyMovePawn_PawnMovesBackwards_ThrowsIllegalArgumentException() {
 		
-		board.resetBoard();
+		emulator.applySequence(PawnChessSequences.PAWN_TWO_STEPS_FORWARD_FROM_START, board);
+		verification = new VerifyMovePawn(); 
 		
-		for(int i = 1; i < 2; i++) {
-			for(int j = 0; j < COLUMNS; j++) {
-				board.getBoard()[i][j] = new ChessPiece(PAWN,WHITE); 
-				board.checkSpace(i, j).setPos(i, j);
-				board.getBoard()[ROWS-i][j] = new ChessPiece(PAWN, BLACK); 
-				board.checkSpace(ROWS-i, j).setPos(ROWS-i, j);
-			}
-		}
+		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
 		
-		//pawn moving two spaces
-		assertEquals(true, logic.verifyMovePawn(board, board.checkSpace(1, A), new Pair(3,A)));
-		//illegal capture (empty space)
-		assertEquals(false, logic.verifyMovePawn(board, board.checkSpace(1, A), new Pair(2,B)));
-		//pawn moving forward single space (legally)
-		assertEquals(true, logic.verifyMovePawn(board, board.checkSpace(1, A), new Pair(2,A))); 
+		assertThrows(IllegalArgumentException.class, ()->{
+			verification.verifyMove(board, pieceToMove, new Pair(2,A)); 
+			},"Expected IllegalArgumentException to be thrown"); 
 		
-		//set a black piece in thirs row first column
-		board.getBoard()[2][A] = new ChessPiece(PAWN,BLACK); 
-		board.getBoard()[2][A].setPos(2, A);
-		//pawn moving forward single space (ilegally)
-		assertEquals(false, logic.verifyMovePawn(board, board.checkSpace(1, A), new Pair(2,A))); 
-		
-		//set a black piece in thirs row first column
-		board.getBoard()[2][B] = new ChessPiece(PAWN,BLACK); 
-		board.getBoard()[2][B].setPos(2, B);
-		
-		//legal capture
-		assertEquals(true, logic.verifyMovePawn(board, board.checkSpace(1, A), new Pair(2,B))); 
+	
 		
 	}
 	
 	@Test
-	public void testVerifyMoveKnight() {
+	@DisplayName("verifyMovePawn pawn moves forward two spaces from start returns true")
+	public void verifyMovePawn_TwoSquaresForwardFromStart_ReturnsTrue() {
 		
+		verification = new VerifyMovePawn(); 
 		
-		ChessPiece knight = board.checkSpace(0, B); 
+		ChessPiece pieceToMove = logic.peek(board, new Pair(1,A)); 
 		
-		//knight at (B,1) moving to square (C,3) //L movement; vertically first -- valid
-		assertEquals(true, logic.verifyMoveKnight(board, knight, new Pair(2,C))); 
-		
-		logic.moveAndUpdate(board, knight, new Pair(2,C)); //update the board
-		
-		
-		//knight at (C,3) moving to occupied square (of ally) (D,1) -- invalid
-		assertEquals(false,logic.verifyMoveKnight(board, knight, new Pair(0,D))); 
-		
-		// knight at (C,3) moving to square (A,4) //L movement; horizontal first -- valid 
-		assertEquals(true, logic.verifyMoveKnight(board, knight, new Pair(3,A))); 
-		
-		logic.moveAndUpdate(board, knight, new Pair(3,A)); //update the board
-		
-		
-		//knight at (A,4) moving to square (A,5) //backwards movement -- invalid
-		assertEquals(false, logic.verifyMoveKnight(board, knight, new Pair(2,A))); 
-		
-		//knight at (A,4) moving to square (A,5) //forwards movement -- invalid
-		assertEquals(false, logic.verifyMoveKnight(board, knight, new Pair(4,A))); 
-		
-		//knight at (A,4) moving out of bounds to (A-1,6) -- invalid
-		assertEquals(false, logic.verifyMoveKnight(board, knight, new Pair(6,0))); 
-		
-		logic.moveAndUpdate(board, knight, new Pair(5,B)); //update the board
-		
-		//test capture of enemies rook -- valid
-		assertEquals(true, logic.verifyMoveKnight(board, knight, new Pair(7,A))); 
+		assertTrue(verification.verifyMove(board, pieceToMove, new Pair(3,A)), "Expected true but returned false"); 
 		
 		
 	}
+	
 
+	@Test
+	@DisplayName("verifyMovePawn pawn moves forward two spaces throws IllegalArgumentException")
+	public void verifyMovePawn_TwoSquaresForward_ThrowsIllegalArgumentException() {
+		
+		verification = new VerifyMovePawn(); 
+		emulator.applySequence(PawnChessSequences.PAWN_TWO_STEPS_FORWARD_FROM_START, board);
+		
+		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
+		
+		assertThrows(IllegalArgumentException.class, ()->{
+			verification.verifyMove(board, pieceToMove, new Pair(5,A)); 
+		}, "Expected IllegalArgumentException to be thrown"); 
+		
+		
+		
+		
+	}
+	
+	@Test
+	@DisplayName("verifyMovePawn pawn tries to move forward into occupied square returns IllegalArgumentException")
+	public void verifyMovePawn_PawnTriesToMoveForwardIntoOccupiedSquare_ThrowsIllegalArgumentException() {
+		
+		verification = new VerifyMovePawn(); 
+		emulator.applySequence(PawnChessSequences.PAWNS_BLOCK_EACH_OTHER, board);
+		
+		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
+		
+		assertThrows(IllegalArgumentException.class, ()->{
+			verification.verifyMove(board, pieceToMove, new Pair(4,A)); 
+		}, "Expected IllegalArgumentException to be thrown"); 
+		
+		
+		
+	}
+	
+	@Test
+	@DisplayName("verifyMovePawn pawn captures piece diagonally returns true")
+	public void verifyMovePawn_PawnMovesDiagonalToCapturePiece_ReturnsTrue() {
+		
+		verification = new VerifyMovePawn(); 
+		emulator.applySequence(PawnChessSequences.PAWN_CAPTURE_SEQUENCE, board);
+		
+		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
+		
+		assertTrue(verification.verifyMove(board, pieceToMove, new Pair(4,B)), "Expected true to be returned"); 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }
