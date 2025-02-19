@@ -32,7 +32,7 @@ public class ChessLogic implements ChessConstants {
 	 * @param newPos the destination square
 	 * @return boolean whether the move is legal or not
 	 */
-	public boolean verifyMove(ChessBoard board, ChessPiece pieceToMove, Pair newPos) {
+	public boolean verifyMove(ChessBoard board, ChessPiece pieceToMove, Pair newPos) throws IllegalArgumentException {
 		
 		boolean isValidMove = false; 
 		
@@ -153,7 +153,8 @@ public class ChessLogic implements ChessConstants {
 		/**
 		 * Checks if the king is in check
 		 * @param board the chess board
-		 * @param arr an array containing all the opponents pieces currently on the board
+		 * @param arr an array containing all the opponent's pieces currently on the board
+		 * @param kingPos the current position of the King
 		 * @return boolean indicates whether the king is in check
 		 */
 		public boolean isChecked(ChessBoard board,ChessPiece[] arr,Pair kingPos) {
@@ -165,22 +166,26 @@ public class ChessLogic implements ChessConstants {
 	        PrintStream originalOut = System.out;
 	        System.setOut(printStream);
 	        
-	        try {
-	        	 for(int i = 0; i < arr.length; i++) {
-	 	        	if(!arr[i].getIsCaptured()) {
-	 	        		this.verifyMove(board, arr[i], kingPos); 
-	 	        	}
-	        	 }
-	        }
-	        catch(ArrayIndexOutOfBoundsException ex) {
-	        	ex.printStackTrace();
-	        }
-	        finally {
-	        	 //restore original print stream
-		        System.setOut(originalOut);
-	        }
+	        boolean inCheck = false; 
+	        
+	        //21-01-2025 IMPORTANT!! -- Refactor method to implement strategy patterns!
+	        for(int i = 0; i < arr.length; i++) {
+       		 ChessPiece p = arr[i]; 
+ 	        	if(!p.getIsCaptured() && p.getRank() != ChessConstants.KING) {
+ 	        		try {
+ 	        			if(this.verifyMove(board, arr[i], kingPos)) {
+ 	 	        			inCheck = true; 
+ 	 	        			break; 
+ 	 	        		} 
+ 	        		}
+ 	        		catch(IllegalArgumentException e) {
+ 	        			//do nothing
+ 	        		}
+ 	        	}
+        	 }	
+	        System.setOut(originalOut);
 	        //indicates king is not in check
-			return false; 
+			return inCheck; 
 		}
 		
 		
