@@ -75,8 +75,7 @@ public class VerifyMovePawnTest implements ChessConstants {
 	@DisplayName("verifyMovePawn pawn move backwards throws IllegalArgumentException")
 	public void verifyMovePawn_PawnMovesBackwards_ThrowsIllegalArgumentException() {
 		
-		emulator.applySequence(PawnChessSequences.PAWN_TWO_STEPS_FORWARD_FROM_START, board);
-		verification = new VerifyMovePawn(); 
+		emulator.applySequence(PawnChessSequences.PAWN_TWO_STEPS_FORWARD_FROM_START, board); 
 		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
 		
@@ -92,8 +91,6 @@ public class VerifyMovePawnTest implements ChessConstants {
 	@DisplayName("verifyMovePawn pawn moves forward two spaces from start returns true")
 	public void verifyMovePawn_TwoSquaresForwardFromStart_ReturnsTrue() {
 		
-		verification = new VerifyMovePawn(); 
-		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(1,A)); 
 		
 		assertTrue(verification.verifyMove(board, pieceToMove, new Pair(3,A)), "Expected true but returned false"); 
@@ -105,8 +102,6 @@ public class VerifyMovePawnTest implements ChessConstants {
 	@Test
 	@DisplayName("verifyMovePawn pawn moves forward two spaces throws IllegalArgumentException")
 	public void verifyMovePawn_TwoSquaresForward_ThrowsIllegalArgumentException() {
-		
-		verification = new VerifyMovePawn(); 
 		emulator.applySequence(PawnChessSequences.PAWN_TWO_STEPS_FORWARD_FROM_START, board);
 		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
@@ -123,8 +118,7 @@ public class VerifyMovePawnTest implements ChessConstants {
 	@Test
 	@DisplayName("verifyMovePawn pawn tries to move forward into occupied square returns IllegalArgumentException")
 	public void verifyMovePawn_PawnTriesToMoveForwardIntoOccupiedSquare_ThrowsIllegalArgumentException() {
-		
-		verification = new VerifyMovePawn(); 
+
 		emulator.applySequence(PawnChessSequences.PAWNS_BLOCK_EACH_OTHER, board);
 		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
@@ -140,8 +134,7 @@ public class VerifyMovePawnTest implements ChessConstants {
 	@Test
 	@DisplayName("verifyMovePawn pawn captures piece diagonally returns true")
 	public void verifyMovePawn_PawnMovesDiagonalToCapturePiece_ReturnsTrue() {
-		
-		verification = new VerifyMovePawn(); 
+
 		emulator.applySequence(PawnChessSequences.PAWN_CAPTURE_SEQUENCE, board);
 		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
