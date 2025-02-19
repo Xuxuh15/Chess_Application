@@ -1,19 +1,15 @@
 package tests;
 
-
-
-
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
 import helpers.Pair;
@@ -31,20 +27,20 @@ public class ChessTextConsoleTest {
 	
 	
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 		game = new ChessTextConsoleGame(board); 
 		
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 		game = null; 
 		
 		 
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		game.setUpGame();
 		
@@ -102,19 +98,6 @@ public class ChessTextConsoleTest {
 		assertEquals(ChessConstants.PAWN, selectedPiece.getRank(), "Expected chess piece to be PAWN rank"); 
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
 	
 }

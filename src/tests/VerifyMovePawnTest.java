@@ -1,15 +1,14 @@
 package tests;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
 import helpers.ChessEmulator;
@@ -30,7 +29,7 @@ public class VerifyMovePawnTest implements ChessConstants {
 	private static ChessEmulator emulator; 
 	private static VerifyMovePawn verification; 
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
@@ -44,14 +43,14 @@ public class VerifyMovePawnTest implements ChessConstants {
 		
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 		board = null; 
 		logic = null; 
 		 
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		logic = new ChessLogic();
 		whitePieces = logic.generatePieces(WHITE); 
@@ -63,7 +62,7 @@ public class VerifyMovePawnTest implements ChessConstants {
 		
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		board.resetBoard();
 		emulator.setLogic(null);

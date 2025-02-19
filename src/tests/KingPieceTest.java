@@ -2,10 +2,10 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import logic.ChessConstants;
 import logic.KingPiece;
@@ -14,17 +14,17 @@ public class KingPieceTest implements ChessConstants {
 	
 	private static KingPiece king; 
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 		king = new KingPiece(WHITE); 
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 		king = null; 
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		king.setIsChecked(false);
 		king.setHasMoved(false);
