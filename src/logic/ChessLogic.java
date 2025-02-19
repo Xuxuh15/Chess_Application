@@ -103,7 +103,6 @@ public class ChessLogic implements ChessConstants {
 			return true; 
 		}
 		
-
 		
 		/**
 		 * Used to convert user column input into corresponding integer
@@ -149,13 +148,6 @@ public class ChessLogic implements ChessConstants {
 			return val; 
 			
 		}
-		
-		
-		
-		
-	
-		
-		
 		
 		
 		/**

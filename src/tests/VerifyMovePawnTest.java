@@ -142,15 +142,7 @@ public class VerifyMovePawnTest implements ChessConstants {
 		assertTrue(verification.verifyMove(board, pieceToMove, new Pair(4,B)), "Expected true to be returned"); 
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 
 }
