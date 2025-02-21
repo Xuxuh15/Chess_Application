@@ -1,15 +1,17 @@
 package tests;
 
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import helpers.ChessEmulator;
 import helpers.PawnChessSequences;
@@ -71,16 +73,14 @@ public class VerifyMovePawnTest implements ChessConstants {
 	}
 	
 	@Test
-	@DisplayName("verifyMovePawn pawn move backwards throws IllegalArgumentException")
-	public void verifyMovePawn_PawnMovesBackwards_ThrowsIllegalArgumentException() {
+	@DisplayName("verifyMovePawn pawn move backwards returns false")
+	public void verifyMovePawn_PawnMovesBackwards_ReturnsFalse() {
 		
 		emulator.applySequence(PawnChessSequences.PAWN_TWO_STEPS_FORWARD_FROM_START, board); 
 		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
 		
-		assertThrows(IllegalArgumentException.class, ()->{
-			verification.verifyMove(board, pieceToMove, new Pair(2,A)); 
-			},"Expected IllegalArgumentException to be thrown"); 
+		assertFalse(verification.verifyMove(board, pieceToMove, new Pair(2,A)), "Expected false to be returned"); 
 		
 	
 		
@@ -99,32 +99,27 @@ public class VerifyMovePawnTest implements ChessConstants {
 	
 
 	@Test
-	@DisplayName("verifyMovePawn pawn moves forward two spaces throws IllegalArgumentException")
-	public void verifyMovePawn_TwoSquaresForward_ThrowsIllegalArgumentException() {
+	@DisplayName("verifyMovePawn pawn moves forward two spaces returns false")
+	public void verifyMovePawn_TwoSquaresForward_ReturnsFalse() {
 		emulator.applySequence(PawnChessSequences.PAWN_TWO_STEPS_FORWARD_FROM_START, board);
 		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
 		
-		assertThrows(IllegalArgumentException.class, ()->{
-			verification.verifyMove(board, pieceToMove, new Pair(5,A)); 
-		}, "Expected IllegalArgumentException to be thrown"); 
-		
+		assertFalse(verification.verifyMove(board, pieceToMove, new Pair(5,A)), "Expected false to be returned"); 
 		
 		
 		
 	}
 	
 	@Test
-	@DisplayName("verifyMovePawn pawn tries to move forward into occupied square returns IllegalArgumentException")
-	public void verifyMovePawn_PawnTriesToMoveForwardIntoOccupiedSquare_ThrowsIllegalArgumentException() {
+	@DisplayName("verifyMovePawn pawn tries to move forward into occupied square returns false")
+	public void verifyMovePawn_PawnTriesToMoveForwardIntoOccupiedSquare_ReturnsFalse() {
 
 		emulator.applySequence(PawnChessSequences.PAWNS_BLOCK_EACH_OTHER, board);
 		
 		ChessPiece pieceToMove = logic.peek(board, new Pair(3,A)); 
 		
-		assertThrows(IllegalArgumentException.class, ()->{
-			verification.verifyMove(board, pieceToMove, new Pair(4,A)); 
-		}, "Expected IllegalArgumentException to be thrown"); 
+		assertFalse(verification.verifyMove(board, pieceToMove, new Pair(4,A)), "Expected false to be returned"); 
 		
 		
 		
