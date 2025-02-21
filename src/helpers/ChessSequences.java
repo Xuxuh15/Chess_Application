@@ -24,5 +24,13 @@ public class ChessSequences {
 		    "H1:E1",  // White rook centralizes
 		    "H8:E8"   // Black rook centralizes
 		};
+	
+	public static final String[] STATE2 = {
+			"E2:E4",
+			"E7:E5",
+			"D1:H5",
+			"A7:A5",
+			
+	};
 
 }
