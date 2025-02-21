@@ -108,6 +108,9 @@ public class ChessTextConsoleGame implements ChessConstants {
 						logic.moveAndUpdate(board, selectedPiece, playerMove);
 						hasMoved = true;
 					}
+					else {
+						throw new IllegalArgumentException("Invalid move"); 
+					}
 					
 					//check for check mate
 					this.checkmate = isCheckmate(); 
@@ -132,7 +135,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 					System.out.println("Input must be in format of number:letter"); 
 				}
 				catch(IllegalArgumentException ex) {
-					System.out.println(ex);  
+					//continue 
 				}
 			}
 				
@@ -281,7 +284,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		if(currentPlayer == WHITE) {
 			king = (KingPiece)piecesBlack[ChessConstants.INDEXKING]; 
 			if(logic.isChecked(board, piecesWhite, king.getPos())){
-				if(logic.checkmate(board, piecesWhite, king.getPos())) {
+				if(logic.checkmate(board, piecesWhite, king)) {
 					checkmate = true; 
 					System.out.println("Checkmate! White player wins!"); 
 				}
@@ -293,7 +296,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		else {
 			king = (KingPiece)piecesWhite[ChessConstants.INDEXKING]; 
 			if(logic.isChecked(board, piecesBlack, king.getPos())){
-				if(logic.checkmate(board, piecesBlack, king.getPos())) {
+				if(logic.checkmate(board, piecesBlack, king)) {
 					checkmate = true; 
 					System.out.println("Checkmate! Black player wins!");
 				}

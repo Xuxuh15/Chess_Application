@@ -90,7 +90,7 @@ public class ChessLogic implements ChessConstants {
 		/**
 		 * Function that indicates whether piece in target square can be captured
 		 * @param board the chess board
-		 * @param p the chess piece attempting a capture
+		 * @param color the ccolor of the chess piece attempting to capture
 		 * @param dest the target square
 		 * @return boolean indicates whether target square can be captured
 		 * @throws ArrayIndexOutOfBoundsException a square out of bounds cannot be captured
@@ -190,43 +190,92 @@ public class ChessLogic implements ChessConstants {
 		
 		
 		/**
-		 * Checks whether a check mate has been achieved
+		 * Checks whether a checkmate condition has been met.
 		 * @param board the chess board
-		 * @param arr an array of opponents active chess pieces 
-		 * @param kingPos the position of the king on the board
-		 * @return boolean indicates whether a check-mate has been achieved
+		 * @param arr an array of the opponent's active chess pieces 
+		 * @param king the king in check
+		 * @return boolean indicates whether a checkmate has been achieved
 		 */
-		public boolean checkmate(ChessBoard board, ChessPiece[] arr, Pair kingPos) {
+		public boolean checkmate(ChessBoard board, ChessPiece[] arr, KingPiece king) {
+			
+			//all possible (and valid) moves a king in check can make
+			Pair[] possibleMoves = calculateSolutionSpace(board,king);
+			boolean isCheckmate =  !this.kingCanMove(board, arr, possibleMoves);
+			
+			return isCheckmate; 
+		}
+		
+		/**
+		 * Checks whether a king piece can make a move that won't result in check. 
+		 * @param board the chess board
+		 * @param arr an array containing all the opponents pieces
+		 * @param possibleMoves an array of Pair objects containing all the possible moves the king
+		 * in check can make
+		 * @return boolean value indicating whether the king can move or not
+		 */
+		private boolean kingCanMove(ChessBoard board, ChessPiece[] arr, Pair[] possibleMoves) {
+			
+			boolean kingCanMove = false; 
+			//now we check whether there exists a destination square that results in no check
+			for(int i = 0; i < possibleMoves.length; i++) {
+				if( possibleMoves[i] != null && !isChecked(board,arr,possibleMoves[i])) {
+					kingCanMove = true;
+					break; 
+				}
+			}
+			
+			return kingCanMove; 
+			
+		}
+		
+		
+		/**
+		 * Returns a unit vector representing the direction along the y-axis a chess piece needs to move 
+		 * to go forward.
+		 * @param p a chess piece
+		 * @return an int value [-1,1]
+		 */
+		private int getUnitVector(ChessPiece p) {
+			int unit_vector = p.getColor() == ChessConstants.WHITE? ChessConstants.UNIT_VECTOR_WHITE : ChessConstants.UNIT_VECTOR_BLACK;
+			
+			return unit_vector; 
+			
+		}
+		
+		/**
+		 * Returns solution space (all possible moves) for a king in check. 
+		 * @param board the chess board
+		 * @param king the king in check
+		 * @return an array of coordinates
+		 */
+		private Pair[] calculateSolutionSpace(ChessBoard board, KingPiece king) {
 			
 			//at any given position, a king piece has maximum 8 possible moves
 			Pair[] possibleMoves = new Pair[8];
+			
+			Pair kingPos = king.getPos(); 
 			int counter = 0; 
 			
+			int unit_vector = this.getUnitVector(king); 
+			
 			//we want to gather all possible and legal moves that a king in check can make
-			for(int i = kingPos.row()+1; i < 3; i--) {
-				for(int j = kingPos.col() +1; j < 3; j++) {
+			for(int i = kingPos.row() - unit_vector; i != kingPos.row() + (unit_vector*2) ; i+= unit_vector) {
+				for(int j = kingPos.col() - 1; j <= kingPos.col() + 1; j++) {
 					try {
-						if(isEmpty(board,i,j)) {
+						if(isEmpty(board,i,j) || this.isCapturable(board,king, new Pair(i,j))) {
 							possibleMoves[counter++] = new Pair(i,j); 
 						}
 					}
-					catch(ArrayIndexOutOfBoundsException ex) { //for cases that go out of bounds, we ignore
-						System.out.println("Exception: square is out of bounds"); 
-						continue; 
+					catch(ArrayIndexOutOfBoundsException ex) {
+						System.out.println("Exception: square is out of bounds"); //cases out of bounds we ignore
 					}
 				}
 				
 			}
-			//now we check whether there exists a destination square that results in no check
-			for(int i = 0; i < counter; i++) {
-				if(!isChecked(board,arr,possibleMoves[i])) {
-					return false; 
-				}
-			}
 			
-			//if your opponent invokes this line, you're cooked  ¯\_(ツ)_/¯
-			return true; 
+			return  possibleMoves; 
 		}
+		
 		
 		
 		/**
