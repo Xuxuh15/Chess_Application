@@ -1,5 +1,8 @@
 package logic;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import helpers.Pair;
 
 /**
@@ -20,12 +23,24 @@ public class VerifyMoveQueen implements VerificationStrategy {
 	 * @param newPos the destination position
 	 * @return boolean indicating whether the move is legal or not
 	 * @throws ArrayIndexOutOfBoundsException a move that is out of bounds is automatically illegal
-	 * @throws IllegalArgumentException a move that is not legal
 	 */
 	public boolean verifyMove(ChessBoard board, ChessPiece queen, Pair newPos)
-			throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
+			throws ArrayIndexOutOfBoundsException {
 		
-		return rookVerification.verifyMove(board, queen, newPos) || bishopVerification.verifyMove(board, queen, newPos); 
+		//Redirect System.out to a ByteArrayOutputStream
+		//this is to prevent error messaging from being logged
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        PrintStream originalOut = System.out;
+        System.setOut(printStream);
+		
+		boolean validMove = rookVerification.verifyMove(board, queen, newPos) || bishopVerification.verifyMove(board, queen, newPos); 
+		
+		if(!validMove) {
+			System.out.println("IllegalMove: Queen can move any straight direction but cannot jump pieces"); 
+		}
+		 System.setOut(originalOut);
+		 return validMove; 
 		
 	}
 	
