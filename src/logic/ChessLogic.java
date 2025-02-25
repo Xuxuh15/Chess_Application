@@ -85,17 +85,12 @@ public class ChessLogic implements ChessConstants {
 		 * @param row the target row
 		 * @param col the target column
 		 * @return boolean indicates if target square is empty or not
+		 * @throws ArrayIndexOutOfBoundsException a square out of bounds 
 		 */
-		public boolean isEmpty(ChessBoard board, int row, int col) {
-			boolean isEmpty = true; 
-			try {
-				isEmpty = board.checkSpace(row, col) == null; 
-			}
-			catch(ArrayIndexOutOfBoundsException e) {
-				System.out.println(e.getMessage()); 
-			}
+		public boolean isEmpty(ChessBoard board, int row, int col) throws ArrayIndexOutOfBoundsException {
+			boolean isEmpty = board.checkSpace(row, col) == null;
 			return isEmpty; 
-			 
+			
 		}
 		
 		/**
@@ -108,10 +103,8 @@ public class ChessLogic implements ChessConstants {
 		 */
 		public boolean isCapturable(ChessBoard board, ChessPiece p, Pair dest) 
 			throws ArrayIndexOutOfBoundsException{
-			if(board.checkSpace(dest.row(), dest.col()).getColor() == p.getColor()) {
-				return false;
-			}
-			return true; 
+			boolean isCapturable = !(board.checkSpace(dest.row(), dest.col()).getColor() == p.getColor()); 
+			return isCapturable; 
 		}
 		
 		
