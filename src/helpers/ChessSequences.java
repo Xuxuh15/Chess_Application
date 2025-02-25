@@ -32,5 +32,15 @@ public class ChessSequences {
 			"A7:A5",
 			
 	};
+	
+	/**
+	 * Fools mate chess sequence
+	 */
+	public static final String[] STATE3 = {
+		    "F2:F3",  // White makes a weak pawn move
+		    "E7:E5",  // Black opens the center
+		    "G2:G4",  // White weakens their kingside further
+		    "D8:H4"   // Black's queen delivers checkmate
+		};
 
 }
