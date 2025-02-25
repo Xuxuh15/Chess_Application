@@ -32,13 +32,13 @@ public class ChessLogic implements ChessConstants {
 	 * @param newPos the destination square
 	 * @return boolean whether the move is legal or not
 	 */
-	public boolean verifyMove(ChessBoard board, ChessPiece pieceToMove, Pair newPos) throws IllegalArgumentException {
+	public boolean verifyMove(ChessBoard board, ChessPiece pieceToMove, Pair newPos) {
 		
 		boolean isValidMove = false; 
 		
-		
-		switch(pieceToMove.getRank()) {
-		
+		if(pieceToMove != null && newPos != null && board != null) {
+			switch(pieceToMove.getRank()) {
+			
 			case PAWN:
 				this.verificationStrategy = new VerifyMovePawn(); 
 				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos); 
@@ -72,7 +72,10 @@ public class ChessLogic implements ChessConstants {
 			default:
 				System.out.println("Method<verifyMove> Error: Chess Piece not recognonized"); 
 				break; 
+			}
+		
 		}
+		
 		return isValidMove; 
 	}
 		
@@ -84,7 +87,15 @@ public class ChessLogic implements ChessConstants {
 		 * @return boolean indicates if target square is empty or not
 		 */
 		public boolean isEmpty(ChessBoard board, int row, int col) {
-			return board.checkSpace(row, col) == null; 
+			boolean isEmpty = true; 
+			try {
+				isEmpty = board.checkSpace(row, col) == null; 
+			}
+			catch(ArrayIndexOutOfBoundsException e) {
+				System.out.println(e.getMessage()); 
+			}
+			return isEmpty; 
+			 
 		}
 		
 		/**
