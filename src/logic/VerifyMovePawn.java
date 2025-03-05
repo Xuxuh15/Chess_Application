@@ -24,8 +24,11 @@ public class VerifyMovePawn implements VerificationStrategy {
 		 * @throws ArrayIndexOutOfBoundsException a move that is out of bounds is automatically illegal
 		 * @throws IllegalArgumentException if a move is not legal
 		 */
-    public boolean verifyMove(ChessBoard board, ChessPiece pawn, Pair newPos) throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
-        	int deltaY = Math.abs(pawn.getPos().row() - newPos.row()); 
+    public boolean verifyMove(ChessBoard board, ChessPiece pawn, Pair newPos) throws ArrayIndexOutOfBoundsException{
+        
+    	boolean validMove = false; 
+    	try {
+    		int deltaY = Math.abs(pawn.getPos().row() - newPos.row()); 
 			int deltaX = Math.abs(pawn.getPos().col() - newPos.col());	
 			int uVector; 
 			
@@ -45,7 +48,7 @@ public class VerifyMovePawn implements VerificationStrategy {
 			//capture sequence 
 			if(deltaY == 1 && deltaX == 1) {
 				
-				return !logic.isEmpty(board, newPos.row(), newPos.col()) && logic.isCapturable(board,pawn,newPos); 
+				validMove = !logic.isEmpty(board, newPos.row(), newPos.col()) && logic.isCapturable(board,pawn,newPos); 
 			}
 			//moving two spaces forward 
 			else if(deltaY == 2 && deltaX == 0) {
@@ -57,7 +60,7 @@ public class VerifyMovePawn implements VerificationStrategy {
 				else if(!logic.isEmpty(board, pawn.getPos().row() + uVector, pawn.getPos().col()) || !logic.isEmpty(board,newPos.row(), newPos.col())) {
 					throw new IllegalArgumentException("Illegal Move: Pawn cannot move over occupied square"); 
 				}
-				return true; 
+				validMove = true; 
 			}
 			//pawn is moving forward one space
 			else if(deltaY == 1 && deltaX == 0) {
@@ -65,11 +68,15 @@ public class VerifyMovePawn implements VerificationStrategy {
 				if(!logic.isEmpty(board,newPos.row(), newPos.col())) {
 					throw new IllegalArgumentException("Illegal Move: Pawn cannot move into occupied square unless capturing"); 
 				}
-				return true; 
+				validMove = true; 
 			}
 			
-			//player inputed a illegal move
-			return false;
+    	}
+    	catch(IllegalArgumentException e) {
+    		System.out.println(e.getMessage()); 
+    	}
+    	return validMove; 
+    	
     }
 
 

@@ -28,6 +28,8 @@ public interface ChessConstants {
 	
 	final static int STARTWHITE = 1;
 	final static int STARTBLACK = 6; 
+	final static int UNIT_VECTOR_WHITE = 1; 
+	final static int UNIT_VECTOR_BLACK = -1; 
 	
 	//index of the king in chess piece array
 	final static int INDEXKING = 12; 

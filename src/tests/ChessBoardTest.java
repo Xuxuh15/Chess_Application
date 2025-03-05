@@ -1,11 +1,13 @@
 package tests;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import logic.ChessBoard;
 import logic.ChessConstants;
@@ -15,18 +17,18 @@ public class ChessBoardTest implements ChessConstants {
 	
 	private static ChessBoard board; 
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 		board = null; 
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		board.resetBoard();
 	}
@@ -36,20 +38,33 @@ public class ChessBoardTest implements ChessConstants {
 		assertNotEquals(null, board.getBoard()); 
 	}
 	
-	@Test (expected = ArrayIndexOutOfBoundsException.class)
-	public void testCheckSpace() {
-		ChessPiece p = new ChessPiece(PAWN, BLACK); 
-		board.getBoard()[0][A] = p; 
-		assertEquals(p, board.checkSpace(0, A)); 
-		assertEquals(null, board.checkSpace(1, E)); 
+	@Test 
+	@DisplayName("checkSpace square outside board throws ArrayIndexOutOfBoundsException")
+	public void checkSpace_SquareOutOfBounds_ThrowsArrayIndexOutOfBoundsException() {
 		//throws an exception
-		board.checkSpace(8, A); 
+		assertThrows(ArrayIndexOutOfBoundsException.class, ()->{board.checkSpace(8, A);}, "Expected ArrayIndexOutOfBoundsException to be thrown"); 
 		
 		
 	}
 	
 	@Test
-	public void testMove() {
+	@DisplayName("checkSpace empty square returns null")
+	public void checkSpace_EmptySquare_ReturnsNull() {
+		assertEquals(null, board.checkSpace(1, E)); 
+	}
+	
+	@Test
+	@DisplayName("checkSpace occupied square returns chess piece")
+	public void checkSpace_OccupiedSquare_ReturnsChessPiece() {
+		ChessPiece p = new ChessPiece(PAWN, BLACK); 
+		board.getBoard()[0][A] = p; 
+		assertEquals(p, board.checkSpace(0, A)); 
+	}
+	
+	
+	@Test
+	@DisplayName("move moves chess piece and updates chess piece state successfully")
+	public void move_UpdatesBoardAndChessPieceFlag() {
 		ChessPiece p = new ChessPiece(PAWN, BLACK); 
 		ChessPiece q = new ChessPiece(QUEEN, WHITE); 
 		
@@ -66,7 +81,8 @@ public class ChessBoardTest implements ChessConstants {
 	}
 	
 	@Test
-	public void testResetBoard() {
+	@DisplayName("resetBoard resets the chess board")
+	public void resetBoard_ResetsBoard() {
 		ChessPiece p = new ChessPiece(PAWN, BLACK); 
 		ChessPiece q = new ChessPiece(QUEEN, WHITE); 
 		

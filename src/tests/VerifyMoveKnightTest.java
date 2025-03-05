@@ -1,6 +1,7 @@
 package tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -72,43 +73,35 @@ public class VerifyMoveKnightTest {
 	
 	
 	@Test
-	@DisplayName("verifyMoveKnight knight moves more than 2 spaces vertically throwsIllegalArgumentException")
-	public void verifyMoveKnight_MovesMoreThanTwoSpacesVertically_ThrowsIllegalArgumentException() { 
+	@DisplayName("verifyMoveKnight knight moves more than 2 spaces vertically returns false")
+	public void verifyMoveKnight_MovesMoreThanTwoSpacesVertically_ReturnsFalse() { 
 		
 		ChessPiece knightToMove = logic.peek(board, new Pair(0,ChessConstants.G)); 
 		
-		assertThrows(IllegalArgumentException.class, ()->{
-			verification.verifyMove(board, knightToMove, new Pair(3,ChessConstants.F));
-		}, "Expected IllegalArgumentException to be thrown"); 
-		
+		assertFalse(verification.verifyMove(board, knightToMove, new Pair(3,ChessConstants.F)), "Expected false to be returned"); 
 		
 	}
 	
 	@Test
-	@DisplayName("verifyMoveKnight knight moves more than 2 spaces horizontally throwsIllegalArgumentException")
-	public void verifyMoveKnight_MovesMoreThanTwoSpacesHorizontally_ThrowsIllegalArgumentException() {
+	@DisplayName("verifyMoveKnight knight moves more than 2 spaces horizontally returns false")
+	public void verifyMoveKnight_MovesMoreThanTwoSpacesHorizontally_ReturnsFalse() {
 		
 		emulator.applySequence(KnightChessSequences.DEVELOP_WHITE_KNIGHT, board);
 		
 		ChessPiece knightToMove = logic.peek(board, new Pair(2,ChessConstants.F)); 
 		
-		assertThrows(IllegalArgumentException.class, ()->{
-			verification.verifyMove(board, knightToMove, new Pair(3,ChessConstants.C));
-		}, "Expected IllegalArgumentException to be thrown"); 
+		assertFalse(verification.verifyMove(board, knightToMove, new Pair(3,ChessConstants.C)), "Expected false to be returned"); 
 		
 		
 	}
 	
 	@Test
-	@DisplayName("verifyMoveKnight knight does not move in L-seqeunce throwsIllegalArgumentException")
-	public void verifyMoveKnight_DoesNotMoveInL_ThrowsIllegalArgumentException() {
+	@DisplayName("verifyMoveKnight knight does not move in L-seqeunce returns false")
+	public void verifyMoveKnight_DoesNotMoveInL_ReturnsFalse() {
 		
 		ChessPiece knightToMove = logic.peek(board, new Pair(0,ChessConstants.G)); 
 		
-		assertThrows(IllegalArgumentException.class, ()->{
-			verification.verifyMove(board, knightToMove, new Pair(3,ChessConstants.G));
-		}, "Expected IllegalArgumentException to be thrown"); 
-		
+		assertFalse(verification.verifyMove(board, knightToMove, new Pair(3,ChessConstants.G)), "Expected false to be returned"); 
 		
 	}
 	
