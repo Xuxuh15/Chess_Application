@@ -21,9 +21,8 @@ public class VerifyMoveKing implements VerificationStrategy {
 	 * Constructor
 	 * @param oppoentPieces array of opponents pieces.
 	 */
-	public VerifyMoveKing(ChessPiece[] oppoentPieces) {
-		this.opponentPieces = opponentPieces;
-		
+	public VerifyMoveKing(ChessPiece[] oppPieces) {
+		this.opponentPieces = oppPieces;
 	}
 	
 
@@ -52,7 +51,7 @@ public class VerifyMoveKing implements VerificationStrategy {
 			
 			if(logic.isEmpty(board, newPos.row(), newPos.col()) || logic.isCapturable(board, king, newPos) ) {
 				if(logic.isChecked(board,this.opponentPieces, king.getPos())) {
-					throw new IllegalArgumentException("Illegal Move: King can only move one space at a time");
+					throw new IllegalArgumentException("Illegal Move: King cannot move into check");
 				}
 			}
 			validMove = true; 
