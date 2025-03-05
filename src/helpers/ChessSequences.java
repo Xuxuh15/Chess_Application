@@ -42,5 +42,20 @@ public class ChessSequences {
 		    "G2:G4",  // White weakens their kingside further
 		    "D8:H4"   // Black's queen delivers checkmate
 		};
+	
+	public static final String[] STATE4 = {
+			"D2:D4", 
+            "C1:F4",  
+            "G1:F3",  
+            "E2:E3", 
+            "C2:C3",
+	}; 
+	
+	public static final String[] STATE5 = {
+			"D8:D5",
+			"E8:B5",
+			"D2:D4",
+			"D1:D2"
+	}; 
 
 }
