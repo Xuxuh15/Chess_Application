@@ -184,6 +184,15 @@ public class ChessLogicTest {
 	}
 	
 	@Test
+	@DisplayName("isCapturable same color returns false")
+	public void isCapturable_SameColor_ReturnsFalse() {
+		
+		ChessPiece p = logic.peek(board, new Pair(0, ChessConstants.E)); 
+		boolean isCapturable = logic.isCapturable(board, p, new Pair(1, ChessConstants.E)); 
+		assertFalse(isCapturable, "Expected isCapturable to be false"); 
+	}
+	
+	@Test
 	@DisplayName("isCapturable square out of bounds throws ArrayIndexOutOfBoundsException")
 	public void isCapturable_SquareOutOfBounds_ThrowsArrayIndexOutOfBoundsException() {
 		

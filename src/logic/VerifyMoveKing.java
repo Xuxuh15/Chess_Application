@@ -53,8 +53,9 @@ public class VerifyMoveKing implements VerificationStrategy {
 				if(logic.isChecked(board,this.opponentPieces, king.getPos())) {
 					throw new IllegalArgumentException("Illegal Move: King cannot move into check");
 				}
+				validMove = true; 
 			}
-			validMove = true; 
+			
 		}
 		catch(IllegalArgumentException e) {
 			System.out.println(e.getMessage()); 
