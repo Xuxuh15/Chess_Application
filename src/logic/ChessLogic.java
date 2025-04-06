@@ -113,7 +113,7 @@ public class ChessLogic implements ChessConstants {
 		 * @param l the column choice [A-H]
 		 * @return the corresponding column value
 		 */
-		public int convertLettertoNum(String l) {
+		public static int convertLettertoNum(String l) {
 			
 			int val = -1; 
 			
