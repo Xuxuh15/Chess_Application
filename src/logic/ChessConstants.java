@@ -38,4 +38,12 @@ public interface ChessConstants {
 	
 	final static char WHITE = 'W'; 
 	final static char BLACK = 'B'; 
+	
+	
+	final static int START = 1; 
+	final static int END = -1; 
+	final static int ASSIGNMENT = 2; 
+	final static int PLAY = 3; 
+	final static int MOVE = 4;
+	final static int UPDATE = 5;
 }
