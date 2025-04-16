@@ -17,6 +17,7 @@ import logic.ChessBoard;
 import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
+import logic.KingPiece;
 
 public class GameSession implements Runnable {
 	
@@ -70,12 +71,33 @@ public class GameSession implements Runnable {
 	
 	private JSONObject validMove() {
 		JSONObject res = new JSONObject(); 
-		res.put("type", "move"); 
+		res.put("type", ChessConstants.VALID_MOVE); 
 		res.put("ok", true); 
 		return res; 
 	}
 	
-	public JSONObject parseRequest(ObjectInputStream in) {
+	private JSONObject updateBoard(Pair from, Pair to) {
+		
+		JSONObject res = new JSONObject(); 
+		res.put("type", ChessConstants.UPDATE); 
+		String fromStr = from.row() + ":" + from.col(); 
+		res.put("from", fromStr); 
+		String toStr = to.row() + ":" + to.col(); 
+		res.put("to", toStr); 
+		
+		return res;
+		
+	}
+	private JSONObject gameOver(char color) {
+		
+		JSONObject res = new JSONObject(); 
+		res.put("type", ChessConstants.END); 
+		res.put("winner", color); 
+		return res; 
+		
+	}
+	
+	private JSONObject parseRequest(ObjectInputStream in) {
 		JSONObject req; 
 		try {
 			String s = (String) in.readObject(); 
@@ -95,6 +117,16 @@ public class GameSession implements Runnable {
 		return req; 
 		
 	}
+	
+	private JSONObject invalidMove(String message) {
+		
+		JSONObject res = new JSONObject(); 
+		res.put("ok", false); 
+		res.put("message", message); 
+		return res; 
+	}
+	
+	
 	
 	/**
 	 * Throws an exception if player tries to move a chess piece that is not the king while in check
@@ -123,6 +155,41 @@ public class GameSession implements Runnable {
 		
 		return false; 
 		
+		
+	}
+	
+	/**
+	 * Checks whether checkmate condition has been achieved
+	 * @param king the king chess piece being checked
+	 * @return boolean whether checkmate condition has been achieved
+	 */ 
+	private boolean isCheckmate() {
+		boolean checkmate = false; 
+		KingPiece king = null; 
+		if(currentPlayer == ChessConstants.WHITE) {
+			king = (KingPiece)piecesBlack[ChessConstants.INDEXKING]; 
+			if(logic.isChecked(board, piecesWhite, king.getPos())){
+				if(logic.checkmate(board, piecesWhite, king)) {
+					checkmate = true; 
+					System.out.println("Checkmate! White player wins!"); 
+				}
+				//set king's checked parameter to true
+				king.setIsChecked(true);
+				
+			}
+		}
+		else {
+			king = (KingPiece)piecesWhite[ChessConstants.INDEXKING]; 
+			if(logic.isChecked(board, piecesBlack, king.getPos())){
+				if(logic.checkmate(board, piecesBlack, king)) {
+					checkmate = true; 
+					System.out.println("Checkmate! Black player wins!");
+				}
+				//set king's checked parameter to true
+				king.setIsChecked(true);
+			}
+		}
+		return checkmate;
 		
 	}
 	
@@ -160,10 +227,10 @@ public class GameSession implements Runnable {
 	@Override 
 	public void run() {
 		
-		ObjectInputStream p1In; 
-		ObjectInputStream p2In; 
-		ObjectOutputStream p1Out; 
-		ObjectOutputStream p2Out; 
+		ObjectInputStream p1In = null; 
+		ObjectInputStream p2In = null; 
+		ObjectOutputStream p1Out = null; 
+		ObjectOutputStream p2Out = null; 
 		
 		boolean inSession = true; 
 		boolean checkmate = false; 
@@ -203,11 +270,30 @@ public class GameSession implements Runnable {
 				
 				
 				while(!hasMoved) {
-					//white's turn to move
+					
+					ObjectInputStream currentPlayerIn; 
+					ObjectOutputStream currentPlayerOut;  
+					ObjectOutputStream waitingPlayerOut; 
+					
 					res = this.play(); 
-					p1Out.writeObject(res);
-					req = parseRequest(p1In); 
-					if(req.get("ok").equals(true)) {
+					
+					//determine which player's turn it is
+					if(currentPlayer == ChessConstants.WHITE) {
+						currentPlayerIn = p1In; 
+						currentPlayerOut = p1Out;  
+						waitingPlayerOut = p2Out; 
+					}
+					else {
+						currentPlayerIn = p2In; 
+						currentPlayerOut = p2Out; 
+						waitingPlayerOut = p1Out; 
+					}
+					
+					currentPlayerOut.writeObject(res);
+					req = parseRequest(currentPlayerIn); 
+					
+					//check if request is in proper format
+					if(req.get("type").equals(ChessConstants.MOVE)) {
 						
 						Pair from;
 						Pair to; 
@@ -224,7 +310,10 @@ public class GameSession implements Runnable {
 								logic.moveAndUpdate(board, selectedPiece, to);
 								hasMoved = true; 
 								res = validMove(); 
-								p1Out.writeObject(res);
+								currentPlayerOut.writeObject(res);
+								res = updateBoard(from, to); 
+								currentPlayerOut.writeObject(res);
+								waitingPlayerOut.writeObject(res); 
 							}
 							else {
 								throw new IllegalArgumentException("Invalid Move"); 
@@ -236,6 +325,15 @@ public class GameSession implements Runnable {
 							//when the player tries to make an invalid move while in check
 							System.out.println("Illegal Move: Player must move king while in check"); 
 							//write response to current player
+							res = invalidMove(e.getMessage());
+							currentPlayerOut.writeObject(res);
+							
+						}
+						catch(NullPointerException e) {
+							System.out.println("Illegal Move: Cannot select an empty space"); 
+							res = invalidMove(e.getMessage());
+							currentPlayerOut.writeObject(res);
+							
 						}
 						catch(Exception e) {
 							System.out.println("Error: Incorrect coordinate format for MOVE"); 
@@ -243,6 +341,14 @@ public class GameSession implements Runnable {
 							
 						}
 						
+						
+						this.checkmate = isCheckmate(); 
+						
+						//toggle the current color
+						if(!checkmate && hasMoved) {
+							currentPlayer = currentPlayer == ChessConstants.WHITE ? ChessConstants.BLACK: ChessConstants.WHITE; 
+							hasMoved = false; 
+						}
 							
 						
 					}
@@ -250,18 +356,32 @@ public class GameSession implements Runnable {
 				}
 				
 				
-				
-				
-				
-				
 			}
+			//final write to players declaring the winner
+			res = gameOver(currentPlayer); 
+			p1Out.writeObject(res); 
+			p2Out.writeObject(res); 
 			
-			
-			
+			//game is over
+			inSession = false; 
 			
 			
 		}
 		catch(IOException e) {
+			
+		}finally {
+			try {
+				if(p1In != null) p1In.close();
+				if(p1Out != null) p1Out.close();
+				if(p2In != null) p2In.close();
+				if(p2Out != null) p2Out.close();
+				
+				
+			}
+			catch(IOException e) {
+				e.printStackTrace();
+			}
+			
 			
 		}
 	}
