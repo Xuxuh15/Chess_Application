@@ -45,5 +45,6 @@ public interface ChessConstants {
 	final static int ASSIGNMENT = 2; 
 	final static int PLAY = 3; 
 	final static int MOVE = 4;
-	final static int UPDATE = 5;
+	final static int VALID_MOVE = 5; 
+	final static int UPDATE = 6;
 }
