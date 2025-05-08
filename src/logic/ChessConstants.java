@@ -47,4 +47,5 @@ public interface ChessConstants {
 	final static int MOVE = 4;
 	final static int VALID_MOVE = 5; 
 	final static int UPDATE = 6;
+	final static int CONTINUE = 7; 
 }
