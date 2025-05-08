@@ -97,6 +97,14 @@ public class GameSession implements Runnable {
 		
 	}
 	
+	private JSONObject continuePlaying() {
+		
+		JSONObject res = new JSONObject(); 
+		res.put("type", ChessConstants.CONTINUE); 
+		return res; 
+		
+	}
+	
 	private JSONObject parseRequest(ObjectInputStream in) {
 		JSONObject req; 
 		try {
@@ -128,70 +136,8 @@ public class GameSession implements Runnable {
 	
 	
 	
-	/**
-	 * Throws an exception if player tries to move a chess piece that is not the king while in check
-	 * @param currentPlayer the current player color
-	 * @param selectedPiece the currently selected piece
-	 * @return false if not in check
-	 * @throws IllegalArgumentException if the selected piece is not the king
-	 */
-	public boolean inCheck(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
-		
-		if(currentPlayer == ChessConstants.WHITE) {
-			if(this.logic.isChecked(this.board, this.piecesBlack, this.piecesWhite[ChessConstants.INDEXKING].getPos())){
-				if(selectedPiece.getRank() != ChessConstants.KING) {
-					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
-					 
-				}
-			}
-		}
-		else {
-			if(logic.isChecked(this.board, this.piecesWhite, this.piecesBlack[ChessConstants.INDEXKING].getPos())){
-				if(selectedPiece.getRank() != ChessConstants.KING) {
-					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
-				}
-			}
-		}
-		
-		return false; 
-		
-		
-	}
 	
-	/**
-	 * Checks whether checkmate condition has been achieved
-	 * @param king the king chess piece being checked
-	 * @return boolean whether checkmate condition has been achieved
-	 */ 
-	private boolean isCheckmate() {
-		boolean checkmate = false; 
-		KingPiece king = null; 
-		if(currentPlayer == ChessConstants.WHITE) {
-			king = (KingPiece)piecesBlack[ChessConstants.INDEXKING]; 
-			if(logic.isChecked(board, piecesWhite, king.getPos())){
-				if(logic.checkmate(board, piecesWhite, king)) {
-					checkmate = true; 
-					System.out.println("Checkmate! White player wins!"); 
-				}
-				//set king's checked parameter to true
-				king.setIsChecked(true);
-				
-			}
-		}
-		else {
-			king = (KingPiece)piecesWhite[ChessConstants.INDEXKING]; 
-			if(logic.isChecked(board, piecesBlack, king.getPos())){
-				if(logic.checkmate(board, piecesBlack, king)) {
-					checkmate = true; 
-					System.out.println("Checkmate! Black player wins!");
-				}
-				//set king's checked parameter to true
-				king.setIsChecked(true);
-			}
-		}
-		return checkmate;
-		
-	}
+	
 	
 	public Pair getCoordinate(String str)  {
 
@@ -219,6 +165,8 @@ public class GameSession implements Runnable {
 		} 
 		throw new IllegalArgumentException("Illegal Move: Player cannot select piece of opponent's color"); 
 	}
+	
+
 	
 	
 	
@@ -268,29 +216,29 @@ public class GameSession implements Runnable {
 			
 			while(inSession && !checkmate) {
 				
+				ObjectInputStream currentPlayerIn; 
+				ObjectOutputStream currentPlayerOut;  
+				ObjectOutputStream waitingPlayerOut; 
+				
+				res = this.play(); 
+				
+				//determine which player's turn it is
+				if(currentPlayer == ChessConstants.WHITE) {
+					currentPlayerIn = p1In; 
+					currentPlayerOut = p1Out;  
+					waitingPlayerOut = p2Out; 
+				}
+				else {
+					currentPlayerIn = p2In; 
+					currentPlayerOut = p2Out; 
+					waitingPlayerOut = p1Out; 
+				}
+				
+				currentPlayerOut.writeObject(res);
+				req = parseRequest(currentPlayerIn); 
+				
 				
 				while(!hasMoved) {
-					
-					ObjectInputStream currentPlayerIn; 
-					ObjectOutputStream currentPlayerOut;  
-					ObjectOutputStream waitingPlayerOut; 
-					
-					res = this.play(); 
-					
-					//determine which player's turn it is
-					if(currentPlayer == ChessConstants.WHITE) {
-						currentPlayerIn = p1In; 
-						currentPlayerOut = p1Out;  
-						waitingPlayerOut = p2Out; 
-					}
-					else {
-						currentPlayerIn = p2In; 
-						currentPlayerOut = p2Out; 
-						waitingPlayerOut = p1Out; 
-					}
-					
-					currentPlayerOut.writeObject(res);
-					req = parseRequest(currentPlayerIn); 
 					
 					//check if request is in proper format
 					if(req.get("type").equals(ChessConstants.MOVE)) {
@@ -302,7 +250,7 @@ public class GameSession implements Runnable {
 							to = getCoordinate(req.getString("to")); 
 							ChessPiece selectedPiece = logic.peek(board, from); 
 							this.selectedCorrectColor(currentPlayer,selectedPiece); 
-							this.inCheck(currentPlayer, selectedPiece); 
+							logic.inCheck(board, selectedPiece,logic.getOpponentPieces(currentPlayer), logic.getMyPieces(currentPlayer)); 
 							
 							validMove = logic.verifyMove(board, selectedPiece, to); 
 							
@@ -318,6 +266,19 @@ public class GameSession implements Runnable {
 							else {
 								throw new IllegalArgumentException("Invalid Move"); 
 							}
+							this.checkmate = logic.isCheckmate(board,currentPlayer); 
+							
+							//toggle the current color
+							if(!checkmate && hasMoved) {
+								currentPlayer = currentPlayer == ChessConstants.WHITE ? ChessConstants.BLACK: ChessConstants.WHITE; 
+								hasMoved = false; 
+								res = this.continuePlaying(); 
+							}
+							else {
+								res = this.gameOver(currentPlayer); 
+							}
+							p1Out.writeObject(res); 
+							p2Out.writeObject(res); 
 							
 							
 						}
@@ -342,25 +303,12 @@ public class GameSession implements Runnable {
 						}
 						
 						
-						this.checkmate = isCheckmate(); 
-						
-						//toggle the current color
-						if(!checkmate && hasMoved) {
-							currentPlayer = currentPlayer == ChessConstants.WHITE ? ChessConstants.BLACK: ChessConstants.WHITE; 
-							hasMoved = false; 
-						}
-							
-						
 					}
 					
-				}
-				
+					
+				} //end of hasMoved block
 				
 			}
-			//final write to players declaring the winner
-			res = gameOver(currentPlayer); 
-			p1Out.writeObject(res); 
-			p2Out.writeObject(res); 
 			
 			//game is over
 			inSession = false; 

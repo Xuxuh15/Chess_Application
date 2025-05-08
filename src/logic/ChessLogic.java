@@ -194,6 +194,64 @@ public class ChessLogic implements ChessConstants {
 		
 		
 		/**
+		 * Throws an exception if player tries to move a chess piece that is not the king while in check
+		 * @param currentPlayer the current player color
+		 * @param selectedPiece the currently selected piece
+		 * @return false if not in check
+		 * @throws IllegalArgumentException if the selected piece is not the king
+		 */
+		public boolean inCheck(ChessBoard board,ChessPiece selectedPiece, ChessPiece[] oppPieces, ChessPiece[] myPieces) throws IllegalArgumentException {
+			
+			if(this.isChecked(board, oppPieces, myPieces[ChessConstants.INDEXKING].getPos())){
+				if(selectedPiece.getRank() != ChessConstants.KING) {
+					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
+					 
+				}
+			}
+			
+			return false;
+			
+		}
+		public ChessPiece[] getMyPieces(char currentPlayer) {
+			if(currentPlayer == ChessConstants.WHITE) return this.whitePlayerPieces; 
+			else return this.blackPlayerPieces; 
+		}
+		
+		public ChessPiece[] getOpponentPieces(char currentPlayer) {
+			if(currentPlayer == ChessConstants.WHITE) return this.blackPlayerPieces; 
+			else return this.whitePlayerPieces; 
+		}
+		
+		/**
+		 * Checks whether checkmate condition has been achieved
+		 * @param king the king chess piece being checked
+		 * @return boolean whether checkmate condition has been achieved
+		 */ 
+		public boolean isCheckmate(ChessBoard board,char currentColor) {
+			boolean checkmate = false; 
+			KingPiece king = null; 
+			ChessPiece[] opponentPieces = this.getOpponentPieces(currentColor); 
+			ChessPiece[] myPieces = this.getMyPieces(currentColor); 
+			
+				
+			king = (KingPiece)opponentPieces[ChessConstants.INDEXKING]; 
+			if(this.isChecked(board, myPieces, king.getPos())){
+				if(this.checkmate(board, myPieces, king)) {
+					checkmate = true; 
+					System.out.println("Checkmate!"); 
+				}
+				//set king's checked parameter to true
+				king.setIsChecked(true);
+				
+			}
+			
+			return checkmate;
+			
+		}
+		
+		
+		
+		/**
 		 * Checks whether a checkmate condition has been met.
 		 * @param board the chess board
 		 * @param arr an array of the opponent's active chess pieces 
