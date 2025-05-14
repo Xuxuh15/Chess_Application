@@ -233,7 +233,6 @@ public class ChessLogic implements ChessConstants {
 			ChessPiece[] opponentPieces = this.getOpponentPieces(currentColor); 
 			ChessPiece[] myPieces = this.getMyPieces(currentColor); 
 			
-				
 			king = (KingPiece)opponentPieces[ChessConstants.INDEXKING]; 
 			if(this.isChecked(board, myPieces, king.getPos())){
 				if(this.checkmate(board, myPieces, king)) {
