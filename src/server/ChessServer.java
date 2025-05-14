@@ -47,7 +47,7 @@ public class ChessServer {
 		Socket sockP2 = null; 
 	    try {
 	      if (args.length != 1) {
-	        System.out.println("Usage: java ThreadedSockServer --args=<port num>");
+	        System.out.println("Usage: java ChessServer --args=<port num>");
 	        System.exit(0);
 	      }
 	      
@@ -69,9 +69,9 @@ public class ChessServer {
 	       
 	        
 	        // create thread
-	        //ThreadedSockServer myServerThread = new ThreadedSockServer(sock, id++);
+	        Thread serverThread = new Thread(new GameSession(sockP1, sockP2)); 
 	        // run thread and don't care about managing it
-	        //myServerThread.start();
+	        serverThread.start(); 
 	      }
 	      
 	      
