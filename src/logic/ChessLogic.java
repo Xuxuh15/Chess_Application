@@ -248,6 +248,21 @@ public class ChessLogic implements ChessConstants {
 			
 		}
 		
+		/**
+		 * Determines whether the current player selected their own piece.
+		 * @param currentPlayer the current color
+		 * @param selectedPiece the color of the selected piece
+		 * @return true if the player color matches the selected piece
+		 * @throws IllegalArgumentException if the color of the selected piece and the color of the player do
+		 * not macth
+		 */
+		private boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
+			if(selectedPiece.getColor() != currentPlayer) {
+				return true; 
+			} 
+			throw new IllegalArgumentException("Illegal Move: Player cannot select piece of opponent's color"); 
+		}
+		
 		
 		
 		/**
