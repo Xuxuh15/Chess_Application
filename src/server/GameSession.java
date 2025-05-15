@@ -63,15 +63,16 @@ public class GameSession implements Runnable {
 		return res; 
 	}
 	
-	public JSONObject play() {
+	public JSONObject play(boolean shouldPlay) {
 		JSONObject res = new JSONObject(); 
 		res.put("type", ChessConstants.PLAY); 
+		res.put("shouldPlay", shouldPlay); 
 		return res; 
 	}
 	
 	private JSONObject validMove() {
 		JSONObject res = new JSONObject(); 
-		res.put("type", ChessConstants.VALID_MOVE); 
+		res.put("type", ChessConstants.WAS_VALID_MOVE); 
 		res.put("ok", true); 
 		return res; 
 	}
@@ -92,7 +93,14 @@ public class GameSession implements Runnable {
 		
 		JSONObject res = new JSONObject(); 
 		res.put("type", ChessConstants.END); 
-		res.put("winner", color); 
+		String winner = ""; 
+		if(color == ChessConstants.WHITE) {
+			winner = "White"; 
+		} 
+		else {
+			 winner = "Black"; 
+		}
+		res.put("message", "The winner is " + winner + " player."); 
 		return res; 
 		
 	}
@@ -129,6 +137,7 @@ public class GameSession implements Runnable {
 	private JSONObject invalidMove(String message) {
 		
 		JSONObject res = new JSONObject(); 
+		res.put("type", ChessConstants.WAS_VALID_MOVE); 
 		res.put("ok", false); 
 		res.put("message", message); 
 		return res; 
@@ -136,37 +145,6 @@ public class GameSession implements Runnable {
 	
 	
 	
-	
-	
-	
-	public Pair getCoordinate(String str)  {
-
-		try {
-			int row; 
-			int col; 
-			//split strings into components
-			row = Integer.parseInt(str.split(":")[1]) - 1; 
-			col = ChessLogic.convertLettertoNum(str.split(":")[0]);
-			//return a pair object with the destination square
-			return new Pair(row,col); 
-		}
-		catch(InputMismatchException e) { //wrong input format
-			throw e; 
-		}
-		catch(NumberFormatException e) {
-			throw e; 
-		}
-	}
-	
-	
-	private boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
-		if(selectedPiece.getColor() != currentPlayer) {
-			return true; 
-		} 
-		throw new IllegalArgumentException("Illegal Move: Player cannot select piece of opponent's color"); 
-	}
-	
-
 	
 	
 	
@@ -220,7 +198,6 @@ public class GameSession implements Runnable {
 				ObjectOutputStream currentPlayerOut;  
 				ObjectOutputStream waitingPlayerOut; 
 				
-				res = this.play(); 
 				
 				//determine which player's turn it is
 				if(currentPlayer == ChessConstants.WHITE) {
@@ -233,8 +210,13 @@ public class GameSession implements Runnable {
 					currentPlayerOut = p2Out; 
 					waitingPlayerOut = p1Out; 
 				}
-				
+				//tell white player that they should make a move
+				res = this.play(true); 
 				currentPlayerOut.writeObject(res);
+				//tell black player that they should wait for an update
+				res = this.play(false); 
+				waitingPlayerOut.writeObject(res);
+				
 				req = parseRequest(currentPlayerIn); 
 				
 				
@@ -246,10 +228,10 @@ public class GameSession implements Runnable {
 						Pair from;
 						Pair to; 
 						try {
-							from = getCoordinate(req.getString("from")); 
-							to = getCoordinate(req.getString("to")); 
+							from = ChessLogic.getCoordinate(req.getString("from")); 
+							to = ChessLogic.getCoordinate(req.getString("to")); 
 							ChessPiece selectedPiece = logic.peek(board, from); 
-							this.selectedCorrectColor(currentPlayer,selectedPiece); 
+							logic.selectedCorrectColor(currentPlayer,selectedPiece); 
 							logic.inCheck(board, selectedPiece,logic.getOpponentPieces(currentPlayer), logic.getMyPieces(currentPlayer)); 
 							
 							validMove = logic.verifyMove(board, selectedPiece, to); 
