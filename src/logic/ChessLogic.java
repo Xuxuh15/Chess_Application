@@ -3,6 +3,7 @@ package logic;
 import helpers.Pair;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.InputMismatchException;
 
 /**
  * Class that is responsible for handling the chess game logic
@@ -249,6 +250,30 @@ public class ChessLogic implements ChessConstants {
 		}
 		
 		/**
+		 * Returns a pair from its String representation (e.g. "row:col")
+		 * @param str
+		 * @return
+		 */
+		public static Pair getCoordinate(String str)  {
+
+			try {
+				int row; 
+				int col; 
+				//split strings into components
+				row = Integer.parseInt(str.split(":")[1]) - 1; 
+				col = ChessLogic.convertLettertoNum(str.split(":")[0]);
+				//return a pair object with the destination square
+				return new Pair(row,col); 
+			}
+			catch(InputMismatchException e) { //wrong input format
+				throw e; 
+			}
+			catch(NumberFormatException e) {
+				throw e; 
+			}
+		}
+		
+		/**
 		 * Determines whether the current player selected their own piece.
 		 * @param currentPlayer the current color
 		 * @param selectedPiece the color of the selected piece
@@ -256,7 +281,7 @@ public class ChessLogic implements ChessConstants {
 		 * @throws IllegalArgumentException if the color of the selected piece and the color of the player do
 		 * not macth
 		 */
-		private boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
+		public boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
 			if(selectedPiece.getColor() != currentPlayer) {
 				return true; 
 			} 
