@@ -11,13 +11,17 @@ import org.json.JSONObject;
 
 import helpers.Pair;
 import logic.ChessConstants;
+import logic.ChessLogic;
 
+/**
+ * Handles communication between client and server
+ */
 public class ChessClient {
 	
 	private Socket socket; 
 	private ObjectInputStream in; 
 	private ObjectOutputStream out; 
-	private ChessConstants color; 
+	private char color; 
 	
 	
 	ChessClient(Socket sock){
@@ -54,6 +58,140 @@ public class ChessClient {
 		return req; 
 		
 	}
+	
+	/*
+	 * Return's the player's color. 
+	 */
+	public char getColor() {
+		return this.color; 
+	}
+	
+	/**
+	 * Gets the assigned color from the server and sets color appropriately. 
+	 */
+	public void getAssignedColor() {
+		JSONObject res; 
+		
+		try {
+			String input = (String) this.in.readObject();
+			res = new JSONObject(input); 
+			if((int)res.getInt("type") == ChessConstants.ASSIGNMENT) {
+				
+				if(res.getString("color").equals(Character.toString(ChessConstants.WHITE))){
+					this.color = ChessConstants.WHITE; 
+				}
+				else {
+					this.color = ChessConstants.BLACK; 	
+				}
+				
+				System.out.println("Client has been assigned color: " + Character.toString(this.color)); 
+			}
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace(); 
+		}
+		
+	}
+	
+	
+	/**
+	 * Consumes start response from server.
+	 */
+	public void waitForStart() {
+		System.out.println("Waiting for game to start...."); 
+		JSONObject res; 
+		try {
+			String in = (String)this.in.readObject(); 
+			res = new JSONObject(in); 
+			
+			if(res.getInt("type") == ChessConstants.START) {
+				System.out.println("Server has sent the signal to start."); 
+				return; 
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * Checks whether it is the player's turn to move at the start of a game. 
+	 * @return boolean whether it is the player's turn. 
+	 */
+	public boolean isMyTurn() { 
+		JSONObject res; 
+		boolean shouldPlay = false; 
+		try {
+			String in = (String)this.in.readObject(); 
+			res = new JSONObject(in); 
+			
+			if(res.getInt("type") == ChessConstants.PLAY) {
+				shouldPlay = res.getBoolean("shouldPlay"); 
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return shouldPlay; 
+	}
+	
+	/**
+	 * Get update from server and return a Pair array where index 0 = source square and index 1 = destination square
+	 * @return an array of 2 Pair objects [source,destination]
+	 */
+	public Pair[] getUpdate() {
+		
+		Pair[] update = new Pair[2]; 
+		JSONObject res; 
+		try {
+			String in = (String)this.in.readObject(); 
+			res = new JSONObject(in); 
+			
+			if(res.getInt("type") == ChessConstants.UPDATE) {
+				String from = res.getString("from"); 
+				update[0] = ChessLogic.getCoordinate(from); 
+				String to = res.getString("to"); 
+				update[1] = ChessLogic.getCoordinate(to); 
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return update;
+	}
+	
+	/**
+	 * Checks whether the game is over. 
+	 * @return boolean if clients should continue playing or not. 
+	 */
+	public boolean continuePlaying() {
+		boolean shouldContinue = true; 
+		JSONObject res; 
+		try {
+			String in = (String)this.in.readObject(); 
+			res = new JSONObject(in); 
+			
+			if(!(res.getInt("type") == ChessConstants.CONTINUE)) {
+				shouldContinue = false; 
+				System.out.println(res.getString("message")); 
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return shouldContinue; 
+	} 
+	
+		
+
+		
+	
+
+	
+	
+	
 	
 	
 	
