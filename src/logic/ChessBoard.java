@@ -3,20 +3,16 @@ import java.lang.ArrayIndexOutOfBoundsException;
 import java.util.ArrayList;
 
 import helpers.Pair;
-import interfaces.EventListener;
-import interfaces.Publisher; 
 
-public class ChessBoard implements ChessConstants, Publisher {
+
+public class ChessBoard implements ChessConstants {
 	
 	/**
 	 * Double matrix to represent the game board
 	 */
 	private ChessPiece[][] gameBoard; 
 	
-	/**
-	 * List to store subscribing objects.
-	 */
-	private ArrayList<EventListener> subscribers = new ArrayList<EventListener>(); 
+
 	
 	/**
 	 * Constructor
@@ -79,29 +75,8 @@ public class ChessBoard implements ChessConstants, Publisher {
 		return this.gameBoard; 
 	}
 
-	@Override
-	public void subscribe(EventListener subscriber) {
-		if(!this.subscribers.contains(subscriber)) {
-			this.subscribers.add(subscriber); 
-		}
+
+		
 	
-		
-	}
-
-	@Override
-	public void unsubscribe(EventListener targ) {
-		if(this.subscribers.contains(targ)) {
-			this.subscribers.remove(targ); 
-		}
-		
-	}
-
-	@Override
-	public void notify(Pair initPos, Pair destination) {
-		this.subscribers.forEach((e)->{
-			e.update(initPos, destination); 
-		});
-		
-	}
 
 }
