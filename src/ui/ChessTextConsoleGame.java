@@ -3,7 +3,11 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import helpers.Pair;
-import logic.*; 
+import logic.ChessBoard;
+import logic.ChessConstants;
+import logic.ChessLogic;
+import logic.ChessPiece;
+import logic.KingPiece; 
 
 /**
  * Class representing a text console chess game
