@@ -10,12 +10,25 @@ import uicomponents.ChessPieceFactory;
 
 public class ChessTile extends StackPane  {
 	
-	
+	/**
+	 * The cooridnate of the tile on the board.
+	 */
 	private Pair coord; 
-	private ImageView chessPiece; 
+	/**
+	 * The Chess Piece gui representation.
+	 */
+	private ImageView chessPiece = null;
+	/**
+	 * The actual tile. 
+	 */
 	private Rectangle tile; 
 	
 	
+	/**
+	 * Constructor 
+	 * @param coord the coordinate of the tile on the Chess Board 
+	 * @param color the tile color
+	 */
 	public ChessTile(Pair coord, Color color) {
 		
 		this.setPrefSize(50, 50);
@@ -26,21 +39,31 @@ public class ChessTile extends StackPane  {
 		tile.heightProperty().bind(this.heightProperty());
 		tile.setFill(color);
 		this.getChildren().add(tile); 
-		
-		
-		
+			
 		
 	}
 	
-	
+	/**
+	 * Setter method for coordinate.
+	 * @param newCoord the new coordinate to set. 
+	 */
 	public void setCoord(Pair newCoord) {
 		this.coord = newCoord; 
 	}
 	
+	/**
+	 * Getter method for the coordinate.
+	 * @return the tile's coordinate.
+	 */
 	public Pair getCoord() {
 		return this.coord; 
 	}
 	
+	/**
+	 * Adds/Modifies the chess piece image on the tile.
+	 * @param chessPieceName the name of the .png file to add.
+	 * @see resources/images/
+	 */
 	public void addChessPiece(String chessPieceName) {
 		ImageView chessPiece = ChessPieceFactory.createPiece(chessPieceName); 
 
@@ -53,15 +76,10 @@ public class ChessTile extends StackPane  {
 		
 	}
 	
-	public void setImage(String imagePath) throws IllegalArgumentException {
-		Image image = new Image(imagePath); 
-		this.chessPiece.setImage(image);
-	}
-	
-	public void setImage(Image image) {
-		this.chessPiece.setImage(image);
-	}
-	
+	/**
+	 * Returns the image on the tile.
+	 * @return Image on the tile if exists or null.
+	 */
 	public Image getImage() {
 		return this.chessPiece.getImage(); 
 	}
