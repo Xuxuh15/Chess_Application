@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import uicomponents.ChessPieceFactory;
 
 public class ChessTile extends StackPane  {
 	
@@ -27,14 +28,6 @@ public class ChessTile extends StackPane  {
 		this.getChildren().add(tile); 
 		
 		
-		this.chessPiece = new ImageView(); 
-		chessPiece.setPreserveRatio(true); // Preserve aspect ratio of the image
-	    chessPiece.setSmooth(true); // Smooth scaling of the image
-	    // Bind ImageView's width and height to StackPane's width and height
-	    chessPiece.fitWidthProperty().bind(this.widthProperty());
-	    chessPiece.fitHeightProperty().bind(this.heightProperty());
-	    this.getChildren().add(chessPiece);
-		
 		
 		
 	}
@@ -46,6 +39,18 @@ public class ChessTile extends StackPane  {
 	
 	public Pair getCoord() {
 		return this.coord; 
+	}
+	
+	public void addChessPiece(String chessPieceName) {
+		ImageView chessPiece = ChessPieceFactory.createPiece(chessPieceName); 
+
+		chessPiece.setPreserveRatio(true); // Preserve aspect ratio of the image
+	    chessPiece.setSmooth(true); // Smooth scaling of the image
+	    // Bind ImageView's width and height to StackPane's width and height
+	    //chessPiece.fitWidthProperty().bind(this.widthProperty());
+	    //chessPiece.fitHeightProperty().bind(this.heightProperty());
+	    this.getChildren().add(chessPiece);
+		
 	}
 	
 	public void setImage(String imagePath) throws IllegalArgumentException {
