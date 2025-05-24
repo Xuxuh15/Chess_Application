@@ -2,8 +2,6 @@ package tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -13,13 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import helpers.ChessEmulator;
-import helpers.Pair;
 import helpers.KnightChessSequences;
+import helpers.Pair;
 import logic.ChessBoard;
+import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
 import logic.VerifyMoveKnight;
-import logic.ChessConstants;
 
 public class VerifyMoveKnightTest {
 	

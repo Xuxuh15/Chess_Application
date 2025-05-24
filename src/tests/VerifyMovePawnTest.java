@@ -2,9 +2,7 @@ package tests;
 
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -14,8 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import helpers.ChessEmulator;
-import helpers.PawnChessSequences;
 import helpers.Pair;
+import helpers.PawnChessSequences;
 import logic.ChessBoard;
 import logic.ChessConstants;
 import logic.ChessLogic;
