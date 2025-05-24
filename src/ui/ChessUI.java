@@ -2,9 +2,11 @@ package ui;
 
 import helpers.Pair;
 import javafx.application.Application;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -36,12 +38,20 @@ public class ChessUI extends Application {
 	 * Represents whether current player has moved
 	 */
 	private boolean hasMoved = false; 
+	
+	private boolean isMyTurn = false; 
 	/**
 	 * the current player
 	 */
 	private char currentPlayer; 
 	
+	/**
+	 * Game logic. 
+	 */
 	private ChessLogic logic; 
+	
+	private Pair selectedSquare; 
+	private Pair destinationSquare; 
 	
 	
 
@@ -63,6 +73,7 @@ public class ChessUI extends Application {
 	
 	/**
 	 * Creates the UI Chess Board
+	 * @return 
 	 * @return a GridPane
 	 */
 	public GridPane createBoard() {
@@ -89,12 +100,69 @@ public class ChessUI extends Application {
 				tile.setPrefSize(70, 70);
 				// Bind the width and height of the tile to the individual cell size based on the root size
 				tile.autosize();
+				tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
+					
+					  //only update selected coords if it is the player's turn and they haven't moved yet.
+					  if(isMyTurn && !hasMoved) {
+						  
+						  ChessPiece selectedPiece = logic.peek(board, tile.getCoord()); 
+						  
+						  //nothing was selected
+						  if(selectedPiece == null) {
+							  return; 
+						  }
+						  boolean selectedCorrectColor = this.selectedCorrectColor(currentPlayer, selectedPiece);
+						  
+						  //player selected the wrong color piece
+						  if(!selectedCorrectColor) {
+							  return; 
+						  }
+						  else {
+							  // if user selects the same square, diselect current square
+							  if(this.selectedSquare == tile.getCoord()) {
+								  this.selectedSquare = null; 
+							  }
+							  //if user has not selected a square yet, set the selected square to this coordinate
+							  else if(this.selectedSquare == null) {
+								  this.selectedSquare = tile.getCoord(); 
+							  }
+							  //user has selected a square with a valid piece and the newly selected square is a different coordinate. 
+							  else {
+								  this.destinationSquare = tile.getCoord(); 
+							  }
+							  //we can have a blocking wait while selected and destination square == null
+						  }
+						
+					  }
+					
+					 
+					 
+					  
+				});
+				
 				 
 				
 				root.add(tile, j, i); 
 			}
 		}
 		return root; 
+	}
+	
+	
+		
+	/**
+	 * 
+	 * @param currentPlayer the current player color
+	 * @param selectedPiece the selected piece 
+	 * @return true if player selected correct color
+	 * @throws IllegalArgumentException if player selects opponents chess piece
+	 */
+	private boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
+		//check to make sure player chooses correct color
+		if(selectedPiece.getColor() != currentPlayer) {
+			throw new IllegalArgumentException("Illegal Move: Cannot select opponent's pieces"); 
+		}
+		return true; 
 	}
 	
 	
