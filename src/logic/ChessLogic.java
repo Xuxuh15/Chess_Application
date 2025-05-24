@@ -1,8 +1,9 @@
 package logic;
 
-import helpers.Pair;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import helpers.Pair;
 
 /**
  * Class that is responsible for handling the chess game logic
@@ -301,7 +302,7 @@ public class ChessLogic implements ChessConstants {
 		 * @param arr the array to be populated
 		 * @param color the color of the chess piece
 		 */
-		public ChessPiece[] generatePieces(char color) {
+		public static ChessPiece[] generatePieces(char color) {
 			
 			ChessPiece[] arrToReturn = new ChessPiece[ChessConstants.NUMPIECES]; 
 			//add first row of pawns from left to right

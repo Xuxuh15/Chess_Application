@@ -1,8 +1,7 @@
 package logic;
 
 
-import helpers.Pair;
-import logic.*; 
+import helpers.Pair; 
 
 /**
  * Verifies whether a move made with a pawn is legal. 

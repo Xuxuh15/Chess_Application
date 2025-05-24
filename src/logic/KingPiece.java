@@ -1,7 +1,5 @@
 package logic;
 
-import helpers.Pair;
-
 /**
  * A class representing a King chess piece
  */

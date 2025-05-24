@@ -2,9 +2,6 @@ package logic;
 
 
 import helpers.Pair;
-import logic.ChessBoard;
-import logic.ChessLogic;
-import logic.ChessPiece;
 
 /**
  * Verifies whether a move made with a knight is legal.

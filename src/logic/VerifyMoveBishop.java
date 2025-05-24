@@ -1,9 +1,6 @@
 package logic;
 
 import helpers.Pair;
-import logic.ChessBoard;
-import logic.ChessPiece;
-import logic.ChessLogic;
 
 /**
  * Verifies whether a move made with a bishop is legal.
