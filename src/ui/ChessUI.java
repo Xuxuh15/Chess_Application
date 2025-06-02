@@ -164,7 +164,15 @@ public class ChessUI extends Application {
 		this.canPlay = true; 
 	}
 	
+	//method to update board
 	
+	//method to create label for game notifications
+	
+	//method for label for current player's turn
+	
+	//method for label for selected and destination square
+	
+	//a timer label on the top
 	
 	
 	

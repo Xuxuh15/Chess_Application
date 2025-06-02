@@ -42,7 +42,20 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 */
 	private char currentPlayer; 
 	
+	/**
+	 * Chess logic.
+	 */
 	private ChessLogic logic; 
+	
+	/**
+	 * Reference to the players' chess pieces.
+	 */
+	private ChessPiece[] myPieces = piecesWhite; 
+	
+	/**
+	 * Reference to opponents' chess pieces. 
+	 */
+	private ChessPiece[] opponentPieces = piecesBlack; 
 	
 	
 	//Getter methods -- primarily for testing purposes
@@ -66,6 +79,8 @@ public class ChessTextConsoleGame implements ChessConstants {
 	public ChessPiece[] getWhiteChessPieces() {
 		return this.piecesWhite; 
 	}
+	
+	
 	
 	
 	/**
@@ -102,9 +117,10 @@ public class ChessTextConsoleGame implements ChessConstants {
 					Pair playerMove = getDestinationSquare(in); 
 					
 					//check to make sure player chooses correct color
-					selectedCorrectColor(currentPlayer, selectedPiece); 
+					logic.selectedCorrectColor(currentPlayer, selectedPiece); 
 					
-					inCheck(currentPlayer, selectedPiece); //checks if player is in check
+					
+					logic.inCheck(board, selectedPiece, this.myPieces, this.opponentPieces); //checks if player is in check
 					
 					//verify move is legal
 					boolean isLegalMove = logic.verifyMove(board, selectedPiece, playerMove); 
@@ -117,11 +133,12 @@ public class ChessTextConsoleGame implements ChessConstants {
 					}
 					
 					//check for check mate
-					this.checkmate = isCheckmate(); 
+					this.checkmate = logic.isCheckmate(board, this.currentPlayer); 
 					
 					//toggle the current color
 					if(!checkmate && hasMoved) {
-						currentPlayer = currentPlayer == WHITE ? BLACK: WHITE; 
+						currentPlayer = currentPlayer == WHITE ? BLACK: WHITE;
+						this.togglePlayers();
 						hasMoved = false; 
 					}
 	
@@ -146,7 +163,20 @@ public class ChessTextConsoleGame implements ChessConstants {
 		}
 			
 	}
-		
+	
+	/**
+	 * Toggles the myPieces and opponentPieces attributes. 
+	 */
+	private void togglePlayers() {
+		if(this.currentPlayer == ChessConstants.WHITE) {
+			this.myPieces = this.piecesWhite; 
+			this.opponentPieces = this.piecesBlack; 
+		}
+		else {
+			this.myPieces = this.piecesBlack;
+			this.opponentPieces = this.piecesWhite; 
+		}
+	}
 		
 		
 	
@@ -161,7 +191,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 		Pair chessPieceSelection = getUserInput(in); 
 		//get the selected piece
 		in.nextLine(); 
-		ChessPiece selectedPiece = selectPiece(chessPieceSelection); 
+		ChessPiece selectedPiece = logic.peek(board, chessPieceSelection);
 		if(selectedPiece == null) {
 			throw new IllegalArgumentException("Illegal Move: You selected an empty squre"); 
 		}
@@ -180,51 +210,6 @@ public class ChessTextConsoleGame implements ChessConstants {
 		Pair playerMove = getUserInput(in);
 		in.nextLine(); 
 		return playerMove; 
-	}
-	
-	/**
-	 * Throws an exception if player tries to move a chess piece that is not the king while in check
-	 * @param currentPlayer the current player color
-	 * @param selectedPiece the currently selected piece
-	 * @return false if not in check
-	 * @throws IllegalArgumentException if the selected piece is not the king
-	 */
-	public boolean inCheck(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
-		
-		if(currentPlayer == WHITE) {
-			if(this.logic.isChecked(this.board, this.piecesBlack, this.piecesWhite[INDEXKING].getPos())){
-				if(selectedPiece.getRank() != KING) {
-					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
-					 
-				}
-			}
-		}
-		else {
-			if(logic.isChecked(this.board, this.piecesWhite, this.piecesBlack[INDEXKING].getPos())){
-				if(selectedPiece.getRank() != KING) {
-					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
-				}
-			}
-		}
-		
-		return false; 
-		
-		
-	}
-	
-	/**
-	 * 
-	 * @param currentPlayer the current player color
-	 * @param selectedPiece the selected piece 
-	 * @return true if player selected correct color
-	 * @throws IllegalArgumentException if player selects opponents chess piece
-	 */
-	private boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
-		//check to make sure player chooses correct color
-		if(selectedPiece.getColor() != currentPlayer) {
-			throw new IllegalArgumentException("Illegal Move: Cannot select opponent's pieces"); 
-		}
-		return true; 
 	}
 	
 	
@@ -263,56 +248,6 @@ public class ChessTextConsoleGame implements ChessConstants {
 		
 	}
 	
-	
-	/**
-	 * Selects a piece on the chess board
-	 * @param board the chess board
-	 * @param square the specified square
-	 * @return the chess piece selected
-	 * @throws ArrayIndexOutOfBoundsException for specified square that is outside the board parameters
-	 */
-	public ChessPiece selectPiece(Pair square) 
-		throws ArrayIndexOutOfBoundsException{
-		
-		return this.board.checkSpace(square.row(), square.col()); 
-	}
-	
-	/**
-	 * Checks whether checkmate condition has been achieved
-	 * @param king the king chess piece being checked
-	 * @return boolean whether checkmate condition has been achieved
-	 */ 
-	private boolean isCheckmate() {
-		boolean checkmate = false; 
-		KingPiece king = null; 
-		if(currentPlayer == WHITE) {
-			king = (KingPiece)piecesBlack[ChessConstants.INDEXKING]; 
-			if(logic.isChecked(board, piecesWhite, king.getPos())){
-				if(logic.checkmate(board, piecesWhite, king)) {
-					checkmate = true; 
-					System.out.println("Checkmate! White player wins!"); 
-				}
-				//set king's checked parameter to true
-				king.setIsChecked(true);
-				
-			}
-		}
-		else {
-			king = (KingPiece)piecesWhite[ChessConstants.INDEXKING]; 
-			if(logic.isChecked(board, piecesBlack, king.getPos())){
-				if(logic.checkmate(board, piecesBlack, king)) {
-					checkmate = true; 
-					System.out.println("Checkmate! Black player wins!");
-				}
-				//set king's checked parameter to true
-				king.setIsChecked(true);
-			}
-		}
-		return checkmate;
-		
-	}
-	
-
 	
 	/**
 	 * Displays the game board

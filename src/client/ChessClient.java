@@ -184,18 +184,6 @@ public class ChessClient {
 		return shouldContinue; 
 	} 
 	
-		
-
-		
-	
-
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public static void main (String args[]) {
