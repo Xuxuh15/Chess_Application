@@ -280,7 +280,7 @@ public class ChessLogic implements ChessConstants {
 		 * @param selectedPiece the color of the selected piece
 		 * @return true if the player color matches the selected piece
 		 * @throws IllegalArgumentException if the color of the selected piece and the color of the player do
-		 * not macth
+		 * not match
 		 */
 		public boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
 			if(selectedPiece.getColor() != currentPlayer) {
