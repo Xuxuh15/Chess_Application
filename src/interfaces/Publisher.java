@@ -1,7 +1,5 @@
 package interfaces;
 
-import java.util.ArrayList;
-
 import helpers.Pair;
 
 public interface Publisher {
