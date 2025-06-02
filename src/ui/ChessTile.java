@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import logic.ChessConstants;
 import uicomponents.ChessPieceFactory;
 
 public class ChessTile extends StackPane  {
@@ -22,6 +23,11 @@ public class ChessTile extends StackPane  {
 	 * The actual tile. 
 	 */
 	private Rectangle tile; 
+	
+	/**
+	 * The color of the chess piece.
+	 */
+	private char chessPieceColor; 
 	
 	
 	/**
@@ -65,7 +71,8 @@ public class ChessTile extends StackPane  {
 	 * @see resources/images/
 	 */
 	public void addChessPiece(String chessPieceName) {
-		ImageView chessPiece = ChessPieceFactory.createPiece(chessPieceName); 
+		 this.chessPiece = ChessPieceFactory.createPiece(chessPieceName);
+		 this.chessPieceColor = chessPieceName.contains("white")? ChessConstants.WHITE : ChessConstants.BLACK; 
 
 		chessPiece.setPreserveRatio(true); // Preserve aspect ratio of the image
 	    chessPiece.setSmooth(true); // Smooth scaling of the image
@@ -74,6 +81,32 @@ public class ChessTile extends StackPane  {
 	    //chessPiece.fitHeightProperty().bind(this.heightProperty());
 	    this.getChildren().add(chessPiece);
 		
+	}
+	
+	/**
+	 * Removes the ChessPiece from this tile.
+	 */
+	public void removeChessPiece() {
+		this.chessPiece = null; 
+		this.chessPieceColor = 'n'; 
+	}
+	
+	/**
+	 * Returns the color of the Chess Piece on this tile. 
+	 * @return a char or null if this tile does not contain a chess piece.
+	 */
+	public char getSelectedChessPieceColor() {
+		return this.chessPieceColor; 
+		
+		
+	}
+	
+	/**
+	 * Checks whether the tile is empty.
+	 * @return boolean. 
+	 */
+	public boolean isEmpty() {
+		return this.chessPiece == null; 
 	}
 	
 	/**
