@@ -246,7 +246,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 			String str = in.next(); 
 			//split strings into components
 			row = Integer.parseInt(str.split(":")[1]) - 1; 
-			col = logic.convertLettertoNum(str.split(":")[0]);
+			col = ChessLogic.convertLettertoNum(str.split(":")[0]);
 			//return a pair object with the destination square
 			return new Pair(row,col); 
 		}

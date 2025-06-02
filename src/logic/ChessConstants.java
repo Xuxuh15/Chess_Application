@@ -38,6 +38,16 @@ public interface ChessConstants {
 	
 	final static char WHITE = 'W'; 
 	final static char BLACK = 'B'; 
+	
 	final static String[] LAYOUT = {"white_castle", "white_knight", "white_bishop", "white_queen", 
 			"white_king", "white_bishop", "white_knight", "white_castle"};  
+
+	final static int START = 1; 
+	final static int END = -1; 
+	final static int ASSIGNMENT = 2; 
+	final static int PLAY = 3; 
+	final static int MOVE = 4;
+	final static int WAS_VALID_MOVE = 5; 
+	final static int UPDATE = 6;
+	final static int CONTINUE = 7; 
 }

@@ -2,6 +2,7 @@ package logic;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.InputMismatchException;
 
 import helpers.Pair;
 
@@ -114,7 +115,7 @@ public class ChessLogic implements ChessConstants {
 		 * @param l the column choice [A-H]
 		 * @return the corresponding column value
 		 */
-		public int convertLettertoNum(String l) {
+		public static int convertLettertoNum(String l) {
 			
 			int val = -1; 
 			
@@ -192,6 +193,102 @@ public class ChessLogic implements ChessConstants {
 	        //indicates king is not in check
 			return inCheck; 
 		}
+		
+		
+		/**
+		 * Throws an exception if player tries to move a chess piece that is not the king while in check
+		 * @param currentPlayer the current player color
+		 * @param selectedPiece the currently selected piece
+		 * @return false if not in check
+		 * @throws IllegalArgumentException if the selected piece is not the king
+		 */
+		public boolean inCheck(ChessBoard board,ChessPiece selectedPiece, ChessPiece[] oppPieces, ChessPiece[] myPieces) throws IllegalArgumentException {
+			
+			if(this.isChecked(board, oppPieces, myPieces[ChessConstants.INDEXKING].getPos())){
+				if(selectedPiece.getRank() != ChessConstants.KING) {
+					throw new IllegalArgumentException("Illegal Selection: King is in check"); 
+					 
+				}
+			}
+			
+			return false;
+			
+		}
+		public ChessPiece[] getMyPieces(char currentPlayer) {
+			if(currentPlayer == ChessConstants.WHITE) return this.whitePlayerPieces; 
+			else return this.blackPlayerPieces; 
+		}
+		
+		public ChessPiece[] getOpponentPieces(char currentPlayer) {
+			if(currentPlayer == ChessConstants.WHITE) return this.blackPlayerPieces; 
+			else return this.whitePlayerPieces; 
+		}
+		
+		/**
+		 * Checks whether checkmate condition has been achieved
+		 * @param king the king chess piece being checked
+		 * @return boolean whether checkmate condition has been achieved
+		 */ 
+		public boolean isCheckmate(ChessBoard board,char currentColor) {
+			boolean checkmate = false; 
+			KingPiece king = null; 
+			ChessPiece[] opponentPieces = this.getOpponentPieces(currentColor); 
+			ChessPiece[] myPieces = this.getMyPieces(currentColor); 
+			
+			king = (KingPiece)opponentPieces[ChessConstants.INDEXKING]; 
+			if(this.isChecked(board, myPieces, king.getPos())){
+				if(this.checkmate(board, myPieces, king)) {
+					checkmate = true; 
+					System.out.println("Checkmate!"); 
+				}
+				//set king's checked parameter to true
+				king.setIsChecked(true);
+				
+			}
+			
+			return checkmate;
+			
+		}
+		
+		/**
+		 * Returns a pair from its String representation (e.g. "row:col")
+		 * @param str
+		 * @return
+		 */
+		public static Pair getCoordinate(String str)  {
+
+			try {
+				int row; 
+				int col; 
+				//split strings into components
+				row = Integer.parseInt(str.split(":")[1]) - 1; 
+				col = ChessLogic.convertLettertoNum(str.split(":")[0]);
+				//return a pair object with the destination square
+				return new Pair(row,col); 
+			}
+			catch(InputMismatchException e) { //wrong input format
+				throw e; 
+			}
+			catch(NumberFormatException e) {
+				throw e; 
+			}
+		}
+		
+		/**
+		 * Determines whether the current player selected their own piece.
+		 * @param currentPlayer the current color
+		 * @param selectedPiece the color of the selected piece
+		 * @return true if the player color matches the selected piece
+		 * @throws IllegalArgumentException if the color of the selected piece and the color of the player do
+		 * not macth
+		 */
+		public boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
+			if(selectedPiece.getColor() != currentPlayer) {
+				return true; 
+			} 
+			throw new IllegalArgumentException("Illegal Move: Player cannot select piece of opponent's color"); 
+		}
+		
 		
 		
 		/**
