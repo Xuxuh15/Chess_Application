@@ -17,41 +17,26 @@ import logic.ChessPiece;
 
 public class ChessUI extends Application {
 	
-	/**
-	 * Represents a check mate
-	 */
-	private boolean checkmate; 
-	/**
-	 * White chess pieces
-	 */
-	private ChessPiece[] piecesWhite = ChessLogic.generatePieces(ChessConstants.WHITE);
-	/*
-	 * Black chess pieces
-	 */
-	private ChessPiece[] piecesBlack = ChessLogic.generatePieces(ChessConstants.BLACK);
-	/**
-	 * the chess board
-	 */
-	private ChessBoard board;  
+
 	
 	/**
-	 * Represents whether current player has moved
+	 * Represents whether current player can make a move. Click event will only fire when this is true.
 	 */
-	private boolean hasMoved = false; 
+	private boolean canPlay = true; 
 	
-	private boolean isMyTurn = false; 
 	/**
 	 * the current player
 	 */
-	private char currentPlayer; 
+	private char currentPlayer = ChessConstants.WHITE; 
 	
 	/**
-	 * Game logic. 
+	 * The player's selected source square. 
 	 */
-	private ChessLogic logic; 
-	
-	private Pair selectedSquare; 
-	private Pair destinationSquare; 
+	private Pair selectedSquare = null; 
+	/**
+	 * The player's selected destination square. 
+	 */
+	private Pair destinationSquare = null; 
 	
 	
 
@@ -103,46 +88,45 @@ public class ChessUI extends Application {
 				tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
 					
 					  //only update selected coords if it is the player's turn and they haven't moved yet.
-					  if(isMyTurn && !hasMoved) {
+					  if(canPlay) {
+						boolean selectedCorrectColor = this.selectedCorrectColor(tile); 
+						System.out.print("Selected correct color: " + selectedCorrectColor ); 
 						  
-						  ChessPiece selectedPiece = logic.peek(board, tile.getCoord()); 
-						  
-						  //nothing was selected
-						  if(selectedPiece == null) {
-							  return; 
-						  }
-						  boolean selectedCorrectColor = this.selectedCorrectColor(currentPlayer, selectedPiece);
-						  
-						  //player selected the wrong color piece
-						  if(!selectedCorrectColor) {
-							  return; 
-						  }
-						  else {
-							  // if user selects the same square, diselect current square
-							  if(this.selectedSquare == tile.getCoord()) {
-								  this.selectedSquare = null; 
+						if(this.selectedSquare == null) {
+							  
+							  //player selected the wrong color piece
+							  if(tile.isEmpty() || !selectedCorrectColor) {
+								  return; 
 							  }
-							  //if user has not selected a square yet, set the selected square to this coordinate
-							  else if(this.selectedSquare == null) {
-								  this.selectedSquare = tile.getCoord(); 
-							  }
-							  //user has selected a square with a valid piece and the newly selected square is a different coordinate. 
 							  else {
-								  this.destinationSquare = tile.getCoord(); 
+								  //if user has not selected a square yet, set the selected square to this coordinate
+								  this.selectedSquare = tile.getCoord(); 
+								  System.out.println("Selected " + tile.getCoord()); 
 							  }
-							  //we can have a blocking wait while selected and destination square == null
-						  }
-						
-					  }
+								    
+								  
+						}
+						else {
+							 // if user selects the same square, diselect current square
+							if(this.selectedSquare == tile.getCoord()) {
+									this.selectedSquare = null; 
+									System.out.println("Diselected " + tile.getCoord()); 
+								}
+							//set the destination square and lock the move to be sent to the server
+							else {
+								this.canPlay = false; //lock the move in
+								System.out.println("Destination " + tile.getCoord());
+							}
+							
+						}
 					
-					 
-					 
+						
+				}
+					
 					  
 				});
 				
-				 
-				
-				root.add(tile, j, i); 
+				root.add(tile, j, i); //adds the tile to the board
 			}
 		}
 		return root; 
@@ -150,19 +134,20 @@ public class ChessUI extends Application {
 	
 	
 		
-	/**
-	 * 
-	 * @param currentPlayer the current player color
-	 * @param selectedPiece the selected piece 
-	 * @return true if player selected correct color
-	 * @throws IllegalArgumentException if player selects opponents chess piece
-	 */
-	private boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
-		//check to make sure player chooses correct color
-		if(selectedPiece.getColor() != currentPlayer) {
-			throw new IllegalArgumentException("Illegal Move: Cannot select opponent's pieces"); 
+	
+	 /**
+	  * Checks if the player has selected the correct ChessPiece color. 
+	  * @param tile the tile.
+	  * @return a boolean.
+	  */
+	private boolean selectedCorrectColor(ChessTile tile) {
+		char color = tile.getSelectedChessPieceColor(); 
+		boolean selectedCorrectColor = false; 
+		if(color == this.currentPlayer) {
+			selectedCorrectColor = true; 
 		}
-		return true; 
+		return selectedCorrectColor; 
+		
 	}
 	
 	
