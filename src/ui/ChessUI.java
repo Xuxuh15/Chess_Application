@@ -119,7 +119,6 @@ public class ChessUI extends Application {
 							}
 							
 						}
-					
 						
 				}
 					
@@ -148,6 +147,21 @@ public class ChessUI extends Application {
 		}
 		return selectedCorrectColor; 
 		
+	}
+	
+	/**
+	 * Resets a move.
+	 */
+	private void resetMove() {
+		this.selectedSquare = null; 
+		this.destinationSquare = null; 
+	}
+	
+	/**
+	 * Changes board state so player can select a move. 
+	 */
+	private void canPlay() {
+		this.canPlay = true; 
 	}
 	
 	
