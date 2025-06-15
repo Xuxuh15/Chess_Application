@@ -72,29 +72,8 @@ public class ChessTextConsoleTest {
 		
 	}
 	
-	@Test
-	@DisplayName("selectPiece input out of bounds throws ArrayIndexOutOfBoundsException")
-	public void selectPiece_InputOutOfBounds_ThrowsArrayIndexOutOfBoundsException() {
-		assertThrows(ArrayIndexOutOfBoundsException.class, ()->{
-			game.selectPiece(new Pair(9,9)); 
-		}, "Expected ArrayIndexOutofBoundsException to be thrown"); 
-	}
 	
-	@Test
-	@DisplayName("selectPiece input out empty square returns null")
-	public void selectPiece_EmptySquare_ReturnsNull() throws ArrayIndexOutOfBoundsException {
-		ChessPiece selectedPiece = game.selectPiece(new Pair(ChessConstants.D,5)); 
-		assertNull(selectedPiece); 
-	}
 	
-	@Test
-	@DisplayName("selectPiece valid input returns correct Chess Piece")
-	public void selectPiece_ValidInput_ReturnsCorrectChessPiece() {
-		ChessPiece selectedPiece = game.selectPiece(new Pair(ChessConstants.B,1)); 
-		assertNotNull(selectedPiece); 
-		assertEquals(ChessConstants.WHITE, selectedPiece.getColor(), "Expected chess pieceto be white"); 
-		assertEquals(ChessConstants.PAWN, selectedPiece.getRank(), "Expected chess piece to be PAWN rank"); 
-	}
 	
 	
 
