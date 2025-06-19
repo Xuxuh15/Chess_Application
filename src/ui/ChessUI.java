@@ -1,11 +1,16 @@
 package ui;
 
+import java.util.Iterator;
+
 import helpers.Pair;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -14,6 +19,7 @@ import logic.ChessBoard;
 import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
+import uicomponents.GUIChessBoard;
 
 public class ChessUI extends Application {
 	
@@ -39,97 +45,73 @@ public class ChessUI extends Application {
 	private Pair destinationSquare = null; 
 	
 	
+	
+	private GUIChessBoard board = new GUIChessBoard(); 
+	
+	
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
 		
-		GridPane root = createBoard(); 
+		ObservableList<Node> tiles = board.getChildren(); 
+		
+		Iterator iter = tiles.iterator(); 
+		
+		while(iter.hasNext()) {
+			ChessTile tile = (ChessTile) iter.next(); 
+			tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
+				//only update selected coords if it is the player's turn and they haven't moved yet.
+				  if(canPlay) {
+					boolean selectedCorrectColor = this.selectedCorrectColor(tile); 
+					System.out.print("Selected correct color: " + selectedCorrectColor ); 
+					  
+					if(board.getSelectedSourceSquare() == null) {
+						  
+						  //player selected the wrong color piece
+						  if(tile.isEmpty() || !selectedCorrectColor) {
+							  return; 
+						  }
+						  else {
+							  //if user has not selected a square yet, set the selected square to this coordinate
+							  board.setSelectedSourceSquare(tile.getCoord()); 
+							  System.out.println("Selected " + tile.getCoord()); 
+						  }
+							    
+							  
+					}
+					else {
+						 // if user selects the same square, diselect current square
+						if(board.getSelectedSourceSquare() == tile.getCoord()) {
+								board.setSelectedSourceSquare(null);   
+								System.out.println("Diselected " + tile.getCoord()); 
+							}
+						//set the destination square and lock the move to be sent to the server
+						else {
+							this.canPlay = false; //lock the move in
+							board.setSelectedDestinationSquare(tile.getCoord()); 
+							System.out.println("Destination " + tile.getCoord());
+						}
+						
+					}
+			
+				  }
+			});
+		}
+		
 
 		
-		Scene scene = new Scene(root, 800, 800);
+		Scene scene = new Scene(this.board, 800, 800);
 		
         primaryStage.setTitle("Chess UI");
         primaryStage.setResizable(true);
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        this.board.updateBoard(new Pair(1,1), new Pair(2,1));
 		
 	}
-	
-	/**
-	 * Creates the UI Chess Board
-	 * @return 
-	 * @return a GridPane
-	 */
-	public GridPane createBoard() {
-		GridPane root = new GridPane(); 
-		root.setAlignment(Pos.CENTER);
-	    // Make sure TilePane does not resize the number of columns (fixed grid)
-	    root.setPrefWidth(600);
-	    root.setPrefHeight(600);
-	    root.setPadding(new Insets(30));
-	    
-		for(int i = 0; i < ChessConstants.ROWS; i++) {
-	
-			for(int j = 0; j < ChessConstants.COLUMNS; j++) {
-	
-				Color tileColor = ((i + j) % 2 == 0 ? Color.BEIGE : Color.BROWN);
-				ChessTile tile = new ChessTile(new Pair(i,j), tileColor); 
-				if(i == 0 || i == ChessConstants.ROWS -1) {
-					tile.addChessPiece(ChessConstants.LAYOUT[j]);
-				}
-				else if(i == 1 || i == ChessConstants.ROWS - 2) {
-					tile.addChessPiece("white_pawn");
-				}
-				
-				tile.setPrefSize(70, 70);
-				// Bind the width and height of the tile to the individual cell size based on the root size
-				tile.autosize();
-				tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
-					
-					  //only update selected coords if it is the player's turn and they haven't moved yet.
-					  if(canPlay) {
-						boolean selectedCorrectColor = this.selectedCorrectColor(tile); 
-						System.out.print("Selected correct color: " + selectedCorrectColor ); 
-						  
-						if(this.selectedSquare == null) {
-							  
-							  //player selected the wrong color piece
-							  if(tile.isEmpty() || !selectedCorrectColor) {
-								  return; 
-							  }
-							  else {
-								  //if user has not selected a square yet, set the selected square to this coordinate
-								  this.selectedSquare = tile.getCoord(); 
-								  System.out.println("Selected " + tile.getCoord()); 
-							  }
-								    
-								  
-						}
-						else {
-							 // if user selects the same square, diselect current square
-							if(this.selectedSquare == tile.getCoord()) {
-									this.selectedSquare = null; 
-									System.out.println("Diselected " + tile.getCoord()); 
-								}
-							//set the destination square and lock the move to be sent to the server
-							else {
-								this.canPlay = false; //lock the move in
-								System.out.println("Destination " + tile.getCoord());
-							}
-							
-						}
-						
-				}
-					
-					  
-				});
-				
-				root.add(tile, j, i); //adds the tile to the board
-			}
-		}
-		return root; 
-	}
+
 	
 	
 		
@@ -164,7 +146,9 @@ public class ChessUI extends Application {
 		this.canPlay = true; 
 	}
 	
-	//method to update board
+	
+	
+	
 	
 	//method to create label for game notifications
 	
@@ -180,6 +164,8 @@ public class ChessUI extends Application {
 	public static void main(String[] args) {
 		
 		launch(args); 
+		
+		
 	}
 
 }
