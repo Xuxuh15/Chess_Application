@@ -18,7 +18,7 @@ public class ChessTile extends StackPane  {
 	/**
 	 * The Chess Piece gui representation.
 	 */
-	private ImageView chessPiece = null;
+	private ImageView chessPieceImgView = null;
 	/**
 	 * The actual tile. 
 	 */
@@ -71,23 +71,34 @@ public class ChessTile extends StackPane  {
 	 * @see resources/images/
 	 */
 	public void addChessPiece(String chessPieceName) {
-		 this.chessPiece = ChessPieceFactory.createPiece(chessPieceName);
+		 this.chessPieceImgView = ChessPieceFactory.createPiece(chessPieceName);
 		 this.chessPieceColor = chessPieceName.contains("white")? ChessConstants.WHITE : ChessConstants.BLACK; 
 
-		chessPiece.setPreserveRatio(true); // Preserve aspect ratio of the image
-	    chessPiece.setSmooth(true); // Smooth scaling of the image
+		chessPieceImgView.setPreserveRatio(true); // Preserve aspect ratio of the image
+	    chessPieceImgView.setSmooth(true); // Smooth scaling of the image
 	    // Bind ImageView's width and height to StackPane's width and height
 	    //chessPiece.fitWidthProperty().bind(this.widthProperty());
 	    //chessPiece.fitHeightProperty().bind(this.heightProperty());
-	    this.getChildren().add(chessPiece);
+	    this.getChildren().add(chessPieceImgView);
 		
 	}
+	
+	/**
+	 * Adds chess piece ImageView to the tile .
+	 * @param imageView the ImageView to add 
+	 */
+	public void addChessPiece(ImageView imageView) {
+		this.getChildren().add(imageView); 
+		this.chessPieceImgView = imageView; 
+	}
+	
 	
 	/**
 	 * Removes the ChessPiece from this tile.
 	 */
 	public void removeChessPiece() {
-		this.chessPiece = null; 
+		this.getChildren().removeIf(node -> node instanceof ImageView); 
+		this.chessPieceImgView = null; 
 		this.chessPieceColor = 'n'; 
 	}
 	
@@ -106,15 +117,15 @@ public class ChessTile extends StackPane  {
 	 * @return boolean. 
 	 */
 	public boolean isEmpty() {
-		return this.chessPiece == null; 
+		return this.chessPieceImgView == null; 
 	}
 	
 	/**
 	 * Returns the image on the tile.
 	 * @return Image on the tile if exists or null.
 	 */
-	public Image getImage() {
-		return this.chessPiece.getImage(); 
+	public ImageView getImageView() {
+		return this.chessPieceImgView; 
 	}
 	
 	
