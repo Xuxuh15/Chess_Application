@@ -19,6 +19,7 @@ import logic.ChessBoard;
 import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
+import statemachine.SelectionController;
 import uicomponents.GUIChessBoard;
 
 public class ChessUI extends Application {
@@ -44,6 +45,8 @@ public class ChessUI extends Application {
 	 */
 	private Pair destinationSquare = null; 
 	
+	private SelectionController controller = new SelectionController(); 
+	
 	
 	
 	private GUIChessBoard board = new GUIChessBoard(); 
@@ -60,43 +63,8 @@ public class ChessUI extends Application {
 		
 		while(iter.hasNext()) {
 			ChessTile tile = (ChessTile) iter.next(); 
-			tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
-				//only update selected coords if it is the player's turn and they haven't moved yet.
-				  if(canPlay) {
-					boolean selectedCorrectColor = this.selectedCorrectColor(tile); 
-					System.out.print("Selected correct color: " + selectedCorrectColor ); 
-					  
-					if(board.getSelectedSourceSquare() == null) {
-						  
-						  //player selected the wrong color piece
-						  if(tile.isEmpty() || !selectedCorrectColor) {
-							  return; 
-						  }
-						  else {
-							  //if user has not selected a square yet, set the selected square to this coordinate
-							  board.setSelectedSourceSquare(tile.getCoord()); 
-							  System.out.println("Selected " + tile.getCoord()); 
-						  }
-							    
-							  
-					}
-					else {
-						 // if user selects the same square, diselect current square
-						if(board.getSelectedSourceSquare() == tile.getCoord()) {
-								board.setSelectedSourceSquare(null);   
-								System.out.println("Diselected " + tile.getCoord()); 
-							}
-						//set the destination square and lock the move to be sent to the server
-						else {
-							this.canPlay = false; //lock the move in
-							board.setSelectedDestinationSquare(tile.getCoord()); 
-							System.out.println("Destination " + tile.getCoord());
-						}
-						
-					}
-			
-				  }
-			});
+			tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{controller.onTileClicked(tile);}); 
+				
 		}
 		
 
