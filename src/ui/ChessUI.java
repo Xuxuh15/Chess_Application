@@ -22,33 +22,22 @@ import logic.ChessPiece;
 import statemachine.SelectionController;
 import uicomponents.GUIChessBoard;
 
+/*
+ * The UI interface for the Chess game.
+ */
 public class ChessUI extends Application {
 	
 
 	
-	/**
-	 * Represents whether current player can make a move. Click event will only fire when this is true.
-	 */
-	private boolean canPlay = true; 
 	
 	/**
-	 * the current player
+	 * Handles state of player board selection. 
 	 */
-	private char currentPlayer = ChessConstants.WHITE; 
-	
-	/**
-	 * The player's selected source square. 
-	 */
-	private Pair selectedSquare = null; 
-	/**
-	 * The player's selected destination square. 
-	 */
-	private Pair destinationSquare = null; 
-	
 	private SelectionController controller = new SelectionController(); 
 	
-	
-	
+	/**
+	 * The GUI ChessBoard.
+	 */
 	private GUIChessBoard board = new GUIChessBoard(); 
 	
 	
@@ -61,6 +50,7 @@ public class ChessUI extends Application {
 		
 		Iterator iter = tiles.iterator(); 
 		
+		//add event listener to the board tiles
 		while(iter.hasNext()) {
 			ChessTile tile = (ChessTile) iter.next(); 
 			tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{controller.onTileClicked(tile);}); 
@@ -81,37 +71,6 @@ public class ChessUI extends Application {
 		
 	}
 
-	
-	
-	
-	/**
-	 * Resets a move.
-	 */
-	private void resetMove() {
-		this.selectedSquare = null; 
-		this.destinationSquare = null; 
-	}
-	
-	/**
-	 * Changes board state so player can select a move. 
-	 */
-	private void canPlay() {
-		this.canPlay = true; 
-	}
-	
-	
-	
-	
-	
-	//method to create label for game notifications
-	
-	//method for label for current player's turn
-	
-	//method for label for selected and destination square
-	
-	//a timer label on the top
-	
-	
 	
 	
 	public static void main(String[] args) {
