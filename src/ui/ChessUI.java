@@ -70,6 +70,7 @@ public class ChessUI extends Application {
 
 		
 		Scene scene = new Scene(this.board, 800, 800);
+		//scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 		
         primaryStage.setTitle("Chess UI");
         primaryStage.setResizable(true);
@@ -82,22 +83,6 @@ public class ChessUI extends Application {
 
 	
 	
-		
-	
-	 /**
-	  * Checks if the player has selected the correct ChessPiece color. 
-	  * @param tile the tile.
-	  * @return a boolean.
-	  */
-	private boolean selectedCorrectColor(ChessTile tile) {
-		char color = tile.getSelectedChessPieceColor(); 
-		boolean selectedCorrectColor = false; 
-		if(color == this.currentPlayer) {
-			selectedCorrectColor = true; 
-		}
-		return selectedCorrectColor; 
-		
-	}
 	
 	/**
 	 * Resets a move.
