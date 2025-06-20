@@ -16,6 +16,13 @@ public class SelectionController {
 	    public SelectionController() {
 	        this.currentState = new IdleState();
 	    }
+	    
+	    public void setCurrentPlayer(char player) {
+	    	this.currentPlayer = player; 
+	    }
+	    public char getCurrentPlayer() {
+	    	return this.currentPlayer; 
+	    }
 
 	    public void setState(SelectionState state) {
 	        this.currentState = state;
@@ -40,6 +47,10 @@ public class SelectionController {
 	        return sourceTile;
 	    }
 	    
+	    public SelectionState getState() {
+	    	return this.currentState; 
+	    }
+	    
 		 /**
 		  * Checks if the player has selected the correct ChessPiece color. 
 		  * @param tile the tile.
@@ -58,6 +69,7 @@ public class SelectionController {
 	    public void resetSelection() {
 	        this.sourceTile = null;
 	        this.destinationTile = null;
+	        this.canPlay = true;
 	        this.setState(new IdleState());
 	    }
 
