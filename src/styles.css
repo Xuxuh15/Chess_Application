@@ -1,0 +1,6 @@
+.highlighted {
+    -fx-background-color: lightblue;
+    -fx-border-color: yellow;
+    -fx-border-width: 3;
+}
+

@@ -8,7 +8,7 @@ public class IdleState implements SelectionState  {
 	    public void onTileSelected(ChessTile tile, SelectionController context) {
 	        if (context.isPlayerPiece(tile)) {
 	            context.setSourceTile(tile);
-	            //tile.select(); // highlight, etc.
+	            //tile.getStyleClass().add("highlighted");
 	            context.setState(new SourceSelectedState());
 	        } else {
 	        	System.out.println("Invalid selection"); 

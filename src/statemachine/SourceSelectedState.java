@@ -8,7 +8,7 @@ public class SourceSelectedState implements SelectionState {
 	        ChessTile source = context.getSourceTile();
 
 	        if (tile == source) {
-	            //tile.deselect(); // visual unhighlight
+	        	//tile.getStyleClass().remove("highlighted");
 	            context.resetSelection();
 	        } else {
 	            context.setDestinationTile(tile);
