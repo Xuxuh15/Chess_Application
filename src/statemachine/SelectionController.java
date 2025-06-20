@@ -38,6 +38,14 @@ public class SelectionController {
 	    }
 	    
 	    /**
+	     * Getter for canPlay. 
+	     * @return boolean
+	     */
+	    public boolean getCanPlay() {
+	    	return this.canPlay;
+	    }
+	    
+	    /**
 	     * Setter for currentPlayer.
 	     * @param player player to set
 	     */
@@ -90,7 +98,7 @@ public class SelectionController {
 
 	    /**
 	     * Getter for sourceTile.
-	     * @return
+	     * @return ChessTile
 	     */
 	    public ChessTile getSourceTile() {
 	        return sourceTile;
@@ -98,10 +106,18 @@ public class SelectionController {
 	    
 	    /**
 	     * Getter for currentState.
-	     * @return
+	     * @return SelectionState
 	     */
 	    public SelectionState getState() {
 	    	return this.currentState; 
+	    }
+	    
+	    /**
+	     * Getter method for destination tile.
+	     * @return ChessTile 
+	     */
+	    public ChessTile getDestinationTile() {
+	    	return this.destinationTile; 
 	    }
 	    
 		 /**
