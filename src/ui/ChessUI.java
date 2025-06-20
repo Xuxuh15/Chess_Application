@@ -20,15 +20,13 @@ import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
 import statemachine.SelectionController;
+import statemachine.SelectionLockedState;
 import uicomponents.GUIChessBoard;
 
 /*
  * The UI interface for the Chess game.
  */
 public class ChessUI extends Application {
-	
-
-	
 	
 	/**
 	 * Handles state of player board selection. 
@@ -39,6 +37,9 @@ public class ChessUI extends Application {
 	 * The GUI ChessBoard.
 	 */
 	private GUIChessBoard board = new GUIChessBoard(); 
+	
+	private boolean ready = false; 
+	boolean inSession = true; 
 	
 	
 
@@ -53,7 +54,19 @@ public class ChessUI extends Application {
 		//add event listener to the board tiles
 		while(iter.hasNext()) {
 			ChessTile tile = (ChessTile) iter.next(); 
-			tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{controller.onTileClicked(tile);}); 
+			tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
+			  if(controller.getCanPlay()) {
+				  controller.onTileClicked(tile);
+				  if (controller.getState() instanceof SelectionLockedState) {
+	                  Pair source = controller.getSourceTile().getCoord();
+	                  Pair destination = controller.getDestinationTile().getCoord();
+	                  //send coord to server and wait for update
+	                  board.updateBoard(source, destination); //only if server approves then update
+	                  controller.resetSelection(); // go back to waiting for next selection
+	              }
+			  } 
+			  
+			}); 
 				
 		}
 		
@@ -66,8 +79,7 @@ public class ChessUI extends Application {
         primaryStage.setResizable(true);
         primaryStage.setScene(scene);
         primaryStage.show();
-        
-        this.board.updateBoard(new Pair(1,1), new Pair(2,1));
+      
 		
 	}
 
