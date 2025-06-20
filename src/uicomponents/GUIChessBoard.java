@@ -84,6 +84,10 @@ public class GUIChessBoard extends GridPane {
 			
 		ImageView chessPieceView = sourceTile.getImageView(); 
 		
+		if(!destinationTile.isEmpty()) {
+			destinationTile.removeChessPiece();
+		}
+		
 		destinationTile.addChessPiece(chessPieceView);
 			
 		sourceTile.removeChessPiece();
