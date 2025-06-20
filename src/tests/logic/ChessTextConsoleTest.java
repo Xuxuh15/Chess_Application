@@ -1,4 +1,4 @@
-package tests;
+package tests.logic;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;

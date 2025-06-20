@@ -1,6 +1,6 @@
-package tests;
+package tests.logic;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
@@ -17,16 +17,17 @@ import logic.ChessBoard;
 import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
-import logic.VerifyMoveBishop;
+import logic.VerifyMoveRook;
 
-public class VerifyMoveBishopTest {
+public class VerifyMoveRookTest {
+	
 	
 	private static ChessBoard board; 
 	private static ChessLogic logic; 
 	private static ChessPiece[] whitePieces; 
 	private static ChessPiece[] blackPieces; 
 	private static ChessEmulator emulator; 
-	private static VerifyMoveBishop verification; 
+	private static VerifyMoveRook verification; 
 
 	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
@@ -37,7 +38,7 @@ public class VerifyMoveBishopTest {
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		emulator = new ChessEmulator(logic);
-		verification = new VerifyMoveBishop(); 
+		verification = new VerifyMoveRook(); 
 		
 		
 	}
@@ -71,50 +72,46 @@ public class VerifyMoveBishopTest {
 	
 	
 	@Test
-	@DisplayName("verifyMove vertial/horizontal move returns false")
-	public void verifyMove_VerticalOrHorizontalMove_ReturnsFalse() {
+	@DisplayName("verifyMoveRook rook moves diagonally throws IllegalArgumentException")
+	public void verifyMoveRook_MovesDiagonally_ThrowsIllegalArgumentException() {
 		
-		emulator.applySequence(ChessSequences.STATE1, board); 
-		ChessPiece bishop = logic.peek(board, new Pair(5, ChessConstants.E)); 
 		
-		assertFalse(verification.verifyMove(board, bishop, new Pair(5, ChessConstants.D)), "Expected false"
-				+ "to be returned"); 
-		assertFalse(verification.verifyMove(board, bishop, new Pair(4, ChessConstants.E)), "Expected false"
-				+ "to be returned"); 
+		emulator.applySequence(ChessSequences.STATE1, board);
+		ChessPiece rookToMove = logic.peek(board, new Pair(0,ChessConstants.E)); 
 		
+		assertThrows(IllegalArgumentException.class,()->{
+			 verification.verifyMove(board, rookToMove, new Pair(1,ChessConstants.D)); 
+		}, "Expected IllegalArgumentException to be thrown"); 
+		
+			
 	}
 	
 	@Test
-	@DisplayName("verifyMove diagonal move returns true")
-	public void verifyMove_DiagonalMove_ReturnsTrue() {
-		
-		emulator.applySequence(ChessSequences.STATE1, board); 
-		ChessPiece bishop = logic.peek(board, new Pair(5, ChessConstants.E)); 
-		
-		assertTrue(verification.verifyMove(board, bishop, new Pair(4, ChessConstants.F)), "Expected true"
-				+ "to be returned"); 
-		assertTrue(verification.verifyMove(board, bishop, new Pair(3, ChessConstants.G)), "Expected true"
-				+ "to be returned"); 
+	@DisplayName("verifyMoveRook rook tries to jump piece on path throws IllegalArgumentException")
+	public void verifyMoveRook_TriesToJumpPieceOnPath_ThrowsIllegalArgumentException() {
 		
 		
+		emulator.applySequence(ChessSequences.STATE1, board);
+		ChessPiece rookToMove = logic.peek(board, new Pair(7,ChessConstants.A)); 
+		
+		assertThrows(IllegalArgumentException.class,()->{
+			 verification.verifyMove(board, rookToMove, new Pair(7,ChessConstants.F)); 
+		}, "Expected IllegalArgumentException to be thrown"); 
+		
+			
 	}
 	
 	@Test
-	@DisplayName("verifyMove chess piece blocking diagonal path returns false")
-	public void verifyMove_ObstructionInPath_ReturnsFalse() {
-		emulator.applySequence(ChessSequences.STATE1, board); 
-		ChessPiece bishop = logic.peek(board, new Pair(5, ChessConstants.E)); 
+	@DisplayName("verifyMoveRook valid move returns true")
+	public void verifyMoveRook_ValidMove_ReturnsTrue() {
 		
-
-		assertFalse(verification.verifyMove(board, bishop, new Pair(7, ChessConstants.G)), "Expected false"
-				+ "to be returned"); 
 		
+		emulator.applySequence(ChessSequences.STATE1, board);
+		ChessPiece rookToMove = logic.peek(board, new Pair(7,ChessConstants.A)); 
+		
+		assertTrue(verification.verifyMove(board, rookToMove, new Pair(7,ChessConstants.C)), "Expected true to be returned"); 
+			
 	}
-	
-
-	
-	
-	
 	
 	
 	

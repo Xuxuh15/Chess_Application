@@ -1,4 +1,4 @@
-package tests;
+package tests.logic;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,16 +17,17 @@ import logic.ChessBoard;
 import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
-import logic.VerifyMoveQueen;
+import logic.VerifyMoveKing;
 
-public class VerifyMoveQueenTest {
+
+public class VerifyMoveKingTest {
 	
 	private static ChessBoard board; 
 	private static ChessLogic logic; 
 	private static ChessPiece[] whitePieces; 
 	private static ChessPiece[] blackPieces; 
 	private static ChessEmulator emulator; 
-	private static VerifyMoveQueen verification; 
+	private static VerifyMoveKing verification; 
 
 	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
@@ -37,7 +38,7 @@ public class VerifyMoveQueenTest {
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		emulator = new ChessEmulator(logic);
-		verification = new VerifyMoveQueen(); 
+		verification = null; 
 		
 		
 	}
@@ -58,6 +59,7 @@ public class VerifyMoveQueenTest {
 		logic.setWhitePlayerChessArray(whitePieces);
 		logic.setUpBoard(board);
 		emulator.setLogic(logic);
+		verification = new VerifyMoveKing(blackPieces); 
 		
 	}
 
@@ -69,47 +71,68 @@ public class VerifyMoveQueenTest {
 		blackPieces= null; 
 	}
 	
+	
 	@Test
 	@DisplayName("verifyMove invalid move returns false")
 	public void verifyMove_InvalidMove_ReturnsFalse() {
 		
-		ChessPiece queen = logic.peek(board, new Pair(0,ChessConstants.E)); 
-		assertFalse(verification.verifyMove(board, queen, new Pair(3, ChessConstants.E)), "Expected false to be returned"); 
-	
+		emulator.applySequence(ChessSequences.STATE4, board);
+		ChessPiece king = whitePieces[ChessConstants.INDEXKING]; 
+		assertFalse(verification.verifyMove(board, king, new Pair(0,ChessConstants.G)),
+				"Expected false to be returned"); 
+		
 	}
 	
 	@Test
-	@DisplayName("verifyMove valid diagonal movement returns true")
-	public void verifyMove_ValidDiagonal_ReturnsTrue() {
+	@DisplayName("verifyMove valid diagonal move returns true")
+	public void verifyMove_ValidDiaginal_ReturnsTrue() {
 		
 		emulator.applySequence(ChessSequences.STATE4, board);
+		ChessPiece king = whitePieces[ChessConstants.INDEXKING]; 
+		assertTrue(verification.verifyMove(board, king, new Pair(1,ChessConstants.D)), 
+				"Expected true to be returned"); 
 		
-		ChessPiece queen = logic.peek(board, new Pair(0, ChessConstants.D)); 
-		assertTrue(verification.verifyMove(board, queen, new Pair(1, ChessConstants.E)), "Expected true to be returned"); 
 	}
 	
 	@Test
-	@DisplayName("verifyMove valid vertical movement returns true")
+	@DisplayName("verifyMove valid horizontal move returns true")
+	public void verifyMove_ValidHorizontal_ReturnsTrue() {
+		
+		emulator.applySequence(ChessSequences.STATE4, board);
+		ChessPiece king = whitePieces[ChessConstants.INDEXKING]; 
+		assertTrue(verification.verifyMove(board, king, new Pair(0,ChessConstants.F)),
+				"Expected true to be returned"); 
+		
+	}
+	
+	@Test
+	@DisplayName("verifyMove valid vertical move returns true")
 	public void verifyMove_ValidVertical_ReturnsTrue() {
 		
 		emulator.applySequence(ChessSequences.STATE4, board);
+		ChessPiece king = whitePieces[ChessConstants.INDEXKING]; 
+		assertTrue(verification.verifyMove(board, king, new Pair(1,ChessConstants.E))
+				,"Expected true to be returned"); 
 		
-		ChessPiece queen = logic.peek(board, new Pair(0, ChessConstants.D)); 
-		assertTrue(verification.verifyMove(board, queen, new Pair(2, ChessConstants.D)), "Expected true to be returned"); 
 	}
 	
 	@Test
-	@DisplayName("verifyMove valid horizontal movement returns true")
-	public void verifyMove_ValidGHorizontal_ReturnsTrue() {
+	@DisplayName("verifyMove king moves into check returns false")
+	public void verifyMove_KingMovesIntoCheck_ReturnsFalse() {
 		
-		emulator.applySequence(ChessSequences.STATE4, board);
-		ChessPiece queen = logic.peek(board, new Pair(0, ChessConstants.D)); 
-		logic.moveAndUpdate(board, queen, new Pair(1, ChessConstants.D));
-		assertTrue(verification.verifyMove(board, queen, new Pair(1, ChessConstants.E)), "Expected true to be returned"); 
+		emulator.applySequence(ChessSequences.STATE5, board);
+		ChessPiece king = whitePieces[ChessConstants.INDEXKING]; 
+		assertFalse(verification.verifyMove(board, king, new Pair(2,ChessConstants.E))
+				,"Expected true to be returned"); 
+		
 	}
 	
 	
 	
-
+	
+	
+	
+	
+	
 
 }
