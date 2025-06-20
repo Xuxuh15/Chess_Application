@@ -79,6 +79,7 @@ public class ChessTile extends StackPane  {
 	    // Bind ImageView's width and height to StackPane's width and height
 	    //chessPiece.fitWidthProperty().bind(this.widthProperty());
 	    //chessPiece.fitHeightProperty().bind(this.heightProperty());
+	    chessPieceImgView.setId(chessPieceName); 
 	    this.getChildren().add(chessPieceImgView);
 		
 	}
@@ -90,6 +91,13 @@ public class ChessTile extends StackPane  {
 	public void addChessPiece(ImageView imageView) {
 		this.getChildren().add(imageView); 
 		this.chessPieceImgView = imageView; 
+		String name = imageView.getId(); 
+		if(name.contains("white")) {
+			this.chessPieceColor = ChessConstants.WHITE; 
+		}
+		else {
+			this.chessPieceColor = ChessConstants.BLACK; 
+		}
 	}
 	
 	
