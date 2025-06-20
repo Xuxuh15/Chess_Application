@@ -3,6 +3,9 @@ package statemachine;
 import logic.ChessConstants;
 import ui.ChessTile;
 
+/**
+ * The logic for handling state of tile selection.
+ */
 public class SelectionController {
 	
 		/**

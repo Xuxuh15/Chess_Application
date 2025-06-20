@@ -10,6 +10,9 @@ import javafx.scene.paint.Color;
 import logic.ChessConstants;
 import ui.ChessTile;
 
+/**
+ * Class that represents the GUI Chess Board.
+ */
 public class GUIChessBoard extends GridPane {
 	
 	/**
