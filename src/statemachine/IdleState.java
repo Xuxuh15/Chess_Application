@@ -1,6 +1,6 @@
 package statemachine;
 
-import ui.ChessTile;
+import uicomponents.ChessTile;
 
 public class IdleState implements SelectionState  {
 	

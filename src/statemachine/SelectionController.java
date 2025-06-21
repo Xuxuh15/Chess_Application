@@ -1,7 +1,7 @@
 package statemachine;
 
 import logic.ChessConstants;
-import ui.ChessTile;
+import uicomponents.ChessTile;
 
 /**
  * The logic for handling state of tile selection.
