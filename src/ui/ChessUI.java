@@ -2,16 +2,20 @@ package ui;
 
 import java.util.Iterator;
 
+import javax.swing.GroupLayout.Alignment;
+
 import helpers.Pair;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.EventType;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -21,6 +25,7 @@ import logic.ChessLogic;
 import logic.ChessPiece;
 import statemachine.SelectionController;
 import statemachine.SelectionLockedState;
+import uicomponents.BoardLabel;
 import uicomponents.GUIChessBoard;
 
 /*
@@ -72,7 +77,7 @@ public class ChessUI extends Application {
 		
 
 		
-		Scene scene = new Scene(this.board, 800, 800);
+		Scene scene = new Scene(createMainGrid(), 1600, 800);
 		//scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 		
         primaryStage.setTitle("Chess UI");
@@ -81,6 +86,63 @@ public class ChessUI extends Application {
         primaryStage.show();
       
 		
+	}
+	
+	/**
+	 * Creates grid to hold chess board and chess labels. 
+	 * @return GridPane
+	 */
+	private GridPane createMainGrid() {
+		GridPane mainGrid = new GridPane(); 
+		mainGrid.setAlignment(Pos.CENTER);
+	    // Make sure TilePane does not resize the number of columns (fixed grid)
+	    mainGrid.setPrefWidth(800);
+	    mainGrid.setPrefHeight(800);
+	    mainGrid.setPadding(new Insets(30));
+	    mainGrid.add(new ColumnLabel(), 1, 0);
+	    mainGrid.add(this.board, 1,1); 
+	    mainGrid.add(new RowLabel(), 0, 1);
+	    return mainGrid; 
+	}
+	
+	/**
+	 * The column labels for the chess board.
+	 */
+	public class ColumnLabel extends GridPane  {
+		
+		public ColumnLabel() {
+			char label = 'A'; 
+			for(int j = 0;  j < ChessConstants.COLUMNS; j++) {
+				BoardLabel colLabel = new BoardLabel(label);
+				colLabel.setPrefSize(BoardLabel.PREF_WIDTH, BoardLabel.PREF_HEIGHT - 50);
+				this.add(colLabel,j,0); 
+				this.setAlignment(Pos.CENTER); 
+				label++; 
+				
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * The row labels for the chess board.
+	 */
+	public class RowLabel extends GridPane  {
+		
+		public RowLabel() {
+			
+			int label = 1; 
+			for(int i = 0;  i < ChessConstants.ROWS; i++) {
+				BoardLabel rowLabel = new BoardLabel(String.valueOf(label)); 
+				rowLabel.setPrefSize(BoardLabel.PREF_WIDTH - 50, BoardLabel.PREF_HEIGHT);
+				this.add(rowLabel,0,i); 
+				this.setAlignment(Pos.CENTER);
+				label++; 
+				
+			}
+			
+		}
 	}
 
 	
