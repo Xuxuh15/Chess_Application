@@ -1,6 +1,7 @@
 package uicomponents;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
@@ -12,6 +13,7 @@ public class Timer extends Label {
 	
 	public Timer(int duration) {
 		this.duration = duration; 
+		this.currentTurnTimeRemaining = duration; 
 		this.setText(formatTime(0)); 
 		this.turnTimer =  new Timeline(new KeyFrame(Duration.seconds(1), e -> {
 	        // Update label or timer logic here
@@ -19,7 +21,9 @@ public class Timer extends Label {
 	    	})
 		); 
 		turnTimer.setCycleCount(Timeline.INDEFINITE);
-		//turnTimer.play();
+		this.setStyle();
+		this.format(); 
+		turnTimer.play();
 	}
 	
 	private String getUpdatedTime() {
@@ -55,6 +59,30 @@ public class Timer extends Label {
 	public void setDuration(int duration) {
 		this.duration = duration; 
 	}
+	
+	public void format() {
+		this.setPrefWidth(200); // or some value that fits your longest time format
+		this.setMinWidth(100);
+		this.setMaxWidth(200);
+		this.setAlignment(Pos.CENTER); // center text inside fixed width
+	}
+	
+	public void setStyle() {
+		this.setStyle(
+			    "-fx-font-size: 26px; " +
+			    "-fx-font-weight: bold; " +
+			    "-fx-text-fill: #7f1d1d; " +          // deep dark red text
+			    "-fx-background-color: #f5f0e6; " +   // light beige background
+			    "-fx-padding: 12px 24px; " +
+			    "-fx-background-radius: 12px; " +
+			    "-fx-border-color: #a42e2e; " +       // medium red border
+			    "-fx-border-width: 3px; " +
+			    "-fx-border-radius: 12px; " +
+			    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);"
+			);
+	}
+	
+	
 	
 	
 
