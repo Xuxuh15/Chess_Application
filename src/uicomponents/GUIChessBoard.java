@@ -8,7 +8,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import logic.ChessConstants;
-import ui.ChessTile;
 
 /**
  * Class that represents the GUI Chess Board.

@@ -1,4 +1,4 @@
-package ui;
+package uicomponents;
 
 import helpers.Pair;
 import javafx.scene.image.Image;
@@ -7,7 +7,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import logic.ChessConstants;
-import uicomponents.ChessPieceFactory;
 
 public class ChessTile extends StackPane  {
 	

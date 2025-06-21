@@ -26,6 +26,7 @@ import logic.ChessPiece;
 import statemachine.SelectionController;
 import statemachine.SelectionLockedState;
 import uicomponents.BoardLabel;
+import uicomponents.ChessTile;
 import uicomponents.GUIChessBoard;
 
 /*
