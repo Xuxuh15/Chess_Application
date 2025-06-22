@@ -5,12 +5,28 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
+/**
+ * A timer comppnent.
+ */
 public class Timer extends Label {
 	
+	/**
+	 * The total duration.
+	 */
 	private int duration = 30;
+	/**
+	 * Time remaining.
+	 */
 	private int currentTurnTimeRemaining; 
+	/**
+	 * Timeline instance.
+	 */
 	private Timeline turnTimer;
 	
+	/**
+	 * Constructor.
+	 * @param duration the time limit for each player.
+	 */
 	public Timer(int duration) {
 		this.duration = duration; 
 		this.currentTurnTimeRemaining = duration; 
@@ -26,8 +42,12 @@ public class Timer extends Label {
 		turnTimer.play();
 	}
 	
+	/**
+	 * Returns string representation of current time remaining.
+	 * @return String time remaining
+	 */
 	private String getUpdatedTime() {
-		String time = "0:00:0"; 
+		String time = "00:00"; 
 		if (currentTurnTimeRemaining > 0) {
 	        currentTurnTimeRemaining--;
 	        time = formatTime(currentTurnTimeRemaining);
@@ -39,34 +59,54 @@ public class Timer extends Label {
 	}
 
 	
-	
+	/**
+	 * Formats the time in form [minutes]:[seconds].
+	 * @param totalSeconds seconds remaining on the clock
+	 * @return a formatted string
+	 */
 	private String formatTime(int totalSeconds) {
 	    int minutes = totalSeconds / 60;
 	    int seconds = totalSeconds % 60;
 	    return String.format("%02d:%02d", minutes, seconds);
 	}
 	
+	/**
+	 * Starts the timer.
+	 */
 	public void startTurnTimer() {
 	    currentTurnTimeRemaining = duration;
 	    this.setText(formatTime(currentTurnTimeRemaining));
 	    turnTimer.play();
 	}
 
+	/**
+	 * Stops the timer.
+	 */
 	public void stopTurnTimer() {
 	    turnTimer.stop();
 	}
 	
+	/**
+	 * Setter method for duration.
+	 * @param duration
+	 */
 	public void setDuration(int duration) {
 		this.duration = duration; 
 	}
 	
+	/**
+	 * Formats the ui component.
+	 */
 	public void format() {
-		this.setPrefWidth(200); // or some value that fits your longest time format
+		this.setPrefWidth(150); // or some value that fits your longest time format
 		this.setMinWidth(100);
 		this.setMaxWidth(200);
 		this.setAlignment(Pos.CENTER); // center text inside fixed width
 	}
 	
+	/**
+	 * Sets the style for this component.
+	 */
 	public void setStyle() {
 		this.setStyle(
 			    "-fx-font-size: 26px; " +
