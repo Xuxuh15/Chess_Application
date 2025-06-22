@@ -47,7 +47,7 @@ public class PlayerInfoPanel extends VBox {
 		 // VBox to hold the icon, timer, and player name
         VBox infoBox = new VBox(5);
         infoBox.setAlignment(Pos.TOP_CENTER);
-        infoBox.setStyle("-fx-background-color: #ffffff; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
+        infoBox.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
         
         // Add icon, timer, and name to infoBox
         infoBox.getChildren().addAll(this.icon,this.stopclock, this.playerName);
