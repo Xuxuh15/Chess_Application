@@ -20,6 +20,8 @@ public class PlayerInfoPanel extends VBox {
 	
 	private ImageView icon; 
 	
+	private CapturedPiecesPanel capturedPanel; 
+	
 	
 	public PlayerInfoPanel(String playerName, String icon, int status) {
 		this.playerName = this.createPlayerNameLabel(playerName); 
@@ -27,7 +29,7 @@ public class PlayerInfoPanel extends VBox {
 		this.statusLabel = new StatusLabel("Your Move"); 
 		statusLabel.setStatus(status);
 		this.icon = ChessPieceFactory.createPiece(icon); 
-		
+		this.capturedPanel = new CapturedPiecesPanel(); 		
 		this.setUp(); 
 		
 	}
@@ -57,8 +59,10 @@ public class PlayerInfoPanel extends VBox {
         statusBox.setAlignment(Pos.CENTER); // Center vertically
         statusBox.setPrefWidth(100); // Optional: control layout width
         
+        
+        
         // Add both boxes to the PlayerInfoPanel (HBox)
-        this.getChildren().addAll(infoBox, statusBox);
+        this.getChildren().addAll(infoBox, statusBox, capturedPanel);
 	}
 	
 	
@@ -95,6 +99,10 @@ public class PlayerInfoPanel extends VBox {
 		Label playerNameLabel = new Label(playerName); 
 		playerNameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 		return playerNameLabel; 
+	}
+	
+	public void addCapture(ImageView view) {
+		this.capturedPanel.add(view);
 	}
 	
 	

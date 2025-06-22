@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -31,7 +32,13 @@ public class ChessUI extends Application {
 	/**
 	 * Handles state of player board selection. 
 	 */
-	private SelectionController controller = new SelectionController(); 
+	private SelectionController controller = new SelectionController();
+	
+	private PlayerInfoPanel player1Panel; 
+	
+	private PlayerInfoPanel player2Panel; 
+	
+	
 	
 	/**
 	 * The GUI ChessBoard.
@@ -47,7 +54,9 @@ public class ChessUI extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		
 		
-		ObservableList<Node> tiles = board.getChildren(); 
+		ObservableList<Node> tiles = board.getChildren();
+		this.player1Panel = new PlayerInfoPanel("Player 1", "white_pawn", ChessConstants.YOUR_MOVE); 
+		this.player2Panel = new PlayerInfoPanel("Player 2", "black_pawn", ChessConstants.WAIT); 
 		
 		Iterator iter = tiles.iterator(); 
 		
@@ -61,7 +70,15 @@ public class ChessUI extends Application {
 	                  Pair source = controller.getSourceTile().getCoord();
 	                  Pair destination = controller.getDestinationTile().getCoord();
 	                  //send coord to server and wait for update
-	                  board.updateBoard(source, destination); //only if server approves then update
+	                  ImageView view = board.updateBoard(source, destination); //only if server approves then update
+	                  if(view != null) {
+	                	  
+	                	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
+	                		    player1Panel.addCapture(view);
+	                		} else {
+	                		    player2Panel.addCapture(view);
+	                		}
+	                  }
 	                  controller.resetSelection(); // go back to waiting for next selection
 	              }
 			  } 
@@ -97,8 +114,9 @@ public class ChessUI extends Application {
 	    mainGrid.add(new ColumnLabel(), 2, 0);
 	    mainGrid.add(this.board, 2,1); 
 	    mainGrid.add(new RowLabel(), 1, 1);
-	    mainGrid.add(new PlayerInfoPanel("Player 1", "white_pawn", ChessConstants.YOUR_MOVE), 0,1); 
-	    mainGrid.add(new PlayerInfoPanel("Player 2", "black_pawn", ChessConstants.WAIT), 3,1);
+	    
+	    mainGrid.add(this.player1Panel, 0,1); 
+	    mainGrid.add(this.player2Panel, 3,1);
 	    return mainGrid; 
 	}
 	

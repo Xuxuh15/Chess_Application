@@ -103,10 +103,12 @@ public class ChessTile extends StackPane  {
 	/**
 	 * Removes the ChessPiece from this tile.
 	 */
-	public void removeChessPiece() {
+	public ImageView removeChessPiece() {
 		this.getChildren().removeIf(node -> node instanceof ImageView); 
+		ImageView chessPiece = this.chessPieceImgView; 
 		this.chessPieceImgView = null; 
 		this.chessPieceColor = 'n'; 
+		return chessPiece; 
 	}
 	
 	/**

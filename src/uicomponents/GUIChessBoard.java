@@ -74,9 +74,11 @@ public class GUIChessBoard extends GridPane {
 	 * Will update board by moving gui chess piece to new location. 
 	 * @param source the starting point
 	 * @param destination the destination point
+	 * @return ImageView captured piece if there was a capture otherwise null
 	 */
-	public void updateBoard(Pair source, Pair destination) {
+	public ImageView updateBoard(Pair source, Pair destination) {
 			
+		ImageView capturedPiece = null; 
 		ChessTile sourceTile = peek(source); 
 			
 		ChessTile destinationTile = peek(destination); 
@@ -84,12 +86,14 @@ public class GUIChessBoard extends GridPane {
 		ImageView chessPieceView = sourceTile.getImageView(); 
 		
 		if(!destinationTile.isEmpty()) {
-			destinationTile.removeChessPiece();
+			capturedPiece = destinationTile.removeChessPiece();
 		}
 		
 		destinationTile.addChessPiece(chessPieceView);
 			
 		sourceTile.removeChessPiece();
+		
+		return capturedPiece; 
 			
 			
 		}
