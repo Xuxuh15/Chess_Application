@@ -7,6 +7,7 @@ import javax.swing.GroupLayout.Alignment;
 import helpers.Pair;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -63,27 +64,7 @@ public class ChessUI extends Application {
 		//add event listener to the board tiles
 		while(iter.hasNext()) {
 			ChessTile tile = (ChessTile) iter.next(); 
-			tile.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
-			  if(controller.getCanPlay()) {
-				  controller.onTileClicked(tile);
-				  if (controller.getState() instanceof SelectionLockedState) {
-	                  Pair source = controller.getSourceTile().getCoord();
-	                  Pair destination = controller.getDestinationTile().getCoord();
-	                  //send coord to server and wait for update
-	                  ImageView view = board.updateBoard(source, destination); //only if server approves then update
-	                  if(view != null) {
-	                	  
-	                	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
-	                		    player1Panel.addCapture(view);
-	                		} else {
-	                		    player2Panel.addCapture(view);
-	                		}
-	                  }
-	                  controller.resetSelection(); // go back to waiting for next selection
-	              }
-			  } 
-			  
-			}); 
+			tile.setOnMouseClicked(tileClickHandler);  
 				
 		}
 		
@@ -99,6 +80,31 @@ public class ChessUI extends Application {
       
 		
 	}
+	
+	public EventHandler<MouseEvent> tileClickHandler = e -> {
+	    ChessTile clickedTile = (ChessTile) e.getSource();
+	    if(controller.getCanPlay()) {
+			  controller.onTileClicked(clickedTile);
+			  if (controller.getState() instanceof SelectionLockedState) {
+                Pair source = controller.getSourceTile().getCoord();
+                Pair destination = controller.getDestinationTile().getCoord();
+                //send coord to server and wait for update
+                ImageView view = board.updateBoard(source, destination); //only if server approves then update
+                if(view != null) {
+              	  
+              	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
+              		    player1Panel.addCapture(view);
+              		} else {
+              		    player2Panel.addCapture(view);
+              		}
+                }
+                controller.resetSelection(); // go back to waiting for next selection
+            }
+		  } 
+		  
+	}; 
+	    
+	
 	
 	/**
 	 * Creates grid to hold chess board and chess labels. 
