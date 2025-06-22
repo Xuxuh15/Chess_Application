@@ -7,27 +7,21 @@ import javax.swing.GroupLayout.Alignment;
 import helpers.Pair;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import logic.ChessBoard;
 import logic.ChessConstants;
-import logic.ChessLogic;
-import logic.ChessPiece;
 import statemachine.SelectionController;
 import statemachine.SelectionLockedState;
 import uicomponents.BoardLabel;
 import uicomponents.ChessTile;
 import uicomponents.GUIChessBoard;
+import uicomponents.PlayerInfoPanel;
+
 
 /*
  * The UI interface for the Chess game.
@@ -100,9 +94,11 @@ public class ChessUI extends Application {
 	    mainGrid.setPrefWidth(800);
 	    mainGrid.setPrefHeight(800);
 	    mainGrid.setPadding(new Insets(30));
-	    mainGrid.add(new ColumnLabel(), 1, 0);
-	    mainGrid.add(this.board, 1,1); 
-	    mainGrid.add(new RowLabel(), 0, 1);
+	    mainGrid.add(new ColumnLabel(), 2, 0);
+	    mainGrid.add(this.board, 2,1); 
+	    mainGrid.add(new RowLabel(), 1, 1);
+	    mainGrid.add(new PlayerInfoPanel("Player 1", "white_pawn", ChessConstants.YOUR_MOVE), 0,1); 
+	    mainGrid.add(new PlayerInfoPanel("Player 2", "black_pawn", ChessConstants.WAIT), 3,1);
 	    return mainGrid; 
 	}
 	
