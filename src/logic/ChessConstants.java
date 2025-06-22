@@ -50,4 +50,10 @@ public interface ChessConstants {
 	final static int WAS_VALID_MOVE = 5; 
 	final static int UPDATE = 6;
 	final static int CONTINUE = 7; 
+	
+	
+	final static int IN_CHECK = 9; 
+	final static int CHECKMATE = 10; 
+	final static int YOUR_MOVE = 11; 
+	final static int WAIT = 12;
 }
