@@ -39,7 +39,7 @@ public class Timer extends Label {
 		turnTimer.setCycleCount(Timeline.INDEFINITE);
 		this.setStyle();
 		this.format(); 
-		turnTimer.play();
+		//turnTimer.play();
 	}
 	
 	/**
@@ -84,6 +84,13 @@ public class Timer extends Label {
 	 */
 	public void stopTurnTimer() {
 	    turnTimer.stop();
+	}
+	
+	/**
+	 * Resets the timer.
+	 */
+	public void resetTimer() {
+		this.currentTurnTimeRemaining = this.duration; 
 	}
 	
 	/**
