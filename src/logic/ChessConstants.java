@@ -39,8 +39,8 @@ public interface ChessConstants {
 	final static char WHITE = 'W'; 
 	final static char BLACK = 'B'; 
 	
-	final static String[] LAYOUT = {"white_castle", "white_knight", "white_bishop", "white_queen", 
-			"white_king", "white_bishop", "white_knight", "white_castle"};  
+	final static String[] LAYOUT = {"_castle", "_knight", "_bishop", "_queen", 
+			"_king", "_bishop", "_knight", "_castle"};  
 
 	final static int START = 1; 
 	final static int END = -1; 
