@@ -60,9 +60,11 @@ public class ChessServer {
 	      while (true) {
 	        System.out.println("Threaded server waiting for connects on port " + portNo);
 	        sockP1 = server.getServer().accept(); //blocking wait
+	        sockP1.setSoTimeout(120000); 
 	        server.incrementId();
 	        System.out.println("Threaded server connected to client-" + server.getID());
 	        sockP2 = server.getServer().accept(); //blocking wait
+	        sockP2.setSoTimeout(120000); 
 	        server.incrementId();
 	        System.out.println("Threaded server connected to client-" + server.getID());
 	        
