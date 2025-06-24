@@ -16,6 +16,7 @@ public class SelectionController {
 	     * Whether player can play. When false, clickEvents are ignored.
 	     */
 	    private boolean canPlay = true; // player's turn flag
+	    
 	    /**
 	     * The current player whose turn it is.
 	     */
@@ -30,6 +31,7 @@ public class SelectionController {
 	     */
 	    private ChessTile destinationTile = null;
 	    
+	    
 	    /**
 	     * Constructor.
 	     */
@@ -43,6 +45,10 @@ public class SelectionController {
 	     */
 	    public boolean getCanPlay() {
 	    	return this.canPlay;
+	    }
+	    
+	    public void setCanPlay(boolean canPlay) {
+	    	this.canPlay = canPlay; 
 	    }
 	    
 	    /**
@@ -68,6 +74,7 @@ public class SelectionController {
 	    public void setState(SelectionState state) {
 	        this.currentState = state;
 	    }
+	    
 
 	    /**
 	     * Handles logic for mouseClickEvent. 
@@ -141,7 +148,7 @@ public class SelectionController {
 	    public void resetSelection() {
 	        this.sourceTile = null;
 	        this.destinationTile = null;
-	        this.canPlay = true;
+	        //this.canPlay = true;
 	        this.setState(new IdleState());
 	    }
 
