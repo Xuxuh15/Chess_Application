@@ -119,11 +119,17 @@ public class GUIChessBoard extends GridPane {
 	
 				Color tileColor = ((i + j) % 2 == 0 ? Color.BEIGE : Color.BROWN);
 				ChessTile tile = new ChessTile(new Pair(i,j), tileColor); 
-				if(i == 0 || i == ChessConstants.ROWS -1) {
-					tile.addChessPiece(ChessConstants.LAYOUT[j]);
+				if(i == 0) {
+					tile.addChessPiece("white" + ChessConstants.LAYOUT[j]);
 				}
-				else if(i == 1 || i == ChessConstants.ROWS - 2) {
+				else if( i == ChessConstants.ROWS -1) {
+					tile.addChessPiece("black" + ChessConstants.LAYOUT[j]);
+				}
+				else if(i == 1) {
 					tile.addChessPiece("white_pawn");
+				}
+				else if(i == ChessConstants.ROWS - 2) {
+					tile.addChessPiece("black_pawn");
 				}
 				
 				tile.setPrefSize(70, 70);
