@@ -71,7 +71,7 @@ public class ChessEmulator {
 	private Pair extractPos(String initPos) {
 		String[] colRow = initPos.split("");  
 		int row = Integer.parseInt(colRow[1]) - 1; 
-		int col = logic.convertLettertoNum(colRow[0]);
+		int col = ChessLogic.convertLettertoNum(colRow[0]);
 		return new Pair(row, col); 
 		
 	}

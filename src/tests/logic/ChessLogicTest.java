@@ -21,8 +21,6 @@ import logic.ChessConstants;
 import logic.ChessLogic;
 import logic.ChessPiece;
 import logic.KingPiece;
-import logic.VerificationStrategy;
-import logic.VerifyMoveKnight;
 
 public class ChessLogicTest {
 	
@@ -32,18 +30,16 @@ public class ChessLogicTest {
 	private static ChessPiece[] whitePieces; 
 	private static ChessPiece[] blackPieces; 
 	private static ChessEmulator emulator; 
-	private static VerificationStrategy verification; 
 
 	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
-		emulator = new ChessEmulator(logic);
-		verification = new VerifyMoveKnight(); 
+		emulator = new ChessEmulator(logic); 
 		
 		
 	}
@@ -58,8 +54,8 @@ public class ChessLogicTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		logic.setUpBoard(board);
@@ -102,19 +98,19 @@ public class ChessLogicTest {
 	@Test
 	@DisplayName("convertLetterToNum null value returns -1")
 	public void convertLetterToNum_NullValue_ReturnsNegativeOne() {
-		assertEquals(-1,logic.convertLettertoNum(null), "Expected -1 to be returned"); 
+		assertEquals(-1,ChessLogic.convertLettertoNum(null), "Expected -1 to be returned"); 
 	}
 	
 	@Test
 	@DisplayName("convertLetterToNum invalid letter returns -1")
 	public void convertLetterToNum_InvalidLetter_ReturnsNegativeOne() {
-		assertEquals(-1,logic.convertLettertoNum("z"), "Expected -1 to be returned"); 
+		assertEquals(-1,ChessLogic.convertLettertoNum("z"), "Expected -1 to be returned"); 
 	}
 	
 	@Test
 	@DisplayName("convertLetterToNum valid letter returns integer equivalent")
 	public void convertLetterToNum_ValidLetter_ReturnsIntegerEquivalent() {
-		assertEquals(ChessConstants.E,logic.convertLettertoNum("E"),String.format("Expected %d to be returned",
+		assertEquals(ChessConstants.E,ChessLogic.convertLettertoNum("E"),String.format("Expected %d to be returned",
 				ChessConstants.E)); 
 	}
 	
@@ -220,7 +216,7 @@ public class ChessLogicTest {
 	@Test
 	@DisplayName("generatePieces populates ChessPiece array")
 	public void generatePieces_PopulatesChessPieceArray() {
-		ChessPiece[] arr = logic.generatePieces(ChessConstants.BLACK); 
+		ChessPiece[] arr = ChessLogic.generatePieces(ChessConstants.BLACK); 
 		
 		assertNotNull(arr, "Expected arr not to be null"); 
 		

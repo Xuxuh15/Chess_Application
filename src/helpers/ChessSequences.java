@@ -49,6 +49,7 @@ public class ChessSequences {
             "G1:F3",  
             "E2:E3", 
             "C2:C3",
+            "D1:D3"
 	}; 
 	
 	public static final String[] STATE5 = {

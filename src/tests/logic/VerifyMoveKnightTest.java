@@ -32,8 +32,8 @@ public class VerifyMoveKnightTest {
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		emulator = new ChessEmulator(logic);
@@ -52,8 +52,8 @@ public class VerifyMoveKnightTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		logic.setUpBoard(board);

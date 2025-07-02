@@ -20,6 +20,7 @@ import logic.ChessPiece;
 import logic.VerifyMoveKing;
 
 
+
 public class VerifyMoveKingTest {
 	
 	private static ChessBoard board; 
@@ -33,8 +34,8 @@ public class VerifyMoveKingTest {
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		emulator = new ChessEmulator(logic);
@@ -53,8 +54,8 @@ public class VerifyMoveKingTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		logic.setUpBoard(board);
@@ -88,7 +89,7 @@ public class VerifyMoveKingTest {
 	public void verifyMove_ValidDiaginal_ReturnsTrue() {
 		
 		emulator.applySequence(ChessSequences.STATE4, board);
-		ChessPiece king = whitePieces[ChessConstants.INDEXKING]; 
+		ChessPiece king = whitePieces[ChessConstants.INDEXKING];  
 		assertTrue(verification.verifyMove(board, king, new Pair(1,ChessConstants.D)), 
 				"Expected true to be returned"); 
 		
@@ -100,7 +101,7 @@ public class VerifyMoveKingTest {
 		
 		emulator.applySequence(ChessSequences.STATE4, board);
 		ChessPiece king = whitePieces[ChessConstants.INDEXKING]; 
-		assertTrue(verification.verifyMove(board, king, new Pair(0,ChessConstants.F)),
+		assertTrue(verification.verifyMove(board, king, new Pair(0,ChessConstants.D)),
 				"Expected true to be returned"); 
 		
 	}

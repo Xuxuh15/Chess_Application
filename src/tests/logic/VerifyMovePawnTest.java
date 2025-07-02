@@ -33,8 +33,8 @@ public class VerifyMovePawnTest implements ChessConstants {
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(WHITE); 
-		blackPieces = logic.generatePieces(BLACK);
+		whitePieces = ChessLogic.generatePieces(WHITE); 
+		blackPieces = ChessLogic.generatePieces(BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		emulator = new ChessEmulator(logic);
@@ -53,8 +53,8 @@ public class VerifyMovePawnTest implements ChessConstants {
 	@BeforeEach
 	public void setUp() throws Exception {
 		logic = new ChessLogic();
-		whitePieces = logic.generatePieces(WHITE); 
-		blackPieces = logic.generatePieces(BLACK);
+		whitePieces = ChessLogic.generatePieces(WHITE); 
+		blackPieces = ChessLogic.generatePieces(BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		logic.setUpBoard(board);

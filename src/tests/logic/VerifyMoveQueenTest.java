@@ -32,8 +32,8 @@ public class VerifyMoveQueenTest {
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		emulator = new ChessEmulator(logic);
@@ -52,8 +52,8 @@ public class VerifyMoveQueenTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		logic.setUpBoard(board);
@@ -84,8 +84,8 @@ public class VerifyMoveQueenTest {
 		
 		emulator.applySequence(ChessSequences.STATE4, board);
 		
-		ChessPiece queen = logic.peek(board, new Pair(0, ChessConstants.D)); 
-		assertTrue(verification.verifyMove(board, queen, new Pair(1, ChessConstants.E)), "Expected true to be returned"); 
+		ChessPiece queen = logic.peek(board, new Pair(2, ChessConstants.D)); 
+		assertTrue(verification.verifyMove(board, queen, new Pair(3, ChessConstants.E)), "Expected true to be returned"); 
 	}
 	
 	@Test
@@ -94,8 +94,8 @@ public class VerifyMoveQueenTest {
 		
 		emulator.applySequence(ChessSequences.STATE4, board);
 		
-		ChessPiece queen = logic.peek(board, new Pair(0, ChessConstants.D)); 
-		assertTrue(verification.verifyMove(board, queen, new Pair(2, ChessConstants.D)), "Expected true to be returned"); 
+		ChessPiece queen = logic.peek(board, new Pair(2, ChessConstants.D)); 
+		assertTrue(verification.verifyMove(board, queen, new Pair(0, ChessConstants.D)), "Expected true to be returned"); 
 	}
 	
 	@Test
@@ -103,7 +103,7 @@ public class VerifyMoveQueenTest {
 	public void verifyMove_ValidGHorizontal_ReturnsTrue() {
 		
 		emulator.applySequence(ChessSequences.STATE4, board);
-		ChessPiece queen = logic.peek(board, new Pair(0, ChessConstants.D)); 
+		ChessPiece queen = logic.peek(board, new Pair(2, ChessConstants.D));
 		logic.moveAndUpdate(board, queen, new Pair(1, ChessConstants.D));
 		assertTrue(verification.verifyMove(board, queen, new Pair(1, ChessConstants.E)), "Expected true to be returned"); 
 	}

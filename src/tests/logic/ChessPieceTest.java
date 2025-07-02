@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +22,8 @@ public class ChessPieceTest implements ChessConstants {
 
 	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
-		pW = new ChessPiece(PAWN,WHITE); 
-		pB = new ChessPiece(ROOK, BLACK); 
+		pW = new ChessPiece(ChessConstants.PAWN,ChessConstants.WHITE); 
+		pB = new ChessPiece(ChessConstants.ROOK, ChessConstants.BLACK); 
 	}
 
 	@AfterAll

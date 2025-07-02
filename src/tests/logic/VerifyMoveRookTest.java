@@ -1,6 +1,6 @@
 package tests.logic;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
@@ -33,8 +33,8 @@ public class VerifyMoveRookTest {
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard(); 
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		emulator = new ChessEmulator(logic);
@@ -53,8 +53,8 @@ public class VerifyMoveRookTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		logic = new ChessLogic(); 
-		whitePieces = logic.generatePieces(ChessConstants.WHITE); 
-		blackPieces = logic.generatePieces(ChessConstants.BLACK);
+		whitePieces = ChessLogic.generatePieces(ChessConstants.WHITE); 
+		blackPieces = ChessLogic.generatePieces(ChessConstants.BLACK);
 		logic.setBlackPlayerChessArray(blackPieces);
 		logic.setWhitePlayerChessArray(whitePieces);
 		logic.setUpBoard(board);
@@ -79,10 +79,8 @@ public class VerifyMoveRookTest {
 		emulator.applySequence(ChessSequences.STATE1, board);
 		ChessPiece rookToMove = logic.peek(board, new Pair(0,ChessConstants.E)); 
 		
-		assertThrows(IllegalArgumentException.class,()->{
-			 verification.verifyMove(board, rookToMove, new Pair(1,ChessConstants.D)); 
-		}, "Expected IllegalArgumentException to be thrown"); 
-		
+		assertFalse(verification.verifyMove(board, rookToMove, new Pair(1,ChessConstants.D)),
+				"Expected false to be returned"); 
 			
 	}
 	
@@ -94,9 +92,10 @@ public class VerifyMoveRookTest {
 		emulator.applySequence(ChessSequences.STATE1, board);
 		ChessPiece rookToMove = logic.peek(board, new Pair(7,ChessConstants.A)); 
 		
-		assertThrows(IllegalArgumentException.class,()->{
-			 verification.verifyMove(board, rookToMove, new Pair(7,ChessConstants.F)); 
-		}, "Expected IllegalArgumentException to be thrown"); 
+		assertFalse(verification.verifyMove(board, rookToMove, new Pair(7,ChessConstants.F)),
+				"Expected false to be returned"); 
+			 
+		
 		
 			
 	}
