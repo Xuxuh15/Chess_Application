@@ -246,7 +246,7 @@ public class GameSession implements Runnable {
 							else {
 								throw new IllegalArgumentException("Invalid Move"); 
 							}
-							this.checkmate = logic.isCheckmate(board,currentPlayer); 
+							checkmate = logic.isCheckmate(board,currentPlayer); 
 							
 							//toggle the current color
 							if(!checkmate && hasMoved) {
