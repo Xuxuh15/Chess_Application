@@ -5,12 +5,15 @@ import org.json.JSONObject;
 
 import helpers.Pair;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.InputMismatchException;
 
 import logic.ChessBoard;
@@ -140,6 +143,23 @@ public class GameSession implements Runnable {
 		return res; 
 	}
 	
+	private JSONObject gameOverDueToTimeout(int playerColor) {
+	    JSONObject res = new JSONObject();
+	    res.put("type", ChessConstants.END);
+	    res.put("reason", "timeout");
+	    res.put("loser", playerColor);
+	    return res;
+	}
+
+	private JSONObject gameOverDueToDisconnect(int playerColor) {
+	    JSONObject res = new JSONObject();
+	    res.put("type", ChessConstants.END);
+	    res.put("reason", "disconnect");
+	    res.put("loser", playerColor);
+	    return res;
+	}
+
+	
 	
 	
 	
@@ -215,7 +235,9 @@ public class GameSession implements Runnable {
 				res = this.play(false); 
 				waitingPlayerOut.writeObject(res);
 				
-				req = parseRequest(currentPlayerIn); 
+				
+				req = parseRequest(currentPlayerIn);
+				
 				
 				
 				while(!hasMoved) {
@@ -295,6 +317,7 @@ public class GameSession implements Runnable {
 			
 			
 		}
+		catch(SocketTimeoutException e) {}
 		catch(IOException e) {
 			
 		}finally {

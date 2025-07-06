@@ -1,11 +1,14 @@
 package ui;
 
+import java.net.Socket;
 import java.util.Iterator;
 
-import javax.swing.GroupLayout.Alignment;
+import org.json.JSONObject;
 
+import client.ChessClient;
 import helpers.Pair;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -39,6 +42,9 @@ public class ChessUI extends Application {
 	
 	private PlayerInfoPanel player2Panel; 
 	
+	private static ChessClient client; 
+
+	
 	
 	
 	/**
@@ -57,7 +63,7 @@ public class ChessUI extends Application {
 		
 		ObservableList<Node> tiles = board.getChildren();
 		this.player1Panel = new PlayerInfoPanel("Player 1", "white_pawn", ChessConstants.YOUR_MOVE); 
-		this.player2Panel = new PlayerInfoPanel("Player 2", "black_pawn", ChessConstants.WAIT); 
+		this.player2Panel = new PlayerInfoPanel("Player 2", "black_pawn", ChessConstants.WAIT);  
 		
 		Iterator iter = tiles.iterator(); 
 		
@@ -68,6 +74,10 @@ public class ChessUI extends Application {
 				
 		}
 		
+	
+		
+		
+		
 
 		
 		Scene scene = new Scene(createMainGrid(), 1600, 800);
@@ -77,7 +87,103 @@ public class ChessUI extends Application {
         primaryStage.setResizable(true);
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        handleGameSession(); 
       
+		
+	}
+	
+	
+	
+	private void handleGameSession() {
+		
+		new Thread(()->{
+			//get the assigned color
+			client.getAssignedColor();
+			
+			//wait for the game to start
+			client.waitForStart();
+			
+			boolean gameOver = false; 
+			
+			while(!gameOver) {
+				
+				controller.setCanPlay(client.isMyTurn()); 
+				
+				if(controller.getCanPlay()) {
+
+					while(controller.getCanPlay()) {
+						
+						while (!(controller.getState() instanceof SelectionLockedState)) {
+						    try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
+						} //wait for a move to be locked
+						
+						Pair from = controller.getSourceTile().getCoord(); 
+						
+						Pair to = controller.getDestinationTile().getCoord(); 
+						
+						client.sendMove(from, to); //send move to server
+						
+						boolean validMove = client.wasValidMove(); 
+						
+						//only for a valid move
+						if(validMove) {
+							//update the ui board
+							Platform.runLater(()->{
+								Pair[] update = client.getUpdate(); 
+								Pair source = update[0]; 
+								Pair destination = update[1]; 
+								ImageView view = this.board.updateBoard(source, destination); 
+								 if(view != null) {
+					              	  
+					              	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
+					              		    player1Panel.addCapture(view);
+					              		} else {
+					              		    player2Panel.addCapture(view);
+					              		}
+					                }
+							}); 
+							controller.resetSelection(); 
+							controller.setCanPlay(false); 
+						}
+						
+						//check for win
+						gameOver = client.continuePlaying();
+						if(gameOver) {
+							break; 
+						}
+						
+					}
+				}
+				else {
+					//update the ui board
+					Platform.runLater(()->{
+						Pair[] update = client.getUpdate(); 
+						Pair source = update[0]; 
+						Pair destination = update[1]; 
+						ImageView view = this.board.updateBoard(source, destination); 
+						 if(view != null) {
+			              	  
+			              	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
+			              		    player1Panel.addCapture(view);
+			              		} else {
+			              		    player2Panel.addCapture(view);
+			              		}
+			                }
+					}); 
+					//check for win
+					gameOver = client.continuePlaying();
+					if(gameOver) {
+						break; 
+					}
+				}
+				
+				
+			} //end of game loop
+			
+			
+		}); 
+		
 		
 	}
 	
@@ -85,24 +191,14 @@ public class ChessUI extends Application {
 	    ChessTile clickedTile = (ChessTile) e.getSource();
 	    if(controller.getCanPlay()) {
 			  controller.onTileClicked(clickedTile);
-			  if (controller.getState() instanceof SelectionLockedState) {
-                Pair source = controller.getSourceTile().getCoord();
-                Pair destination = controller.getDestinationTile().getCoord();
-                //send coord to server and wait for update
-                ImageView view = board.updateBoard(source, destination); //only if server approves then update
-                if(view != null) {
-              	  
-              	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
-              		    player1Panel.addCapture(view);
-              		} else {
-              		    player2Panel.addCapture(view);
-              		}
-                }
-                controller.resetSelection(); // go back to waiting for next selection
             }
-		  } 
-		  
 	}; 
+		  
+	 
+	
+	public static void setSocket(ChessClient s){
+		client = s; 
+	}
 	    
 	
 	

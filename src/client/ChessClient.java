@@ -10,8 +10,10 @@ import java.net.Socket;
 import org.json.JSONObject;
 
 import helpers.Pair;
+import javafx.application.Application;
 import logic.ChessConstants;
 import logic.ChessLogic;
+import ui.ChessUI;
 
 /**
  * Handles communication between client and server
@@ -48,14 +50,21 @@ public class ChessClient {
 	 * @param to the destination square
 	 * @return a JSON request object of type MOVE
 	 */
-	private JSONObject sendMove(Pair from, Pair to) {
+	public void sendMove(Pair from, Pair to) {
 		JSONObject req = new JSONObject(); 
 		req.put("type", ChessConstants.MOVE); 
 		String fromStr = from.row() + ":" + from.col(); 
 		req.put("from", fromStr); 
 		String toStr = to.row() + ":" + to.col(); 
 		req.put("to", toStr); 
-		return req; 
+		try {
+			out.writeObject(req);
+		}
+		catch(IOException e) {
+			System.out.println("ChessClient<sendMove> Error: error sending request to server"); 
+			e.printStackTrace();
+			
+		}
 		
 	}
 	
@@ -89,6 +98,7 @@ public class ChessClient {
 			
 		}
 		catch(Exception e) {
+			System.out.println("ChessClient<getAssignedColor> Error: error receiving response from server"); 
 			e.printStackTrace(); 
 		}
 		
@@ -111,6 +121,7 @@ public class ChessClient {
 			}
 		}
 		catch(Exception e) {
+			System.out.println("ChessClient<waitForStart> Error: error receiving response from server"); 
 			e.printStackTrace();
 		}
 		
@@ -132,6 +143,7 @@ public class ChessClient {
 			}
 		}
 		catch(Exception e) {
+			System.out.println("ChessClient<isMyTurn> Error: error receiving response from server"); 
 			e.printStackTrace();
 		}
 		return shouldPlay; 
@@ -157,6 +169,7 @@ public class ChessClient {
 			}
 		}
 		catch(Exception e) {
+			System.out.println("ChessClient<getUpdate> Error: error receiving response from server"); 
 			e.printStackTrace();
 		}
 		return update;
@@ -179,9 +192,34 @@ public class ChessClient {
 			}
 		}
 		catch(Exception e) {
+			System.out.println("ChessClient<continuePlaying> Error: error receiving response from server"); 
 			e.printStackTrace();
 		}
 		return shouldContinue; 
+	} 
+	
+	
+	/**
+	 * Checks whether the last sent move was valid. 
+	 * @return boolean if move was valid or not 
+	 */
+	public boolean wasValidMove() {
+		boolean validMove = false; 
+		JSONObject res; 
+		try {
+			String in = (String)this.in.readObject(); 
+			res = new JSONObject(in); 
+			
+			if(!(res.getInt("type") == ChessConstants.WAS_VALID_MOVE)) {
+				validMove = res.getBoolean("ok"); 
+				System.out.println(res.getString("message")); 
+			}
+		}
+		catch(Exception e) {
+			System.out.println("ChessClient<continuePlaying> Error: error receiving response from server"); 
+			e.printStackTrace();
+		}
+		return validMove; 
 	} 
 	
 	
@@ -213,6 +251,12 @@ public class ChessClient {
 	      sock = new Socket(host, 8888); // connect to host and socket on port 8888
 	      
 	      client = new ChessClient(sock);
+	      
+	      //set client socket
+	      ChessUI.setSocket(client);
+	      
+	      //launch the Chess Board
+	      Application.launch(ChessUI.class, args);
 	      
 	      
 
