@@ -50,12 +50,12 @@ public class ChessTextConsoleGame implements ChessConstants {
 	/**
 	 * Reference to the players' chess pieces.
 	 */
-	private ChessPiece[] myPieces = piecesWhite; 
+	private ChessPiece[] myPieces; 
 	
 	/**
 	 * Reference to opponents' chess pieces. 
 	 */
-	private ChessPiece[] opponentPieces = piecesBlack; 
+	private ChessPiece[] opponentPieces;  
 	
 	
 	//Getter methods -- primarily for testing purposes
@@ -115,6 +115,7 @@ public class ChessTextConsoleGame implements ChessConstants {
 					
 					ChessPiece selectedPiece = selectChessPiece(in); 
 					Pair playerMove = getDestinationSquare(in); 
+					
 					
 					//check to make sure player chooses correct color
 					logic.selectedCorrectColor(currentPlayer, selectedPiece); 
@@ -317,11 +318,12 @@ public class ChessTextConsoleGame implements ChessConstants {
 	 */
 	private void generatePiecesAndSetUpBoard() {
 		//generate the chess pieces
-		this.piecesWhite = logic.generatePieces(WHITE); //white pieces
+		this.piecesWhite = ChessLogic.generatePieces(WHITE); //white pieces
 		logic.setWhitePlayerChessArray(piecesWhite);
-		this.piecesBlack = logic.generatePieces(BLACK); //black pieces
+		this.myPieces = this.piecesWhite; 
+		this.piecesBlack = ChessLogic.generatePieces(BLACK); //black pieces
 		logic.setBlackPlayerChessArray(piecesBlack);
-		
+		this.opponentPieces = this.piecesBlack; 
 		//set up the board
 		logic.setUpBoard(board);
 		

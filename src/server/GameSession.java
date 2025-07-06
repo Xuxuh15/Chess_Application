@@ -28,10 +28,7 @@ public class GameSession implements Runnable {
 	private ChessPiece[] piecesWhite; 
 	private ChessPiece[] piecesBlack; 
 	
-	
-	private boolean checkmate = false; 
-	private char currentPlayer = ChessConstants.WHITE; 
-	private boolean hasMoved = false; 
+
 	
 	public GameSession(Socket p1, Socket p2) {
 		this.p1 = p1;
@@ -42,8 +39,8 @@ public class GameSession implements Runnable {
 	
 	
 	public void setUpGame() {
-		piecesBlack = logic.generatePieces(ChessConstants.BLACK); 
-		piecesWhite = logic.generatePieces(ChessConstants.WHITE); 
+		piecesBlack = ChessLogic.generatePieces(ChessConstants.BLACK); 
+		piecesWhite = ChessLogic.generatePieces(ChessConstants.WHITE); 
 		this.logic.setBlackPlayerChessArray(piecesBlack);
 		this.logic.setWhitePlayerChessArray(piecesWhite);
 		logic.setUpBoard(board);
@@ -162,6 +159,7 @@ public class GameSession implements Runnable {
 		boolean checkmate = false; 
 		char currentPlayer = ChessConstants.WHITE; 
 		boolean validMove = false;
+		boolean hasMoved = false; 
 		
 		
 		try {

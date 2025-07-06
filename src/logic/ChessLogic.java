@@ -284,9 +284,9 @@ public class ChessLogic implements ChessConstants {
 		 */
 		public boolean selectedCorrectColor(char currentPlayer, ChessPiece selectedPiece) throws IllegalArgumentException {
 			if(selectedPiece.getColor() != currentPlayer) {
-				return true; 
+				throw new IllegalArgumentException("Illegal Move: Player cannot select piece of opponent's color"); 
 			} 
-			throw new IllegalArgumentException("Illegal Move: Player cannot select piece of opponent's color"); 
+			return true; 
 		}
 		
 		
