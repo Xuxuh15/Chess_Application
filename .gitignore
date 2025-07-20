@@ -24,7 +24,28 @@
 hs_err_pid*
 replay_pid*
 
+# MacOS system files
 .DS_Store
 .metadata/
 src/.DS_Store
 bin/
+
+# Gradle build directory
+/build/
+
+# Gradle cache directory
+.gradle/
+
+# IDEA / Eclipse / other IDE files (optional, if you want IDE-specific ignores)
+.idea/
+*.iml
+*.classpath
+*.project
+
+
+# Logs
+*.log
+
+# Generated files
+/out/
+/bin/
