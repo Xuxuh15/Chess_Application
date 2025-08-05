@@ -53,12 +53,12 @@ public class ChessClient {
 	public void sendMove(Pair from, Pair to) {
 		JSONObject req = new JSONObject(); 
 		req.put("type", ChessConstants.MOVE); 
-		String fromStr = from.row() + ":" + from.col(); 
+		String fromStr =  from.row()  + ":" + ChessLogic.convertNumToLetter(from.col()); 
 		req.put("from", fromStr); 
-		String toStr = to.row() + ":" + to.col(); 
+		String toStr = to.row() + ":" +  ChessLogic.convertNumToLetter(to.col()); 
 		req.put("to", toStr); 
 		try {
-			out.writeObject(req);
+			out.writeObject(req.toString());
 		}
 		catch(IOException e) {
 			System.out.println("ChessClient<sendMove> Error: error sending request to server"); 
@@ -86,7 +86,7 @@ public class ChessClient {
 			res = new JSONObject(input); 
 			if((int)res.getInt("type") == ChessConstants.ASSIGNMENT) {
 				
-				if(res.getString("color").equals(Character.toString(ChessConstants.WHITE))){
+				if(res.getInt("color") == (ChessConstants.WHITE)){
 					this.color = ChessConstants.WHITE; 
 				}
 				else {
@@ -210,13 +210,13 @@ public class ChessClient {
 			String in = (String)this.in.readObject(); 
 			res = new JSONObject(in); 
 			
-			if(!(res.getInt("type") == ChessConstants.WAS_VALID_MOVE)) {
+			if((res.getInt("type") == ChessConstants.WAS_VALID_MOVE)) {
 				validMove = res.getBoolean("ok"); 
 				System.out.println(res.getString("message")); 
 			}
 		}
 		catch(Exception e) {
-			System.out.println("ChessClient<continuePlaying> Error: error receiving response from server"); 
+			System.out.println("ChessClient<wasValidMove> Error: error receiving response from server"); 
 			e.printStackTrace();
 		}
 		return validMove; 

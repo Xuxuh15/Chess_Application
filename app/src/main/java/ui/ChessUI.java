@@ -43,6 +43,7 @@ public class ChessUI extends Application {
 	private PlayerInfoPanel player2Panel; 
 	
 	private static ChessClient client; 
+	
 
 	
 	
@@ -54,12 +55,14 @@ public class ChessUI extends Application {
 	
 	private boolean ready = false; 
 	boolean inSession = true; 
+	private Stage primaryStage = null; 
 	
 	
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
+		this.primaryStage = primaryStage;
 		
 		ObservableList<Node> tiles = board.getChildren();
 		this.player1Panel = new PlayerInfoPanel("Player 1", "white_pawn", ChessConstants.YOUR_MOVE); 
@@ -97,54 +100,62 @@ public class ChessUI extends Application {
 	
 	private void handleGameSession() {
 		
-		new Thread(()->{
+		Thread gameThread = new Thread(()->{
 			//get the assigned color
-			client.getAssignedColor();
+			this.client.getAssignedColor();
+			
+			
 			
 			//wait for the game to start
-			client.waitForStart();
+			this.client.waitForStart();
 			
 			boolean gameOver = false; 
+			System.out.println("Entering loop");
 			
 			while(!gameOver) {
 				
-				controller.setCanPlay(client.isMyTurn()); 
+				this.controller.setCanPlay(client.isMyTurn()); 
 				
-				if(controller.getCanPlay()) {
+				if(this.controller.getCanPlay()) {
 
-					while(controller.getCanPlay()) {
+					while(this.controller.getCanPlay()) {
+						System.out.println("My Turn");
 						
-						while (!(controller.getState() instanceof SelectionLockedState)) {
+						while (!(this.controller.getState() instanceof SelectionLockedState)) {
 						    try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
 						} //wait for a move to be locked
 						
-						Pair from = controller.getSourceTile().getCoord(); 
+						Pair from = this.controller.getSourceTile().getCoord(); 
 						
-						Pair to = controller.getDestinationTile().getCoord(); 
+						Pair to = this.controller.getDestinationTile().getCoord(); 
 						
-						client.sendMove(from, to); //send move to server
+						this.client.sendMove(from, to); //send move to server
+						System.out.println("Move Sent");
 						
-						boolean validMove = client.wasValidMove(); 
+						boolean validMove = this.client.wasValidMove(); 
 						
 						//only for a valid move
 						if(validMove) {
 							//update the ui board
 							Platform.runLater(()->{
-								Pair[] update = client.getUpdate(); 
+								Pair[] update = this.client.getUpdate(); 
 								Pair source = update[0]; 
 								Pair destination = update[1]; 
 								ImageView view = this.board.updateBoard(source, destination); 
 								 if(view != null) {
 					              	  
-					              	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
+					              	  if (this.controller.getCurrentPlayer() == ChessConstants.WHITE) {
 					              		    player1Panel.addCapture(view);
 					              		} else {
 					              		    player2Panel.addCapture(view);
 					              		}
 					                }
 							}); 
-							controller.resetSelection(); 
-							controller.setCanPlay(false); 
+							this.controller.resetSelection(); 
+							this.controller.setCanPlay(false); 
+						}
+						else {
+							this.controller.resetSelection(); 
 						}
 						
 						//check for win
@@ -158,13 +169,13 @@ public class ChessUI extends Application {
 				else {
 					//update the ui board
 					Platform.runLater(()->{
-						Pair[] update = client.getUpdate(); 
+						Pair[] update = this.client.getUpdate(); 
 						Pair source = update[0]; 
 						Pair destination = update[1]; 
 						ImageView view = this.board.updateBoard(source, destination); 
 						 if(view != null) {
 			              	  
-			              	  if (controller.getCurrentPlayer() == ChessConstants.WHITE) {
+			              	  if (this.controller.getCurrentPlayer() == ChessConstants.WHITE) {
 			              		    player1Panel.addCapture(view);
 			              		} else {
 			              		    player2Panel.addCapture(view);
@@ -172,7 +183,7 @@ public class ChessUI extends Application {
 			                }
 					}); 
 					//check for win
-					gameOver = client.continuePlaying();
+					gameOver = this.client.continuePlaying();
 					if(gameOver) {
 						break; 
 					}
@@ -182,15 +193,17 @@ public class ChessUI extends Application {
 			} //end of game loop
 			
 			
-		}); 
+		});
+		 //gameThread.setDaemon(true);  
+		 gameThread.start();          
 		
 		
 	}
 	
 	public EventHandler<MouseEvent> tileClickHandler = e -> {
 	    ChessTile clickedTile = (ChessTile) e.getSource();
-	    if(controller.getCanPlay()) {
-			  controller.onTileClicked(clickedTile);
+	    if(this.controller.getCanPlay()) {
+			  this.controller.onTileClicked(clickedTile);
             }
 	}; 
 		  

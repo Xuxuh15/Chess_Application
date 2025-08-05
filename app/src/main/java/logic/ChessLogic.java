@@ -155,6 +155,52 @@ public class ChessLogic implements ChessConstants {
 			
 		}
 		
+		/**
+		 * The UI client returns a number for the column instead of a letter. Until that is patched we will simply convert the number back to a letter
+		 * since that is what the logic is expecting
+		 * @param num the string representation of a number
+		 * @return the corresponding column value
+		 */
+		public static String convertNumToLetter(int num) {
+			
+			String val = ""; 
+			
+			switch(num) {
+			
+			case 0:
+				val = "A";
+				break;
+			case 1:
+				val = "B";
+				break;
+			case 2:
+				val = "C";
+				break;
+			case 3:
+				val = "D";
+				break;
+			case 4:
+				val = "E";
+				break;
+			case 5:
+				val = "F";
+				break;
+			case 6:
+				val = "G";
+				break;
+			case 7:
+				val = "H"; 
+				break;
+			default:
+				break;  
+				
+		}
+		
+				
+			return val; 
+			
+		}
+		
 		
 		/**
 		 * Checks if the king is in check
@@ -256,14 +302,18 @@ public class ChessLogic implements ChessConstants {
 		 * @return
 		 */
 		public static Pair getCoordinate(String str)  {
+			System.out.println(str);
 
 			try {
 				int row; 
 				int col; 
 				//split strings into components
-				row = Integer.parseInt(str.split(":")[1]) - 1; 
-				col = ChessLogic.convertLettertoNum(str.split(":")[0]);
+				row = Integer.parseInt(str.split(":")[0]); 
+				System.out.println(row);
+				col = ChessLogic.convertLettertoNum(str.split(":")[1]);
+				System.out.println(col);
 				//return a pair object with the destination square
+				System.out.println("Received coordinates" + new Pair(row,col));
 				return new Pair(row,col); 
 			}
 			catch(InputMismatchException e) { //wrong input format

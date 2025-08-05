@@ -53,7 +53,13 @@ public class GameSession implements Runnable {
 	public JSONObject assignColor(char color) {
 		JSONObject res = new JSONObject(); 
 		res.put("type", ChessConstants.ASSIGNMENT); 
-		res.put("color", ChessConstants.WHITE); 
+		if(color == ChessConstants.WHITE) {
+			res.put("color", ChessConstants.WHITE); 
+		}
+		else {
+			res.put("color", ChessConstants.BLACK); 
+		}
+		
 		return res; 
 	}
 	
@@ -74,6 +80,7 @@ public class GameSession implements Runnable {
 		JSONObject res = new JSONObject(); 
 		res.put("type", ChessConstants.WAS_VALID_MOVE); 
 		res.put("ok", true); 
+		res.put("message", "Valid move received.");
 		return res; 
 	}
 	
@@ -190,27 +197,31 @@ public class GameSession implements Runnable {
 			JSONObject res; 
 			JSONObject req;
 			
+			System.out.println("Here");
 			
 			// Assign white to player one
 			res = this.assignColor(ChessConstants.WHITE); 
 			
 			p1Out.writeObject(res.toString());
 			
-			
+			System.out.println("Assign Color 1");
 			//Assign black to player two
 			res = this.assignColor(ChessConstants.BLACK); 
 			
 			p2Out.writeObject(res.toString());
 			
-			
+			System.out.println("Assign Color 2");
 			//set up the chess board
 			this.setUpGame(); 
 			
 			//indicate that the game has started
 			res = this.start();  
+			p1Out.writeObject(res.toString());
+			p2Out.writeObject(res.toString());
 			
-			
+			System.out.println("Start");
 			while(inSession && !checkmate) {
+				System.out.println("Session-Started");
 				
 				ObjectInputStream currentPlayerIn; 
 				ObjectOutputStream currentPlayerOut;  
@@ -230,14 +241,16 @@ public class GameSession implements Runnable {
 				}
 				//tell white player that they should make a move
 				res = this.play(true); 
-				currentPlayerOut.writeObject(res);
+				currentPlayerOut.writeObject(res.toString());
+				System.out.println("White Player Move");
 				//tell black player that they should wait for an update
 				res = this.play(false); 
-				waitingPlayerOut.writeObject(res);
+				waitingPlayerOut.writeObject(res.toString());
 				
 				
 				req = parseRequest(currentPlayerIn);
 				
+				System.out.println("Get move");
 				
 				
 				while(!hasMoved) {
@@ -252,18 +265,19 @@ public class GameSession implements Runnable {
 							to = ChessLogic.getCoordinate(req.getString("to")); 
 							ChessPiece selectedPiece = logic.peek(board, from); 
 							logic.selectedCorrectColor(currentPlayer,selectedPiece); 
-							logic.inCheck(board, selectedPiece,logic.getOpponentPieces(currentPlayer), logic.getMyPieces(currentPlayer)); 
+							//logic.inCheck(board, selectedPiece,logic.getOpponentPieces(currentPlayer), logic.getMyPieces(currentPlayer)); 
 							
-							validMove = logic.verifyMove(board, selectedPiece, to); 
+							validMove = logic.verifyMove(board, selectedPiece, to);
+							System.out.println("Was a valid move? --" + validMove);
 							
 							if(validMove) {
 								logic.moveAndUpdate(board, selectedPiece, to);
 								hasMoved = true; 
 								res = validMove(); 
-								currentPlayerOut.writeObject(res);
+								currentPlayerOut.writeObject(res.toString());
 								res = updateBoard(from, to); 
-								currentPlayerOut.writeObject(res);
-								waitingPlayerOut.writeObject(res); 
+								currentPlayerOut.writeObject(res.toString());
+								waitingPlayerOut.writeObject(res.toString()); 
 							}
 							else {
 								throw new IllegalArgumentException("Invalid Move"); 
@@ -279,28 +293,35 @@ public class GameSession implements Runnable {
 							else {
 								res = this.gameOver(currentPlayer); 
 							}
-							p1Out.writeObject(res); 
-							p2Out.writeObject(res); 
+							p1Out.writeObject(res.toString()); 
+							p2Out.writeObject(res.toString()); 
 							
 							
 						}
 						catch(IllegalArgumentException e) {
 							//when the player tries to make an invalid move while in check
 							System.out.println("Illegal Move: Player must move king while in check"); 
+							e.printStackTrace();
 							//write response to current player
 							res = invalidMove(e.getMessage());
-							currentPlayerOut.writeObject(res);
+							currentPlayerOut.writeObject(res.toString());
+							System.exit(1);
 							
 						}
 						catch(NullPointerException e) {
+							e.printStackTrace();
 							System.out.println("Illegal Move: Cannot select an empty space"); 
 							res = invalidMove(e.getMessage());
-							currentPlayerOut.writeObject(res);
+							currentPlayerOut.writeObject(res.toString());
 							
 						}
 						catch(Exception e) {
-							System.out.println("Error: Incorrect coordinate format for MOVE"); 
-							//log error
+							//System.out.println("Error: Incorrect coordinate format for MOVE"); 
+							//log error\
+							e.printStackTrace();
+							res = invalidMove(e.getMessage());
+							currentPlayerOut.writeObject(res.toString());
+							System.exit(1);
 							
 						}
 						
