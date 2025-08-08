@@ -59,6 +59,7 @@ public class ChessClient {
 		req.put("to", toStr); 
 		try {
 			out.writeObject(req.toString());
+			out.flush();
 		}
 		catch(IOException e) {
 			System.out.println("ChessClient<sendMove> Error: error sending request to server"); 
@@ -156,6 +157,7 @@ public class ChessClient {
 	public Pair[] getUpdate() {
 		
 		Pair[] update = new Pair[2]; 
+		
 		JSONObject res; 
 		try {
 			String in = (String)this.in.readObject(); 
@@ -164,8 +166,10 @@ public class ChessClient {
 			if(res.getInt("type") == ChessConstants.UPDATE) {
 				String from = res.getString("from"); 
 				update[0] = ChessLogic.getCoordinate(from); 
+				System.out.println("<ChessClient.getUpdate> from: " + from); 
 				String to = res.getString("to"); 
 				update[1] = ChessLogic.getCoordinate(to); 
+				System.out.println("<ChessClient.getUpdate> to: " + to); 
 			}
 		}
 		catch(Exception e) {
@@ -185,6 +189,7 @@ public class ChessClient {
 		try {
 			String in = (String)this.in.readObject(); 
 			res = new JSONObject(in); 
+			System.out.println("ChessClient.continuePlaying: response = " + res.toString());
 			
 			if(!(res.getInt("type") == ChessConstants.CONTINUE)) {
 				shouldContinue = false; 
