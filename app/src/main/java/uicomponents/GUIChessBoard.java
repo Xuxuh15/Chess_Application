@@ -80,10 +80,14 @@ public class GUIChessBoard extends GridPane {
 			
 		ImageView capturedPiece = null; 
 		ChessTile sourceTile = peek(source); 
+		System.out.println("<GUIChessBoard.updateBoard> Source Tile " + sourceTile.getCoord());
 			
 		ChessTile destinationTile = peek(destination); 
 			
 		ImageView chessPieceView = sourceTile.getImageView(); 
+		if(chessPieceView == null) {
+			System.out.println("<GUIChessBoard.updateBoard> Null ImageView");
+		}
 		
 		if(!destinationTile.isEmpty()) {
 			capturedPiece = destinationTile.removeChessPiece();
