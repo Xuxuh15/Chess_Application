@@ -1,4 +1,4 @@
-package tests.logic.statemachine;
+package logic.statemachine;
 
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
