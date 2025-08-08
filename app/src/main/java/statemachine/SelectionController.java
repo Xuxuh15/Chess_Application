@@ -59,6 +59,15 @@ public class SelectionController {
 	    	this.currentPlayer = player; 
 	    }
 	    
+	    public void toggleCurrentPlayer() {
+	    	if(this.currentPlayer == ChessConstants.WHITE) {
+	    		this.currentPlayer = ChessConstants.BLACK; 
+	    	}
+	    	else {
+	    		this.currentPlayer = ChessConstants.WHITE;
+	    	}
+	    }
+	    
 	    /**
 	     * Returns the current player.s
 	     * @return char 
