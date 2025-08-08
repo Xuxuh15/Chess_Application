@@ -120,6 +120,12 @@ public class ChessUI extends Application {
 
 					while(this.controller.getCanPlay()) {
 						System.out.println("My Turn");
+						System.out.println("<ChessUI> Selection Controller State: "); 
+						System.out.println("<ChessUI> myTurn = " + controller.getCanPlay());
+						System.out.println("<ChessUI> Selection Controller Color: " + controller.getCurrentPlayer()); 
+						System.out.println("<ChessUI> Selection Controller State: " + controller.getState()); 
+						
+						
 						
 						while (!(this.controller.getState() instanceof SelectionLockedState)) {
 						    try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
@@ -136,11 +142,15 @@ public class ChessUI extends Application {
 						
 						//only for a valid move
 						if(validMove) {
+							Pair[] update = this.client.getUpdate(); 
 							//update the ui board
 							Platform.runLater(()->{
-								Pair[] update = this.client.getUpdate(); 
+								System.out.println("<ChessUI.UpdateBoard> : " + update);
+								
 								Pair source = update[0]; 
 								Pair destination = update[1]; 
+								System.out.println("<ChessUI.UpdateBoard> : source = " + source); 
+								System.out.println("<ChessUI.UpdateBoard> : destination = " + destination); 
 								ImageView view = this.board.updateBoard(source, destination); 
 								 if(view != null) {
 					              	  
@@ -152,24 +162,21 @@ public class ChessUI extends Application {
 					                }
 							}); 
 							this.controller.resetSelection(); 
-							this.controller.setCanPlay(false); 
+							this.controller.setCanPlay(false);  
 						}
 						else {
 							this.controller.resetSelection(); 
 						}
 						
-						//check for win
-						gameOver = client.continuePlaying();
-						if(gameOver) {
-							break; 
-						}
 						
 					}
+				
 				}
 				else {
+					Pair[] update = this.client.getUpdate(); 
 					//update the ui board
 					Platform.runLater(()->{
-						Pair[] update = this.client.getUpdate(); 
+						
 						Pair source = update[0]; 
 						Pair destination = update[1]; 
 						ImageView view = this.board.updateBoard(source, destination); 
@@ -182,12 +189,13 @@ public class ChessUI extends Application {
 			              		}
 			                }
 					}); 
-					//check for win
-					gameOver = this.client.continuePlaying();
-					if(gameOver) {
-						break; 
-					}
 				}
+				//check for win
+				gameOver = !this.client.continuePlaying();
+				if(gameOver) {
+					break; 
+				}
+				this.controller.toggleCurrentPlayer(); 
 				
 				
 			} //end of game loop

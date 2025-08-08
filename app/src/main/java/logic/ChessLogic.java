@@ -43,7 +43,9 @@ public class ChessLogic implements ChessConstants {
 			
 			case PAWN:
 				this.verificationStrategy = new VerifyMovePawn(); 
+				System.out.println(("Entering verification")); 
 				isValidMove = verificationStrategy.verifyMove(board, pieceToMove, newPos); 
+				System.out.println("Is a valid move: " + isValidMove); 
 				break; 
 			case KNIGHT:
 				this.verificationStrategy = new VerifyMoveKnight(); 
@@ -302,18 +304,18 @@ public class ChessLogic implements ChessConstants {
 		 * @return
 		 */
 		public static Pair getCoordinate(String str)  {
-			System.out.println(str);
+			System.out.println("<ChessLogic.getCoordinate>: " + str);
 
 			try {
 				int row; 
 				int col; 
 				//split strings into components
 				row = Integer.parseInt(str.split(":")[0]); 
-				System.out.println(row);
+				//System.out.println(row);
 				col = ChessLogic.convertLettertoNum(str.split(":")[1]);
-				System.out.println(col);
+				//System.out.println(col);
 				//return a pair object with the destination square
-				System.out.println("Received coordinates" + new Pair(row,col));
+				System.out.println("<ChessLogic.getCoordinate>: Converted Coords = " + new Pair(row,col));
 				return new Pair(row,col); 
 			}
 			catch(InputMismatchException e) { //wrong input format
