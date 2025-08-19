@@ -58,7 +58,7 @@ public class PlayerInfoPanelHandler {
 	 * Starts opponents turn timer. 
 	 */
 	public void startOpponentTurnTimer() {
-		Timer oppTimer = myPanel.getTimer(); 
+		Timer oppTimer = opponentPanel.getTimer(); 
 		oppTimer.startTurnTimer(); 
 		
 	}
@@ -67,7 +67,7 @@ public class PlayerInfoPanelHandler {
 	 * Stops opponents turn timer. 
 	 */
 	public void stopOpponentTurnTimer() {
-		Timer oppTimer = myPanel.getTimer(); 
+		Timer oppTimer = opponentPanel.getTimer(); 
 		oppTimer.stopTurnTimer(); 
 	}
 	
@@ -75,7 +75,7 @@ public class PlayerInfoPanelHandler {
 	 * Resets opponents turn timer.
 	 */
 	public void resetOpponentTurnTimer() {
-		Timer oppTimer = myPanel.getTimer(); 
+		Timer oppTimer = opponentPanel.getTimer(); 
 		oppTimer.resetTimer();; 
 	}
 	
@@ -89,9 +89,10 @@ public class PlayerInfoPanelHandler {
 		myStatusLabel.setText(update);
 	}
 	
-	public void toggleTurn(char currentPlayer) {
+	public void toggleTurn(String currentPlayer) {
 		
-		if(currentPlayer == this.playerColor) {
+		char currentPlayerColor = currentPlayer.toUpperCase().charAt(0); 
+		if(currentPlayerColor == this.playerColor) {
 			this.myPanel.getStatusLabel().setStatus(ChessConstants.YOUR_MOVE);
 			this.opponentPanel.getStatusLabel().setStatus(ChessConstants.WAIT);
 		}
