@@ -102,14 +102,14 @@ public class ChessUI extends Application {
 		
 		Thread gameThread = new Thread(()->{
 			//get the assigned color
-			this.client.getAssignedColor();
+			client.getAssignedColor();
 			
 			
 			
 			
 			
 			//wait for the game to start
-			this.client.waitForStart();
+			client.waitForStart();
 			
 			boolean gameOver = false; 
 			System.out.println("Entering loop");
@@ -137,14 +137,14 @@ public class ChessUI extends Application {
 						
 						Pair to = this.controller.getDestinationTile().getCoord(); 
 						
-						this.client.sendMove(from, to); //send move to server
+						client.sendMove(from, to); //send move to server
 						System.out.println("Move Sent");
 						
-						boolean validMove = this.client.wasValidMove(); 
+						boolean validMove = client.wasValidMove(); 
 						
 						//only for a valid move
 						if(validMove) {
-							Pair[] update = this.client.getUpdate(); 
+							Pair[] update = client.getUpdate(); 
 							//update the ui board
 							Platform.runLater(()->{
 								System.out.println("<ChessUI.UpdateBoard> : " + update);
@@ -180,7 +180,7 @@ public class ChessUI extends Application {
 				
 				}
 				else {
-					Pair[] update = this.client.getUpdate(); 
+					Pair[] update = client.getUpdate(); 
 					//update the ui board
 					Platform.runLater(()->{
 						
