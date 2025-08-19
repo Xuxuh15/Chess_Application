@@ -65,8 +65,8 @@ public class ChessUI extends Application {
 		this.primaryStage = primaryStage;
 		
 		ObservableList<Node> tiles = board.getChildren();
-		this.player1Panel = new PlayerInfoPanel("Player 1", "white_pawn", ChessConstants.YOUR_MOVE); 
-		this.player2Panel = new PlayerInfoPanel("Player 2", "black_pawn", ChessConstants.WAIT);  
+		this.player1Panel = new PlayerInfoPanel("Player 1 (W)", "white_pawn", ChessConstants.YOUR_MOVE); 
+		this.player2Panel = new PlayerInfoPanel("Player 2 (B)", "black_pawn", ChessConstants.WAIT);  
 		
 		Iterator iter = tiles.iterator(); 
 		
@@ -103,6 +103,8 @@ public class ChessUI extends Application {
 		Thread gameThread = new Thread(()->{
 			//get the assigned color
 			this.client.getAssignedColor();
+			
+			
 			
 			
 			
@@ -154,7 +156,7 @@ public class ChessUI extends Application {
 								ImageView view = this.board.updateBoard(source, destination); 
 								 if(view != null) {
 					              	  
-					              	  if (this.controller.getCurrentPlayer() == ChessConstants.WHITE) {
+					              	  if (client.getColor() == ChessConstants.WHITE) {
 					              		    player1Panel.addCapture(view);
 					              		} else {
 					              		    player2Panel.addCapture(view);
@@ -187,10 +189,10 @@ public class ChessUI extends Application {
 						ImageView view = this.board.updateBoard(source, destination); 
 						 if(view != null) {
 			              	  
-			              	  if (this.controller.getCurrentPlayer() == ChessConstants.WHITE) {
-			              		    player1Panel.addCapture(view);
-			              		} else {
+			              	  if (client.getColor() == ChessConstants.WHITE) {
 			              		    player2Panel.addCapture(view);
+			              		} else {
+			              		    player1Panel.addCapture(view);
 			              		}
 			                }
 					}); 
