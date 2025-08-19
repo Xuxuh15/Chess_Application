@@ -157,7 +157,7 @@ public class SelectionController {
 	    public void resetSelection() {
 	        this.sourceTile = null;
 	        this.destinationTile = null;
-	        //this.canPlay = true;
+	        this.canPlay = true;
 	        this.setState(new IdleState());
 	    }
 

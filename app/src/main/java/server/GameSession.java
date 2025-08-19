@@ -264,6 +264,7 @@ public class GameSession implements Runnable {
 				
 				
 				while(!hasMoved) {
+					System.out.println("<GameSession.gameloop> Waiting to receive the player's next move"); 
 					req = parseRequest(currentPlayerIn);
 					//check if request is in proper format
 					if(req.get("type").equals(ChessConstants.MOVE)) {

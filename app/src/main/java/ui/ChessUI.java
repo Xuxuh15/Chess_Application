@@ -163,9 +163,14 @@ public class ChessUI extends Application {
 							}); 
 							this.controller.resetSelection(); 
 							this.controller.setCanPlay(false);  
+							//check for win
+							gameOver = !client.continuePlaying();
+							this.controller.toggleCurrentPlayer(); 
 						}
 						else {
 							this.controller.resetSelection(); 
+							System.out.println("<ChessUI.gameloop> Resetting the selection controller after invalid move.");
+							System.out.println("ChessUI.gamelopp> Can play? : " + controller.getCanPlay());
 						}
 						
 						
@@ -189,13 +194,14 @@ public class ChessUI extends Application {
 			              		}
 			                }
 					}); 
+					//check for win
+					gameOver = !client.continuePlaying();
+					this.controller.toggleCurrentPlayer(); 
 				}
-				//check for win
-				gameOver = !this.client.continuePlaying();
 				if(gameOver) {
 					break; 
 				}
-				this.controller.toggleCurrentPlayer(); 
+				
 				
 				
 			} //end of game loop
