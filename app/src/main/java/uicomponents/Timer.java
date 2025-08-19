@@ -91,6 +91,7 @@ public class Timer extends Label {
 	 */
 	public void resetTimer() {
 		this.currentTurnTimeRemaining = this.duration; 
+		this.setText(formatTime(currentTurnTimeRemaining));
 	}
 	
 	/**
