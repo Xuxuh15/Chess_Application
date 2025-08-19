@@ -2,6 +2,8 @@ package ui;
 
 import java.net.Socket;
 import java.util.Iterator;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.json.JSONObject;
 
@@ -20,11 +22,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import logic.ChessConstants;
+import logic.ui_handlers.PlayerInfoPanelHandler;
 import statemachine.SelectionController;
 import statemachine.SelectionLockedState;
 import uicomponents.BoardLabel;
 import uicomponents.ChessTile;
 import uicomponents.GUIChessBoard;
+import uicomponents.GameNotification;
 import uicomponents.PlayerInfoPanel;
 
 
@@ -41,6 +45,10 @@ public class ChessUI extends Application {
 	private PlayerInfoPanel player1Panel; 
 	
 	private PlayerInfoPanel player2Panel; 
+	
+	private PlayerInfoPanel myPanel; 
+	
+	private PlayerInfoPanel oppPanel; 
 	
 	private static ChessClient client; 
 	
@@ -96,13 +104,46 @@ public class ChessUI extends Application {
 		
 	}
 	
+	public void setPanels(char myColor) {
+		System.out.println( "<ChessUI.setPanel>" + myColor); 
+		if(myColor == ChessConstants.WHITE) {
+			this.myPanel = this.player1Panel; 
+			this.oppPanel = this.player2Panel; 
+		}
+		else {
+			this.myPanel = this.player2Panel; 
+			this.oppPanel = this.player1Panel; 
+		}
+	}
+	
+	public void runStatusDisplay(BiConsumer<PlayerInfoPanel, Double> action, PlayerInfoPanel parent, double duration) {
+	    Platform.runLater(() -> action.accept(parent, duration));
+	}
+	
+	public void toggleTurnStatusLabel(Consumer<String> action,  String color) {
+	    Platform.runLater(() -> action.accept(color));
+	}
+	
+	// Method that accepts a Runnable
+	public void runAction(Runnable action) {
+	    Platform.runLater(action); // or just action.run()
+	}
+	
+	
+	
 	
 	
 	private void handleGameSession() {
 		
 		Thread gameThread = new Thread(()->{
+			
 			//get the assigned color
 			client.getAssignedColor();
+			
+			setPanels(client.getColor()); 
+			
+
+			PlayerInfoPanelHandler panelHandler = new PlayerInfoPanelHandler(myPanel, oppPanel, client.getColor()); 
 			
 			
 			
@@ -117,8 +158,11 @@ public class ChessUI extends Application {
 			while(!gameOver) {
 				
 				this.controller.setCanPlay(client.isMyTurn()); 
+				toggleTurnStatusLabel(panelHandler::toggleTurn, String.valueOf(controller.getCurrentPlayer())); 
 				
 				if(this.controller.getCanPlay()) {
+					
+					runAction(panelHandler::startMyTurnTimer); 
 
 					while(this.controller.getCanPlay()) {
 						System.out.println("My Turn");
@@ -138,7 +182,8 @@ public class ChessUI extends Application {
 						Pair to = this.controller.getDestinationTile().getCoord(); 
 						
 						client.sendMove(from, to); //send move to server
-						System.out.println("Move Sent");
+						
+						runStatusDisplay(new GameNotification("Move Sent")::show, this.myPanel, 2.0 ); 
 						
 						boolean validMove = client.wasValidMove(); 
 						
@@ -164,10 +209,14 @@ public class ChessUI extends Application {
 					                }
 							}); 
 							this.controller.resetSelection(); 
-							this.controller.setCanPlay(false);  
+							this.controller.setCanPlay(false); 
+							runAction(panelHandler::stopMyTurnTimer); 
+							runAction(panelHandler::resetMyTurnTimer); 
 							//check for win
 							gameOver = !client.continuePlaying();
 							this.controller.toggleCurrentPlayer(); 
+							
+							
 						}
 						else {
 							this.controller.resetSelection(); 
@@ -180,7 +229,9 @@ public class ChessUI extends Application {
 				
 				}
 				else {
+					runAction(panelHandler::startOpponentTurnTimer); 
 					Pair[] update = client.getUpdate(); 
+					
 					//update the ui board
 					Platform.runLater(()->{
 						
@@ -196,9 +247,11 @@ public class ChessUI extends Application {
 			              		}
 			                }
 					}); 
+					runAction(panelHandler::stopOpponentTurnTimer); 
+					runAction(panelHandler::resetOpponentTurnTimer); 
 					//check for win
 					gameOver = !client.continuePlaying();
-					this.controller.toggleCurrentPlayer(); 
+					this.controller.toggleCurrentPlayer();
 				}
 				if(gameOver) {
 					break; 
