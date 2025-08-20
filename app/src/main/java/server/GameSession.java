@@ -59,6 +59,7 @@ public class GameSession implements Runnable {
 		else {
 			res.put("color", ChessConstants.BLACK); 
 		}
+		System.out.println("<GameSession.assignColor> Sending assigned color: " + Character.toString(color)); 
 		
 		return res; 
 	}
@@ -66,13 +67,16 @@ public class GameSession implements Runnable {
 	public JSONObject start() {
 		JSONObject res = new JSONObject(); 
 		res.put("type", ChessConstants.START); 
+		System.out.println("<GameSession.start> Sending start signal"); 
 		return res; 
+		
 	}
 	
 	public JSONObject play(boolean shouldPlay) {
 		JSONObject res = new JSONObject(); 
 		res.put("type", ChessConstants.PLAY); 
 		res.put("shouldPlay", shouldPlay); 
+		System.out.println("<GameSession.play> Sending shouldPlay: " + shouldPlay); 
 		return res; 
 	}
 	
@@ -81,6 +85,7 @@ public class GameSession implements Runnable {
 		res.put("type", ChessConstants.WAS_VALID_MOVE); 
 		res.put("ok", true); 
 		res.put("message", "Valid move received.");
+		System.out.println("<GameSession.validMove> Sending validMove: " + true); 
 		return res; 
 	}
 	
@@ -92,6 +97,7 @@ public class GameSession implements Runnable {
 		res.put("from", fromStr); 
 		String toStr = to.row() + ":" + ChessLogic.convertNumToLetter(to.col()); 
 		res.put("to", toStr); 
+		System.out.println("<GameSession.updateBoard> Sending board update from: " + from.toString() + " to: " + to.toString()); 
 		
 		return res;
 		
@@ -108,6 +114,7 @@ public class GameSession implements Runnable {
 			 winner = "Black"; 
 		}
 		res.put("message", "The winner is " + winner + " player."); 
+		System.out.println("<GameSession.gameOver> Sending gameOver: " + res.getString("message")); 
 		return res; 
 		
 	}
@@ -117,6 +124,7 @@ public class GameSession implements Runnable {
 		JSONObject res = new JSONObject(); 
 		res.put("type", ChessConstants.CONTINUE); 
 		res.put("message", "Continue playing");
+		System.out.println("<GameSession.continuePlaying> Sending continuePlaying: " + true); 
 		return res; 
 		
 	}
@@ -126,6 +134,7 @@ public class GameSession implements Runnable {
 		try {
 			String s = (String) in.readObject(); 
 			req = new JSONObject(s); 
+			System.out.println("<GameSession.parseRequest> Received req: " + s); 
 		}
 		catch(IOException e) {
 			req = new JSONObject(); 
@@ -148,6 +157,7 @@ public class GameSession implements Runnable {
 		res.put("type", ChessConstants.WAS_VALID_MOVE); 
 		res.put("ok", false); 
 		res.put("message", message); 
+		System.out.println("<GameSesison.invalidMove> Sending invalidMove: " + message); 
 		return res; 
 	}
 	
