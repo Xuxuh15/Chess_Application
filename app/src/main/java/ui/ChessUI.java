@@ -126,7 +126,7 @@ public class ChessUI extends Application {
 	
 	// Method that accepts a Runnable
 	public void runAction(Runnable action) {
-	    Platform.runLater(action); // or just action.run()
+	    Platform.runLater(action); 
 	}
 	
 	
@@ -153,7 +153,6 @@ public class ChessUI extends Application {
 			client.waitForStart();
 			
 			boolean gameOver = false; 
-			System.out.println("Entering loop");
 			
 			while(!gameOver) {
 				
@@ -165,13 +164,7 @@ public class ChessUI extends Application {
 					runAction(panelHandler::startMyTurnTimer); 
 
 					while(this.controller.getCanPlay()) {
-						System.out.println("My Turn");
-						System.out.println("<ChessUI> Selection Controller State: "); 
-						System.out.println("<ChessUI> myTurn = " + controller.getCanPlay());
-						System.out.println("<ChessUI> Selection Controller Color: " + controller.getCurrentPlayer()); 
-						System.out.println("<ChessUI> Selection Controller State: " + controller.getState()); 
-						
-						
+					
 						
 						while (!(this.controller.getState() instanceof SelectionLockedState)) {
 						    try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
@@ -192,12 +185,8 @@ public class ChessUI extends Application {
 							Pair[] update = client.getUpdate(); 
 							//update the ui board
 							Platform.runLater(()->{
-								System.out.println("<ChessUI.UpdateBoard> : " + update);
-								
 								Pair source = update[0]; 
 								Pair destination = update[1]; 
-								System.out.println("<ChessUI.UpdateBoard> : source = " + source); 
-								System.out.println("<ChessUI.UpdateBoard> : destination = " + destination); 
 								ImageView view = this.board.updateBoard(source, destination); 
 								 if(view != null) {
 					              	  
@@ -220,8 +209,6 @@ public class ChessUI extends Application {
 						}
 						else {
 							this.controller.resetSelection(); 
-							System.out.println("<ChessUI.gameloop> Resetting the selection controller after invalid move.");
-							System.out.println("ChessUI.gamelopp> Can play? : " + controller.getCanPlay());
 						}
 						
 						

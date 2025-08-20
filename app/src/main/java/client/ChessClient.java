@@ -110,14 +110,12 @@ public class ChessClient {
 	 * Consumes start response from server.
 	 */
 	public void waitForStart() {
-		System.out.println("Waiting for game to start...."); 
 		JSONObject res; 
 		try {
 			String in = (String)this.in.readObject(); 
 			res = new JSONObject(in); 
 			
-			if(res.getInt("type") == ChessConstants.START) {
-				System.out.println("Server has sent the signal to start."); 
+			if(res.getInt("type") == ChessConstants.START) { 
 				return; 
 			}
 		}
@@ -166,10 +164,8 @@ public class ChessClient {
 			if(res.getInt("type") == ChessConstants.UPDATE) {
 				String from = res.getString("from"); 
 				update[0] = ChessLogic.getCoordinate(from); 
-				System.out.println("<ChessClient.getUpdate> from: " + from); 
 				String to = res.getString("to"); 
-				update[1] = ChessLogic.getCoordinate(to); 
-				System.out.println("<ChessClient.getUpdate> to: " + to); 
+				update[1] = ChessLogic.getCoordinate(to);  
 			}
 		}
 		catch(Exception e) {

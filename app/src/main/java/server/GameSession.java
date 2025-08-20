@@ -198,20 +198,16 @@ public class GameSession implements Runnable {
 			JSONObject res; 
 			JSONObject req;
 			
-			System.out.println("Here");
-			
 			// Assign white to player one
 			res = this.assignColor(ChessConstants.WHITE); 
 			
 			p1Out.writeObject(res.toString());
 			
-			System.out.println("Assign Color 1");
 			//Assign black to player two
 			res = this.assignColor(ChessConstants.BLACK); 
 			
 			p2Out.writeObject(res.toString());
 			
-			System.out.println("Assign Color 2");
 			//set up the chess board
 			this.setUpGame(); 
 			for(int i = 0; i < ChessConstants.ROWS; i++) {
@@ -227,11 +223,9 @@ public class GameSession implements Runnable {
 			p1Out.writeObject(res.toString());
 			p2Out.writeObject(res.toString());
 			
-			System.out.println("Start");
 			int count = 0; 
 			while(inSession && !checkmate) {
 				hasMoved = false; 
-				System.out.println("Session-Started: count = " + count);
 				
 				ObjectInputStream currentPlayerIn; 
 				ObjectOutputStream currentPlayerOut;  
@@ -252,7 +246,6 @@ public class GameSession implements Runnable {
 				//tell white player that they should make a move
 				res = this.play(true); 
 				currentPlayerOut.writeObject(res.toString());
-				System.out.println("<GameSession>: current player's turn =" + currentPlayer);
 				//tell black player that they should wait for an update
 				res = this.play(false); 
 				waitingPlayerOut.writeObject(res.toString());
@@ -264,7 +257,6 @@ public class GameSession implements Runnable {
 				
 				
 				while(!hasMoved) {
-					System.out.println("<GameSession.gameloop> Waiting to receive the player's next move"); 
 					req = parseRequest(currentPlayerIn);
 					//check if request is in proper format
 					if(req.get("type").equals(ChessConstants.MOVE)) {
@@ -273,24 +265,19 @@ public class GameSession implements Runnable {
 						Pair to; 
 						try {
 							from = ChessLogic.getCoordinate(req.getString("from")); 
-							System.out.println("Source Square" + from); 
 							to = ChessLogic.getCoordinate(req.getString("to")); 
-							System.out.println("Destination Square" + to); 
-							ChessPiece selectedPiece = logic.peek(board, from); 
-							System.out.println("Chess Piecce" + selectedPiece.getPos()); 
+							ChessPiece selectedPiece = logic.peek(board, from); ; 
 							logic.selectedCorrectColor(currentPlayer,selectedPiece); 
 							//logic.inCheck(board, selectedPiece,logic.getOpponentPieces(currentPlayer), logic.getMyPieces(currentPlayer)); 
 							
 						
 							
 							validMove = logic.verifyMove(board, selectedPiece, to);
-							System.out.println("Was a valid move? --" + validMove);
 							
 							if(validMove) {
 								logic.moveAndUpdate(board, selectedPiece, to);
 								hasMoved = true; 
 								res = validMove(); 
-								System.out.println("Trying to send updates");
 								currentPlayerOut.writeObject(res.toString());
 								res = updateBoard(from, to); 
 								currentPlayerOut.writeObject(res.toString());
@@ -301,13 +288,11 @@ public class GameSession implements Runnable {
 								throw new IllegalArgumentException("Invalid Move"); 
 							}
 							checkmate = logic.isCheckmate(board,currentPlayer); 
-							System.out.println("<GameSession.isCheckmate>: " + checkmate); 
 							
 							//toggle the current color
 							if(!checkmate && hasMoved) {
 								
 								currentPlayer = currentPlayer == ChessConstants.WHITE ? ChessConstants.BLACK: ChessConstants.WHITE; 
-								System.out.println("<GameSession.togglingColor> Current Player is now : " + currentPlayer); 
 								res = this.continuePlaying(); 
 							}
 							else {
