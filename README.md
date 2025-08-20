@@ -4,31 +4,113 @@ A chess game application built in Java that features both a text-console and GUI
 
 ## JSON Protocol
 
+Describes the JSON protocol that the client and server use to communciate with each other. 
 
 
-### Move
+#### Assign Color <GameSession.java>
 
-Request: 
+Response: Assigns a color to each client.
 
-``` {"type": "move", "row":<int>, "column":<int>} ```
+```
+{
+    "type": <int>, // ChessConstants.ASSIGNMENT
+    "color": <char>,  //assigns a color to the player
+}
+```
 
-Success Response:
+#### Start <GameSession.java>
 
-``` {"ok":true, "message":<String>} ```
+Response: Signal for the game to start. 
 
-Error Response:
+```
+{
+    "type": <int> // ChessConstants.START
+}
+```
 
-``` {"ok":false, "message":<String>} ```
+#### Play <GameSession.java>
 
-### Status Updates
+Response: Signals which client should play for this turn. 
 
-#### Types
+```
+{ 
+    "type": <int>, // ChessConstants.PLAY
+    "shouldPlay": <boolean>, // determines which player's turn it is
+}
+```
 
-checkmate : checkmate
-check : opponent in check
-start: start game
-end: end game
-play: current players turn
+
+#### Send Move <ChessClient.java>
+
+Request: To send the client's a move to the ChessServer. 
+
+```{
+    "type": <int>, // ChessConstants.MOVE
+    "from": <Pair>, // the source square
+    "to": <Pair>,  // the destination square
+    }
+```
+
+#### Valid Move <GameSession.java> (Success Case)
+
+Response: Signals to the client that their move was valid. 
+
+```
+{
+    "type": <int>, // ChessConstants.WAS_VALID_MOVE
+    "ok": <boolean>,  // whether the move was valid or not
+    "message": <String>,
+
+}
+```
+
+#### Invalid Move <GameSession.java> (Failure Case )
+
+Response: Signals to the client that their move was invalid.
+
+```
+{
+    "type": <int>, // ChessConstants.WAS_VALID_MOVE
+    "ok": <boolean>, // whether the move was valid or not
+    "message": <String> // reason why the move was invalid
+}
+```
+
+#### Update Board <GameSession.java>
+
+Response: Response that tells client to update their board. 
+
+```
+{
+    "type": <int>, // ChessConstants.UPDATE
+    "from": <Pair>, // the source square
+    "to": <Pair>, // the destination square
+}
+```
+
+#### Continue Playing <GameSession.java>
+
+Response: Response that tells the clients to continue playing since no one has achieved a win state.
+
+```
+{
+    "type": <int>, //ChessConstants.CONTNINUE
+    "message": <String>,
+}
+```
+
+#### Game Over <GameSession.java>
+
+Response: Signals to the client that a win state has been acchieved and announces the winner.
+
+```
+{
+    "type": <int>, // ChessConstants.END
+    "message": <String> // announces which color won
+}
+```
 
 
-``` {"type": , "code":<int>} ```
+
+
+
