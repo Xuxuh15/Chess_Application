@@ -1,6 +1,47 @@
-# Chess_Application
-A chess game application built in Java that features both a text-console and GUI version. 
 
+
+# Chess Application
+
+A **Java**-based chess game that supports both **text-console** and **GUI** gameplay, using a simple JSON-based protocol for client-server communication.
+
+---
+
+## Table of Contents
+
+- [Features](#features)  
+- [Architecture](#architecture)  
+- [JSON Communication Protocol](#JSON-Protocol)  
+- [Getting Started](#getting-started)  
+- [Usage](#usage)  
+- [Contributing](#contributing)  
+- [License](#license)
+
+---
+
+## Features
+
+- Java-based implementation of chess logic, including legal move detection and win condition handling.  
+- Two user interface options:  
+  - **Text Console** – for CLI-based interaction  
+  - **Graphical UI** – using JavaFX for a visual experience  
+- Networked gameplay: can host and connect to a **server** for two-player matches.
+
+---
+
+## Architecture
+
+The project follows a typical client–server model:
+
+- **Server Side**  
+  - Manages player sessions, enforces game rules, tracks board state.  
+  - Sends JSON messages to control flow (start, play turn, move validation, updates).  
+
+- **Client Side**  
+  - Initiates and maintains socket connection to server.  
+  - Sends moves and receives updates via JSON.  
+  - Renders board state via console or GUI.
+
+---
 
 ## JSON Protocol
 
