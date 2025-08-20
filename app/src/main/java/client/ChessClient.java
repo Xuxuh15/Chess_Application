@@ -51,6 +51,7 @@ public class ChessClient {
 	 * @return a JSON request object of type MOVE
 	 */
 	public void sendMove(Pair from, Pair to) {
+		System.out.println("<ChessClient.sendMove>: Sending from: " + from.toString() + " to: " + to.toString());
 		JSONObject req = new JSONObject(); 
 		req.put("type", ChessConstants.MOVE); 
 		String fromStr =  from.row()  + ":" + ChessLogic.convertNumToLetter(from.col()); 
@@ -94,7 +95,7 @@ public class ChessClient {
 					this.color = ChessConstants.BLACK; 	
 				}
 				
-				System.out.println("Client has been assigned color: " + Character.toString(this.color)); 
+				System.out.println("<ChessClient.getAssignedColor> Received assignedColor: " + Character.toString(this.color)); 
 			}
 			
 		}
@@ -116,8 +117,10 @@ public class ChessClient {
 			res = new JSONObject(in); 
 			
 			if(res.getInt("type") == ChessConstants.START) { 
+				System.out.println("<ChessClient.waitForStart> Received start signal"); 
 				return; 
 			}
+			
 		}
 		catch(Exception e) {
 			System.out.println("ChessClient<waitForStart> Error: error receiving response from server"); 
@@ -139,6 +142,7 @@ public class ChessClient {
 			
 			if(res.getInt("type") == ChessConstants.PLAY) {
 				shouldPlay = res.getBoolean("shouldPlay"); 
+				System.out.println("<ChessClient.isMyTurn> Received isMyTurn: " + this.isMyTurn()); 
 			}
 		}
 		catch(Exception e) {
@@ -166,6 +170,7 @@ public class ChessClient {
 				update[0] = ChessLogic.getCoordinate(from); 
 				String to = res.getString("to"); 
 				update[1] = ChessLogic.getCoordinate(to);  
+				System.out.println("<ChessClient.getUpdate> Received from: " + update[0].toString() + " to: " + update[1].toString()); 
 			}
 		}
 		catch(Exception e) {
@@ -185,11 +190,12 @@ public class ChessClient {
 		try {
 			String in = (String)this.in.readObject(); 
 			res = new JSONObject(in); 
-			System.out.println("ChessClient.continuePlaying: response = " + res.toString());
+			System.out.println("<ChessClient.continuePlaying>  Received:  " + res.toString());
 			
 			if(!(res.getInt("type") == ChessConstants.CONTINUE)) {
 				shouldContinue = false; 
-				System.out.println(res.getString("message")); 
+				System.out.println("<ChessClient.continuePlaying>  Received:  " + res.getString("message"));
+				
 			}
 		}
 		catch(Exception e) {
@@ -213,7 +219,7 @@ public class ChessClient {
 			
 			if((res.getInt("type") == ChessConstants.WAS_VALID_MOVE)) {
 				validMove = res.getBoolean("ok"); 
-				System.out.println(res.getString("message")); 
+				System.out.println("ChessClient.wasValidMove> Received validMove: " + validMove); 
 			}
 		}
 		catch(Exception e) {
