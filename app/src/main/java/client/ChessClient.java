@@ -51,7 +51,7 @@ public class ChessClient {
 	 * @return a JSON request object of type MOVE
 	 */
 	public void sendMove(Pair from, Pair to) {
-		System.out.println("<ChessClient.sendMove>: Sending from: " + from.toString() + " to: " + to.toString());
+		//System.out.println("<ChessClient.sendMove>: Sending from: " + from.toString() + " to: " + to.toString());
 		JSONObject req = new JSONObject(); 
 		req.put("type", ChessConstants.MOVE); 
 		String fromStr =  from.row()  + ":" + ChessLogic.convertNumToLetter(from.col()); 
@@ -95,7 +95,7 @@ public class ChessClient {
 					this.color = ChessConstants.BLACK; 	
 				}
 				
-				System.out.println("<ChessClient.getAssignedColor> Received assignedColor: " + Character.toString(this.color)); 
+				//System.out.println("<ChessClient.getAssignedColor> Received assignedColor: " + Character.toString(this.color)); 
 			}
 			
 		}
@@ -117,7 +117,7 @@ public class ChessClient {
 			res = new JSONObject(in); 
 			
 			if(res.getInt("type") == ChessConstants.START) { 
-				System.out.println("<ChessClient.waitForStart> Received start signal"); 
+				//System.out.println("<ChessClient.waitForStart> Received start signal"); 
 				return; 
 			}
 			
@@ -142,7 +142,7 @@ public class ChessClient {
 			
 			if(res.getInt("type") == ChessConstants.PLAY) {
 				shouldPlay = res.getBoolean("shouldPlay"); 
-				System.out.println("<ChessClient.isMyTurn> Received isMyTurn: " + this.isMyTurn()); 
+				System.out.println("<ChessClient.isMyTurn> Received isMyTurn: " + shouldPlay); 
 			}
 		}
 		catch(Exception e) {
@@ -190,7 +190,7 @@ public class ChessClient {
 		try {
 			String in = (String)this.in.readObject(); 
 			res = new JSONObject(in); 
-			System.out.println("<ChessClient.continuePlaying>  Received:  " + res.toString());
+			//System.out.println("<ChessClient.continuePlaying>  Received:  " + res.toString());
 			
 			if(!(res.getInt("type") == ChessConstants.CONTINUE)) {
 				shouldContinue = false; 
