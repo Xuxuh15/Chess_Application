@@ -12,7 +12,7 @@ public class GameNotification extends Label {
     }
 
     private void initialize() {
-        // Style the label (you can customize as you like)
+        
         this.setStyle("-fx-background-color: rgba(0,0,0,0.7); " +
                       "-fx-text-fill: white; " +
                       "-fx-padding: 10px; " +
@@ -23,7 +23,7 @@ public class GameNotification extends Label {
     }
 
     /**
-     * Displays this notification on the parent StackPane for the specified duration
+     * Displays this notification on the parent PlayerInfoPanel for the specified duration
      */
     public void show(PlayerInfoPanel parent, double durationSeconds) {
         if (!parent.getChildren().contains(this)) {
